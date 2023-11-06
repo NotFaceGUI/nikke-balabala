@@ -1,0 +1,27 @@
+{
+  "name": "nikke-balabala",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "dom-to-image-more": "^3.2.0",
+    "file-saver": "^2.0.5",
+    "html2canvas": "^1.4.1",
+    "vh-check": "^2.0.5",
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@types/dom-to-image": "^2.6.6",
+    "@types/file-saver": "^2.0.6",
+    "@types/node": "^18.14.0",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vue-tsc": "^1.8.5"
+  }
+}
