@@ -201,71 +201,73 @@ onBeforeUnmount(() => {
     <NikkeDialog  :current-time="currentTime" :back="back" 
       :dialog-data="filteredData[currentProject]"></NikkeDialog>
   </div> -->
-  <div class="box">
-    <NikkeDialog :current-time="currentTime" :back="back" v-if="currentProject !== -1"
-      :dialog-data="filteredData[currentProject]"></NikkeDialog>
-    <NikkeWindow id="createProject" title="创建对话" :confirm="true" :show="isShow" v-if="isShow" button-cancel="取消"
-      :cancel="cancel" :success="success" button-success="创建">
-      <div class="project">
-        <div class="label">
-          <div class="pcontent">
-            <span>对话名称 *</span>
-            <input class="nikkeInput" v-model="newProjecData.proName" type="text">
-          </div>
-          <div class="pcontent">
-            <span>对话类型</span>
-            <NikkeRadio :checked="true" label="任务" style="flex: 1;">
-              <div style="margin: 0; display: flex; justify-content: space-between;">
-                <div>
-                  <input id="task" type="radio" value="0" name="projectType" v-model="selectType">
-                  <label for="task">任务</label>
+  <div style="height: 100%;" v-if="currentProject !== -1">
+    <NikkeDialog :current-time="currentTime" :back="back" :dialog-data="filteredData[currentProject]"></NikkeDialog>
+  </div>
+  <div style="height: 100%;width: 100%;">
+    <div class="box">
+      <NikkeWindow id="createProject" title="创建对话" :confirm="true" :show="isShow" v-if="isShow" button-cancel="取消"
+        :cancel="cancel" :success="success" button-success="创建">
+        <div class="project">
+          <div class="label">
+            <div class="pcontent">
+              <span>对话名称 *</span>
+              <input class="nikkeInput" v-model="newProjecData.proName" type="text">
+            </div>
+            <div class="pcontent">
+              <span>对话类型</span>
+              <NikkeRadio :checked="true" label="任务" style="flex: 1;">
+                <div style="margin: 0; display: flex; justify-content: space-between;">
+                  <div>
+                    <input id="task" type="radio" value="0" name="projectType" v-model="selectType">
+                    <label for="task">任务</label>
+                  </div>
+                  <div>
+                    <input id="nikke" type="radio" value="1" name="projectType" v-model="selectType" checked>
+                    <label for="nikke">妮姬</label>
+                  </div>
+                  <div>
+                    <input id="group" type="radio" value="2" name="projectType" v-model="selectType">
+                    <label for="group">群组</label>
+                  </div>
                 </div>
-                <div>
-                  <input id="nikke" type="radio" value="1" name="projectType" v-model="selectType" checked>
-                  <label for="nikke">妮姬</label>
-                </div>
-                <div>
-                  <input id="group" type="radio" value="2" name="projectType" v-model="selectType">
-                  <label for="group">群组</label>
-                </div>
-              </div>
-              <NikkeInfo>
-                (只实现了妮姬项目类型)
-              </NikkeInfo>
-            </NikkeRadio>
-          </div>
-          <div class="pcontent">
-            <span>描述</span>
-            <input class="nikkeInput" v-model="newProjecData.proDesc" type="text">
-          </div>
-          <div class="pcontent">
-            <span>作者 *</span>
-            <input style="flex: 0;width: 120px;" class="nikkeInput" type="text" maxlength="20"
-              v-model="newProjecData.author" placeholder="your name">
-          </div>
-          <div style="height: 1px;background-color: #e6e7e6;"></div>
-          <div>
-            <span>选择对话妮姬（可多选|至少选一个）</span>
+                <NikkeInfo>
+                  (只实现了妮姬项目类型)
+                </NikkeInfo>
+              </NikkeRadio>
+            </div>
+            <div class="pcontent">
+              <span>描述</span>
+              <input class="nikkeInput" v-model="newProjecData.proDesc" type="text">
+            </div>
+            <div class="pcontent">
+              <span>作者 *</span>
+              <input style="flex: 0;width: 120px;" class="nikkeInput" type="text" maxlength="20"
+                v-model="newProjecData.author" placeholder="your name">
+            </div>
+            <div style="height: 1px;background-color: #e6e7e6;"></div>
+            <div>
+              <span>选择对话妮姬（可多选|至少选一个）</span>
 
-          </div>
-          <div class="nikkeSelect" v-if="selectType == '1'">
-            <div class="enterprise">
-              <div class="enterpriseBox" style="background-color: #32b1f4;">ALL</div>
-              <div class="enterpriseBox">极乐净土</div>
-              <div class="enterpriseBox">米西利斯</div>
-              <div class="enterpriseBox">泰特拉</div>
-              <div class="enterpriseBox">朝圣者</div>
-              <div class="enterpriseBox">反常</div>
             </div>
-            <div class="nikkeGrid">
-              <div class="nikke" :class="{ nikkeCheck: isSelect[index] }" @click="select(value, index)"
-                v-for="(value, index) in nikkeData.nikkes" :key="index"
-                :style="{ backgroundImage: 'url(/pic/' + value.img + '.png)' }">
+            <div class="nikkeSelect" v-if="selectType == '1'">
+              <div class="enterprise">
+                <div class="enterpriseBox" style="background-color: #32b1f4;">ALL</div>
+                <div class="enterpriseBox">极乐净土</div>
+                <div class="enterpriseBox">米西利斯</div>
+                <div class="enterpriseBox">泰特拉</div>
+                <div class="enterpriseBox">朝圣者</div>
+                <div class="enterpriseBox">反常</div>
+              </div>
+              <div class="nikkeGrid">
+                <div class="nikke" :class="{ nikkeCheck: isSelect[index] }" @click="select(value, index)"
+                  v-for="(value, index) in nikkeData.nikkes" :key="index"
+                  :style="{ backgroundImage: 'url(/pic/' + value.img + '.png)' }">
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- <div class="pcontent">
+          <!-- <div class="pcontent">
           <div style="">
             <input type="text">
 
@@ -273,47 +275,50 @@ onBeforeUnmount(() => {
             <input type="text">
           </div>
         </div> -->
-      </div>
-    </NikkeWindow>
+        </div>
+      </NikkeWindow>
 
-    <!-- <div class="box back"><img src="/background.png" style="width: 100%;height: 100%;object-fit: cover;"></div> -->
-    <div class="btnbox">
-      <NikkeButton :type="buttonType.Cancel" content="导出对话" style="width: 150px;height: 45px;margin: 5px;"></NikkeButton>
-      <NikkeButton :type="buttonType.Success" @click="createProject()" content="创建对话"
-        style="width: 150px;height: 45px;margin: 5px;"></NikkeButton>
-    </div>
+      <!-- <div class="box back"><img src="/background.png" style="width: 100%;height: 100%;object-fit: cover;"></div> -->
+      <div class="btnbox">
+        <NikkeButton :type="buttonType.Cancel" content="导出对话" style="width: 150px;height: 45px;margin: 5px;">
+        </NikkeButton>
+        <NikkeButton :type="buttonType.Success" @click="createProject()" content="创建对话"
+          style="width: 150px;height: 45px;margin: 5px;"></NikkeButton>
+      </div>
 
-    <div class="header">
-      <div class="tilte">
-        <span style="vertical-align: middle;">
-          <img src="/wifi.png" style="width: 18px;">
-        </span>
-        {{ currentTime }}
-        <span class="logoText">生成器
-          v1.0</span>
+      <div class="header">
+        <div class="tilte">
+          <span style="vertical-align: middle;">
+            <img src="/wifi.png" style="width: 18px;">
+          </span>
+          {{ currentTime }}
+          <span class="logoText">生成器
+            v1.0</span>
+        </div>
+        <div class="logo"><span>balabala</span></div>
+        <div class="tab">
+          <span class="tabName" :class="{ show: value.id == currentTabId }" v-for="value in data"
+            @click="selectTab(value.id)">
+            {{ value.type }}
+          </span>
+        </div>
       </div>
-      <div class="logo"><span>balabala</span></div>
-      <div class="tab">
-        <span class="tabName" :class="{ show: value.id == currentTabId }" v-for="value in data"
-          @click="selectTab(value.id)">
-          {{ value.type }}
-        </span>
+      <div class="text">
+        <span>对话清单: ({{ listNumber }})</span>
+        <span style="margin-left: auto;">最新对话 </span>
+        <span style="color: grey; margin: 0 5px;"> | </span>
+        <span>图标 </span>
       </div>
-    </div>
-    <div class="text">
-      <span>对话清单: ({{ listNumber }})</span>
-      <span style="margin-left: auto;">最新对话 </span>
-      <span style="color: grey; margin: 0 5px;"> | </span>
-      <span>图标 </span>
-    </div>
 
-    <div class="content">
-      <div class="cardList">
-        <ProjectCard v-for="value, index in filteredData" :key="index" :select-nikkes="value" @click="openDialog(index)">
-        </ProjectCard>
+      <div class="content">
+        <div class="cardList">
+          <ProjectCard v-for="value, index in filteredData" :key="index" :select-nikkes="value"
+            @click="openDialog(index)">
+          </ProjectCard>
+        </div>
       </div>
+      <div class="floor"></div>
     </div>
-    <div class="floor"></div>
   </div>
 </template>
 

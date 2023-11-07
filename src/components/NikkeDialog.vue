@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ICharacterData, Project, enterprise, msgType } from '../script/project';
+import { ICharacterData, Project, enterprise, msgType, exportImgType } from '../script/project';
 import NikkeMessage from './NikkeMessage.vue';
 import domtoimage from 'dom-to-image-more';
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick, reactive } from 'vue';
 import { saveAs } from 'file-saver';
+import NikkeWindow from './NikkeWindow.vue';
+import NikkeInfo from './NikkeInfo.vue';
 
 let props = defineProps<{
     dialogData: Project
@@ -33,7 +35,6 @@ const scrollToBottom = () => {
             scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
         }
     });
-
 };
 
 
@@ -61,6 +62,72 @@ function add() {
     inputContent.value = ""
 }
 
+
+var isImg = ref(false);
+
+var imgData = reactive({
+    scale: 2,
+    quality: 0.95,
+    exportType: "0",
+    imgName: dialogData.value.name,
+});
+
+function exprotRealToImg() {
+    switch (imgData.exportType) {
+        case exportImgType.png.toString():
+            nextTick(() => {
+                if (dialogImg.value != undefined) {
+                    domtoimage.toBlob(dialogImg.value, {
+                        width: dialogImg.value.clientWidth * imgData.scale,
+                        height: dialogImg.value.clientHeight * imgData.scale,
+                        style: {
+                            transform: 'scale(' + imgData.scale + ')',
+                            transformOrigin: 'top left'
+                        }
+                    })
+                        .then(function (blob: string | Blob) {
+                            saveAs(blob, imgData.imgName + '.png');
+                            if (dialogImg.value != undefined) {
+                                dialogImg.value.style.transform = `scale(${1})`
+                            }
+                            isImg.value = false;
+                        })
+                        .catch(function (error: any) {
+                            console.error('oops, something went wrong!', error);
+                        });
+                }
+            });
+            break;
+        case exportImgType.jpeg.toString():
+            nextTick(() => {
+                if (dialogImg.value != undefined) {
+                    domtoimage.toJpeg(dialogImg.value, {
+                        width: dialogImg.value.clientWidth * imgData.scale,
+                        height: dialogImg.value.clientHeight * imgData.scale,
+                        quality: imgData.quality,
+                        style: {
+                            transform: 'scale(' + imgData.scale + ')',
+                            transformOrigin: 'top left'
+                        }
+                    })
+                        .then(function (dataUrl: string) {
+                            saveAs(dataUrl, imgData.imgName + '.jpeg');
+                            if (dialogImg.value != undefined) {
+                                dialogImg.value.style.transform = `scale(${1})`
+                            }
+                            isImg.value = false;
+                        })
+                        .catch(function (error: any) {
+                            console.error('oops, something went wrong!', error);
+                        });
+                }
+            });
+            break;
+        default:
+            break;
+    }
+}
+
 function exportImg() {
     //   if (dialogImg.value != undefined) {
     //     console.log("test");
@@ -68,15 +135,8 @@ function exportImg() {
     //       document.body.appendChild(canvas);
     //     });
     //   }
+    isImg.value = true;
 
-    domtoimage
-        .toBlob(dialogImg.value)
-        .then(function (blob: string | Blob) {
-            saveAs(blob, dialogData.value.name + '.png');
-        })
-        .catch(function (error: any) {
-            console.error('oops, something went wrong!', error);
-        });
 }
 
 const dialogImg = ref<HTMLElement | null>(null);
@@ -88,7 +148,7 @@ const dialogContent = ref<HTMLElement | null>(null);
 function append() {
     dialogData.value.messageData.list[dialogData.value.messageData.list.length - 1].msg.push(inputContent.value);
     inputContent.value = "";
-
+    scrollToBottom();
     // exportImg();
 }
 
@@ -121,17 +181,22 @@ function selectZ() {
     isZHG.value = true;
 }
 
-// function clamp(vaule: number, min: number, max: number) {
-//     if (vaule < min) {
-//         return min;
-//     }
+function clamp(vaule: number, min: number, max: number) {
+    if (vaule < min) {
+        return min;
+    }
 
-//     if (vaule > max) {
-//         return max;
-//     }
+    if (vaule > max) {
+        return max;
+    }
 
-//     return vaule;
-// }
+    return vaule;
+}
+
+function cancel() {
+    isImg.value = false;
+    console.log("cancel");
+}
 
 </script>
 
@@ -191,8 +256,8 @@ function selectZ() {
     </div>
 
     <div class="dialogImg"
-        :style="{ height: (dialogHeader == undefined ? 80 : dialogHeader.clientHeight) + (dialogContent == undefined ? 50 : dialogContent.scrollHeight - 5) + 'px !important' }"
-        ref="dialogImg">
+        :style="{ height: (dialogHeader == undefined ? 80 : clamp(dialogHeader.clientHeight, 70, 90)) + (dialogContent == undefined ? 50 : clamp((dialogContent.scrollHeight - 5), 700, 99999999)) + 'px !important' }"
+        ref="dialogImg" v-if="isImg">
         <div class="dheader himg" ref="dialogHeader">
             <div class="tilte">
                 <span style="vertical-align: middle;">
@@ -219,9 +284,83 @@ function selectZ() {
                 :nikke="value.nikke" :key="index"></NikkeMessage>
         </div>
     </div>
+
+    <NikkeWindow id="createProject" title="导出图片" :confirm="true" :show="isImg" v-if="isImg" button-cancel="取消"
+        :cancel="cancel" :success="exprotRealToImg" button-success="导出">
+        <div class="project">
+            <div class="label">
+                <div class="pcontent">
+                    <span>图片名称 *</span>
+                    <input class="nikkeInput" v-model="imgData.imgName" type="text">
+                </div>
+                <div class="pcontent">
+                    <span>导出图片格式</span>
+                    <NikkeRadio :checked="true" label="任务" style="flex: 1;">
+                        <div style="margin: 0; display: flex; justify-content: space-between;">
+
+                            <div>
+                                <input id="png" type="radio" value="0" name="projectType" v-model="imgData.exportType"
+                                    checked>
+                                <label for="png">png</label>
+                            </div>
+                            <div>
+                                <input id="jpeg" type="radio" value="1" name="projectType" v-model="imgData.exportType">
+                                <label for="jpeg">jpeg</label>
+                            </div>
+                        </div>
+
+                    </NikkeRadio>
+                </div>
+                <div class="pcontent" v-if="parseInt(imgData.exportType) == exportImgType.jpeg">
+                    <span>质量</span>
+                    <input class="nikkeInput" v-model="imgData.quality" type="text">
+                    <div>
+
+                    </div>
+
+                </div>
+                <NikkeInfo v-if="parseInt(imgData.exportType) == exportImgType.jpeg">
+                    jepg导出时的质量取值范围{0-1}
+                </NikkeInfo>
+                <div class="pcontent">
+                    <span>缩放</span>
+                    <input style="flex: 0;width: 120px;" class="nikkeInput" type="text" maxlength="20"
+                        v-model="imgData.scale" placeholder="your name">
+                </div>
+                <NikkeInfo>
+                    图片的缩放比例，值越高画面越清晰，但大小则会变得更大 推荐范围{1-10}
+                </NikkeInfo>
+                <div style="height: 1px;background-color: #e6e7e6;"></div>
+            </div>
+
+        </div>
+    </NikkeWindow>
 </template>
 
 <style>
+.label div {
+    margin: 5px 0;
+}
+
+.label {
+    color: rgb(59, 50, 50);
+    display: flex;
+    font-weight: bold;
+    letter-spacing: 2px;
+    font-size: 14px;
+    flex-direction: column;
+}
+
+.pcontent span {
+    width: 30%;
+    line-height: 25px;
+}
+
+.pcontent {
+    display: flex;
+    flex: 1;
+}
+
 .export {
     transition: transform .1s ease-in-out !important;
 }
@@ -241,7 +380,8 @@ div.dialogImg {
     flex-direction: column;
     justify-content: space-between;
 
-    width: 500px;
+    min-width: 500px;
+    max-width: 800px;
     z-index: 99999;
 }
 

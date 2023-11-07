@@ -77,7 +77,7 @@ defineProps<{
 
 .window {
     position: absolute;
-    z-index: 99999;
+    z-index: 9999999999;
     max-width: 450px;
     width: 90%;
     height: 70%;
@@ -98,7 +98,7 @@ defineProps<{
     content: "";
     display: block;
     position: absolute;
-    z-index: 9999;
+    z-index: 9999999;
     background-color: rgba(0, 0, 0, 0.65);
     width: 100vw;
     height: 100vh;

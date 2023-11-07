@@ -19,6 +19,11 @@ export enum msgType {
     partition = "分割"
 }
 
+export enum exportImgType {
+    png,
+    jpeg
+}
+
 
 export enum enterprise {
     极乐净土,
