@@ -9,7 +9,6 @@ specifiers:
   file-saver: ^2.0.5
   html2canvas: ^1.4.1
   typescript: ^5.0.2
-  vh-check: ^2.0.5
   vite: ^4.4.5
   vue: ^3.3.4
   vue-tsc: ^1.8.5
@@ -18,7 +17,6 @@ dependencies:
   dom-to-image-more: registry.npmmirror.com/dom-to-image-more/3.2.0
   file-saver: registry.npmmirror.com/file-saver/2.0.5
   html2canvas: registry.npmmirror.com/html2canvas/1.4.1
-  vh-check: registry.npmmirror.com/vh-check/2.0.5
   vue: registry.npmmirror.com/vue/3.3.7_typescript@5.2.2
 
 devDependencies:
@@ -707,12 +705,6 @@ packages:
     version: 1.0.2
     dependencies:
       base64-arraybuffer: registry.npmmirror.com/base64-arraybuffer/1.0.2
-    dev: false
-
-  registry.npmmirror.com/vh-check/2.0.5:
-    resolution: {integrity: sha512-vHtIYWt9uLl2P2tLlatVpMwv9+ezuJCtMNjUVIpzd5Pa/dJXN8AtqkKmVRcNSlmXyCjkCkbMQX/Vs9axmdlfgg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vh-check/-/vh-check-2.0.5.tgz}
-    name: vh-check
-    version: 2.0.5
     dev: false
 
   registry.npmmirror.com/vite/4.5.0_@types+node@18.18.8:

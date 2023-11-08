@@ -256,7 +256,7 @@ function cancel() {
     </div>
 
     <div class="dialogImg"
-        :style="{ height: (dialogHeader == undefined ? 80 : clamp(dialogHeader.clientHeight, 70, 90)) + (dialogContent == undefined ? 50 : clamp((dialogContent.scrollHeight - 5), 700, 99999999)) + 'px !important' }"
+        :style="{ height: (dialogHeader == undefined ? 80 : clamp(dialogHeader.clientHeight, 70, 90)) + (dialogContent == undefined ? 50 : clamp((dialogContent.scrollHeight + 30), 700, 99999999)) + 'px !important' }"
         ref="dialogImg" v-if="isImg">
         <div class="dheader himg" ref="dialogHeader">
             <div class="tilte">
@@ -313,7 +313,7 @@ function cancel() {
                 </div>
                 <div class="pcontent" v-if="parseInt(imgData.exportType) == exportImgType.jpeg">
                     <span>质量</span>
-                    <input class="nikkeInput" v-model="imgData.quality" type="text">
+                    <input class="nikkeInput" v-model="imgData.quality" type="number" min="0" max="1">
                     <div>
 
                     </div>
@@ -324,7 +324,7 @@ function cancel() {
                 </NikkeInfo>
                 <div class="pcontent">
                     <span>缩放</span>
-                    <input style="flex: 0;width: 120px;" class="nikkeInput" type="text" maxlength="20"
+                    <input style="flex: 0;width: 120px;" class="nikkeInput" type="number" maxlength="20"  min="1" max="10"
                         v-model="imgData.scale" placeholder="your name">
                 </div>
                 <NikkeInfo>
@@ -373,20 +373,27 @@ div.toimg {
     overflow: hidden !important;
 }
 
+
+
+
+
 div.dialogImg {
     position: absolute;
-    right: -900px;
+    right: -999999px;
+    top: 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
+    border-radius: 15px !important;
+    overflow: hidden;
     min-width: 500px;
-    max-width: 800px;
+    max-width: 550px;
     z-index: 99999;
 }
 
 div.himg {
-    max-height: 100px;
+    min-height: 110px;
+    max-height: 120px;
 }
 
 .dmodel {
@@ -630,6 +637,7 @@ div::-webkit-scrollbar {
     display: flex;
     flex-direction: column;
     height: 12%;
+    min-height:110px;
     box-shadow:
         0px 0px 10px rgba(0, 0, 0, 0.4);
     background: linear-gradient(transparent 50%, #fda912 50%),

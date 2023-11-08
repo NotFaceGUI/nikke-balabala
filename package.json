@@ -12,7 +12,6 @@
     "dom-to-image-more": "^3.2.0",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
-    "vh-check": "^2.0.5",
     "vue": "^3.3.4"
   },
   "devDependencies": {
