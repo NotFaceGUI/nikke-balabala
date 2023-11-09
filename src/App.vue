@@ -286,7 +286,7 @@ onBeforeUnmount(() => {
         </div>
       </NikkeWindow>
 
-      <!-- <div class="box back"><img src="/background.png" style="width: 100%;height: 100%;object-fit: cover;"></div> -->
+      <div class="box back"><img src="/background.png" style="width: 100%;height: 100%;object-fit: cover;"></div>
 
 
       <div class="header">
