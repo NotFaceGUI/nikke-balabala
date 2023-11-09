@@ -204,6 +204,14 @@ onBeforeUnmount(() => {
   <div style="height: 100%;" v-if="currentProject !== -1">
     <NikkeDialog :current-time="currentTime" :back="back" :dialog-data="filteredData[currentProject]"></NikkeDialog>
   </div>
+  <div>
+    <div style="height: 100%;" class="btnbox">
+      <NikkeButton :type="buttonType.Cancel" content="导出对话" style="width: 150px;height: 45px;margin: 5px;">
+      </NikkeButton>
+      <NikkeButton :type="buttonType.Success" @click="createProject()" content="创建对话"
+        style="width: 150px;height: 45px;margin: 5px;"></NikkeButton>
+    </div>
+  </div>
   <div style="height: 100%;width: 100%;">
     <div class="box">
       <NikkeWindow id="createProject" title="创建对话" :confirm="true" :show="isShow" v-if="isShow" button-cancel="取消"
@@ -279,12 +287,7 @@ onBeforeUnmount(() => {
       </NikkeWindow>
 
       <!-- <div class="box back"><img src="/background.png" style="width: 100%;height: 100%;object-fit: cover;"></div> -->
-      <div class="btnbox">
-        <NikkeButton :type="buttonType.Cancel" content="导出对话" style="width: 150px;height: 45px;margin: 5px;">
-        </NikkeButton>
-        <NikkeButton :type="buttonType.Success" @click="createProject()" content="创建对话"
-          style="width: 150px;height: 45px;margin: 5px;"></NikkeButton>
-      </div>
+
 
       <div class="header">
         <div class="tilte">
@@ -472,10 +475,10 @@ onBeforeUnmount(() => {
 
 .btnbox {
   width: 100%;
-  /* height: 15%; */
+  height: 50px !important;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: end;
   position: absolute;
   bottom: 20px;
   z-index: 999;

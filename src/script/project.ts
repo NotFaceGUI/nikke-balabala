@@ -72,6 +72,11 @@ export interface IProjectData {
     datas: Array<Project>;
 }
 
+export interface ImgConfig {
+    width: number,
+    maxWidth: number,
+    bottomHeigth: number,
+}
 
 
 export interface Inikkes {
@@ -126,6 +131,7 @@ export var nikkeData: Inikkes = {
         { name: "豺狼", img: "cl", enterprise: enterprise.米西利斯 },
         { name: "吉尔提", img: "jet", enterprise: enterprise.米西利斯 },
         { name: "森", img: "s", enterprise: enterprise.米西利斯 },
+        { name: "坎西", img: "kx", enterprise: enterprise.米西利斯 },
         { name: "娜嘉", img: "nj", enterprise: enterprise.米西利斯 },
         { name: "蒂亚", img: "dy", enterprise: enterprise.米西利斯 },
         { name: "N102", img: "n102", enterprise: enterprise.米西利斯 },

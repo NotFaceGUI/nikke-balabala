@@ -1,33 +1,40 @@
 <script setup lang="ts">
-import { ICharacterData, Project, enterprise, msgType, exportImgType } from '../script/project';
-import NikkeMessage from './NikkeMessage.vue';
-import domtoimage from 'dom-to-image-more';
-import { ref, onMounted, nextTick, reactive } from 'vue';
-import { saveAs } from 'file-saver';
-import NikkeWindow from './NikkeWindow.vue';
-import NikkeInfo from './NikkeInfo.vue';
+import {
+    ICharacterData,
+    Project,
+    enterprise,
+    msgType,
+    exportImgType,
+    ImgConfig,
+} from "../script/project";
+import NikkeMessage from "./NikkeMessage.vue";
+import domtoimage from "dom-to-image-more";
+import { ref, onMounted, nextTick, reactive } from "vue";
+import { saveAs } from "file-saver";
+import NikkeWindow from "./NikkeWindow.vue";
+import NikkeInfo from "./NikkeInfo.vue";
 
 let props = defineProps<{
-    dialogData: Project
-    back: Function
-    currentTime: string
-}>()
+    dialogData: Project;
+    back: Function;
+    currentTime: string;
+}>();
 
+let imgConfig: ImgConfig = reactive({
+    width: 500,
+    maxWidth: 550,
+    bottomHeigth: 15 // 最下面对话与图片最底部的距离 用于方便查看
+});
 
 let currentModel = ref(msgType.nikke);
 
-var typeList = ref([
-    msgType.nikke,
-    msgType.img,
-    msgType.aside,
-    msgType.partition
-]);
+var typeList = ref([msgType.nikke, msgType.img, msgType.aside, msgType.partition]);
 
 // 使用ref包装dialogData，使其变成响应式
 const dialogData = ref(props.dialogData);
 const scrollContainer = ref<HTMLElement | null>(null);
+const currentSelectImgae = ref<number>(-1);
 
-domtoimage
 
 const scrollToBottom = () => {
     nextTick(() => {
@@ -37,31 +44,73 @@ const scrollToBottom = () => {
     });
 };
 
+function check() {
+    if (inputContent.value != "") {
+        currentModel.value = msgType.nikke;
+    }
+}
 
+function append() {
+    // 当前模式和最后对话的模式不同 即最后对话的是img则无需进行添加
+    if (currentModel.value == msgType.img && currentSelectImgae.value != -1) {
+        // 如果想最加图片则必须使得msgType为追加图片
+        dialogData.value.messageData.list[
+            dialogData.value.messageData.list.length - 1
+        ].msg.push("[url][base64:] [" + totalImages.value[currentSelectImgae.value] + "]");
+    } else if (dialogData.value.messageData.list[dialogData.value.messageData.list.length - 1].msgType == msgType.img) {
+        let model: msgType = msgType.nikke;
+        // 如果最后一项是指挥官则修改为指挥官
+        if (dialogData.value.messageData.list[dialogData.value.messageData.list.length - 1].nikke.img == "指挥官") {
+            model = msgType.commander;
+        }
+        // 如果最后一项是图片 且追加类型不等于图片则修改最后一项的类型
+        dialogData.value.messageData.list[dialogData.value.messageData.list.length - 1].msgType = model;
+        dialogData.value.messageData.list[dialogData.value.messageData.list.length - 1].msg.push(inputContent.value);
+        inputContent.value = "";
+    }
+    else {
+        dialogData.value.messageData.list[
+            dialogData.value.messageData.list.length - 1
+        ].msg.push(inputContent.value);
+        inputContent.value = "";
+    }
+
+    scrollToBottom();
+
+    // exportImg();
+}
 
 function add() {
     var info: ICharacterData = {
         msgType: currentModel.value, // 正常消息类型
         msg: [],
-        nikke: dialogData.value.projectNikkes[currentNikke.value]
-    }
+        nikke: dialogData.value.projectNikkes[currentNikke.value],
+    };
 
-    if (isZHG.value && (currentModel.value == msgType.nikke || currentModel.value == msgType.img)) {
-
+    if (
+        isZHG.value &&
+        (currentModel.value == msgType.nikke || currentModel.value == msgType.img)
+    ) {
         info.nikke = {
             name: "指挥官",
             img: "指挥官",
-            enterprise: enterprise.主角
+            enterprise: enterprise.主角,
         };
+
         info.msgType = msgType.commander;
     }
 
-    info.msg.push(inputContent.value);
+    // 如果消息类型是图片 则进行图片文本
+    if (currentModel.value == msgType.img && currentSelectImgae.value != -1) {
+        info.msgType = msgType.img;
+        info.msg.push("[url][base64:] [" + totalImages.value[currentSelectImgae.value] + "]");
+    } else {
+        info.msg.push(inputContent.value);
+    }
     dialogData.value.messageData.list?.push(info);
     scrollToBottom();
-    inputContent.value = ""
+    inputContent.value = "";
 }
-
 
 var isImg = ref(false);
 
@@ -77,23 +126,24 @@ function exprotRealToImg() {
         case exportImgType.png.toString():
             nextTick(() => {
                 if (dialogImg.value != undefined) {
-                    domtoimage.toBlob(dialogImg.value, {
-                        width: dialogImg.value.clientWidth * imgData.scale,
-                        height: dialogImg.value.clientHeight * imgData.scale,
-                        style: {
-                            transform: 'scale(' + imgData.scale + ')',
-                            transformOrigin: 'top left'
-                        }
-                    })
+                    domtoimage
+                        .toBlob(dialogImg.value, {
+                            width: dialogImg.value.clientWidth * imgData.scale,
+                            height: dialogImg.value.clientHeight * imgData.scale,
+                            style: {
+                                transform: "scale(" + imgData.scale + ")",
+                                transformOrigin: "top left",
+                            },
+                        })
                         .then(function (blob: string | Blob) {
-                            saveAs(blob, imgData.imgName + '.png');
+                            saveAs(blob, imgData.imgName + ".png");
                             if (dialogImg.value != undefined) {
-                                dialogImg.value.style.transform = `scale(${1})`
+                                dialogImg.value.style.transform = `scale(${1})`;
                             }
                             isImg.value = false;
                         })
                         .catch(function (error: any) {
-                            console.error('oops, something went wrong!', error);
+                            console.error("oops, something went wrong!", error);
                         });
                 }
             });
@@ -101,24 +151,25 @@ function exprotRealToImg() {
         case exportImgType.jpeg.toString():
             nextTick(() => {
                 if (dialogImg.value != undefined) {
-                    domtoimage.toJpeg(dialogImg.value, {
-                        width: dialogImg.value.clientWidth * imgData.scale,
-                        height: dialogImg.value.clientHeight * imgData.scale,
-                        quality: imgData.quality,
-                        style: {
-                            transform: 'scale(' + imgData.scale + ')',
-                            transformOrigin: 'top left'
-                        }
-                    })
+                    domtoimage
+                        .toJpeg(dialogImg.value, {
+                            width: dialogImg.value.clientWidth * imgData.scale,
+                            height: dialogImg.value.clientHeight * imgData.scale,
+                            quality: imgData.quality,
+                            style: {
+                                transform: "scale(" + imgData.scale + ")",
+                                transformOrigin: "top left",
+                            },
+                        })
                         .then(function (dataUrl: string) {
-                            saveAs(dataUrl, imgData.imgName + '.jpeg');
+                            saveAs(dataUrl, imgData.imgName + ".jpeg");
                             if (dialogImg.value != undefined) {
-                                dialogImg.value.style.transform = `scale(${1})`
+                                dialogImg.value.style.transform = `scale(${1})`;
                             }
                             isImg.value = false;
                         })
                         .catch(function (error: any) {
-                            console.error('oops, something went wrong!', error);
+                            console.error("oops, something went wrong!", error);
                         });
                 }
             });
@@ -136,7 +187,6 @@ function exportImg() {
     //     });
     //   }
     isImg.value = true;
-
 }
 
 const dialogImg = ref<HTMLElement | null>(null);
@@ -145,30 +195,37 @@ const dialogHeader = ref<HTMLElement | null>(null);
 const dialogContent = ref<HTMLElement | null>(null);
 
 
-function append() {
-    dialogData.value.messageData.list[dialogData.value.messageData.list.length - 1].msg.push(inputContent.value);
-    inputContent.value = "";
-    scrollToBottom();
-    // exportImg();
-}
 
 function show() {
     isSelectView.value = !isSelectView.value;
-    scrollToBottom()
+    scrollToBottom();
 }
 
 function selectModel(type: msgType) {
+    if (type == msgType.img) {
+        inputContent.value = "";
+    }
     currentModel.value = type;
 }
 
+let totalImages = ref<string[]>([]); // 存储到 local 中
+
 onMounted(() => {
     scrollToBottom();
-})
+
+    // 判断有没有totalImages这个字段
+    var isV = localStorage.getItem("totalImages"); //'true' 字符串类型的
+    if (isV === null) {
+        localStorage.setItem("totalImages", JSON.stringify(totalImages.value));
+    } else {
+        totalImages.value = JSON.parse(isV);
+    }
+});
 
 var currentNikke = ref(0);
 var isSelectView = ref(false);
 var isZHG = ref(false);
-
+let isImgListView = ref(false);
 
 var inputContent = ref("");
 
@@ -198,21 +255,119 @@ function cancel() {
     console.log("cancel");
 }
 
+const selectedImages = ref<string[]>([]);
+
+const handleFileUpload = (event: Event) => {
+    const fileInput = event.target as HTMLInputElement;
+    const files = Array.from(fileInput.files || []);
+
+    if (files.length > 0) {
+        const readerPromises = files.map((file) => {
+            return new Promise<string>((resolve) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    resolve(reader.result as string);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        Promise.all(readerPromises)
+            .then((imageDataArray) => {
+                selectedImages.value = selectedImages.value.concat(imageDataArray);
+            })
+            .finally(() => {
+                addImages();
+            });
+    }
+};
+
+const addImages = () => {
+    // 将选中的图像添加到totalImages，同时检查重复, 并且当数据有更新时我们将图片添加到本地数据存储中
+    let sum: number = 0;
+    selectedImages.value.forEach((image) => {
+        if (!totalImages.value.includes(image)) {
+            totalImages.value.push(image);
+            sum++;
+        }
+    });
+    if (sum > 0) {
+        localStorage.setItem("totalImages", JSON.stringify(totalImages.value));
+    }
+};
+
+function selectImage(index: number) {
+    console.log(1);
+    if (currentSelectImgae.value == index) {
+        currentSelectImgae.value = -1;
+    } else {
+        currentSelectImgae.value = index;
+    }
+}
+
+const fileInput = ref<HTMLInputElement>();
+
+const openFileInput = () => {
+    isImgListView.value = !isImgListView.value;
+};
+
+// const saveImages = () => {
+//     selectedImages.value.forEach((imageData, index) => {
+//         const blob = dataURLtoBlob(imageData);
+//         const fileName = `image_${index}.png`;
+//         saveAs(blob, fileName);
+//     });
+// };
+
+// 将数据URL转换为Blob的辅助函数
+// const dataURLtoBlob = (dataURL: string) => {
+//     const arr = dataURL.split(',');
+//     if (arr.length < 2) {
+//         throw new Error('Invalid data URL');
+//     }
+
+//     const mimeMatch = arr[0].match(/:(.*?);/);
+//     if (!mimeMatch || mimeMatch.length < 2) {
+//         throw new Error('MIME type not found in data URL');
+//     }
+
+//     const mime = mimeMatch[1];
+//     const bstr = atob(arr[1]);
+//     let n = bstr.length;
+//     const u8arr = new Uint8Array(n);
+
+//     while (n--) {
+//         u8arr[n] = bstr.charCodeAt(n);
+//     }
+
+//     return new Blob([u8arr], { type: mime });
+// };
+
+const openFile = () => {
+    fileInput.value?.click();
+};
 </script>
 
-<template >
+<template>
+    <!-- <div>
+        <input type="file" @change="handleFileUpload" accept="image/*" multiple />
+        <div v-for="(image, index) in selectedImages" :key="index">
+            <img :src="image" alt="Uploaded Image" />
+        </div>
+        <button @click="saveImages">Save Images</button>
+    </div> -->
     <div class="dialog">
         <div class="dheader">
             <div class="tilte">
-                <span style="vertical-align: middle;">
-                    <img src="/wifi.png" style="width: 18px;">
+                <span style="vertical-align: middle">
+                    <img src="/wifi.png" style="width: 18px" />
                 </span>
                 {{ currentTime }}
             </div>
             <div class="dback" @click="$props.back(dialogData)">
                 <div class="dtilte">
-                    <img src="/back.png" alt="" style="width: 25px;margin-top: 2px;">
-                    <span style="vertical-align: middle;">{{ dialogData?.name }}</span>
+                    <img src="/back.png" alt="" style="width: 25px; margin-top: 2px" />
+                    <span style="vertical-align: middle">{{ dialogData?.name }}</span>
                 </div>
             </div>
 
@@ -224,63 +379,97 @@ function cancel() {
             </div> -->
         </div>
         <div class="dcontent" ref="scrollContainer">
-            <NikkeMessage v-for="value, index in dialogData?.messageData.list" :type="value.msgType" :msgs="value.msg"
+            <NikkeMessage v-for="(value, index) in dialogData?.messageData.list" :type="value.msgType" :msgs="value.msg"
                 :nikke="value.nikke" :key="index"></NikkeMessage>
         </div>
 
-        <div style="position: relative;bottom: 0;width: 100%;">
+        <div style="position: relative; bottom: 0; width: 100%">
             <div class="dmodel">
                 <span class="dmodelView" :class="{ slectModel: currentModel == value }" v-for="value in typeList"
                     @click="selectModel(value)">{{ value }}</span>
-                <span class="dmodelView export" style="margin-left: auto;width: 80px;" @click="exportImg()">导出图片</span>
+                <span class="dmodelView export" style="margin-left: auto; width: 80px" @click="exportImg()">导出图片</span>
             </div>
             <div class="selectNikkeInfo last" v-if="isSelectView" @click="selectZ()">指</div>
             <div class="dselectnikke" v-if="isSelectView">
-                <div class="selectNikkeInfo" v-for="value, index in dialogData?.projectNikkes" :key="index"
-                    :style="{ backgroundImage: 'url(/pic/' + value.img + '.png)' }" @click="selectNikke(index)">
+                <div class="selectNikkeInfo" v-for="(value, index) in dialogData?.projectNikkes" :key="index"
+                    :style="{ backgroundImage: 'url(/pic/' + value.img + '.png)' }" @click="selectNikke(index)"></div>
+            </div>
+            <div class="imgList" v-if="isImgListView">
+                <div v-for="(value, index) in totalImages" :key="index">
+                    <div style="width: 96px;height: 96px;">
+                        
+                        <img :src="value" :class="{ isSelectImageView: currentSelectImgae === index }"
+                            style="box-sizing: border-box;width: 96px;background-color: #c6c6c6;border-radius: 5px;border: 2px #c6c6c6 solid;transition: all .1s ease-in-out;"
+                            @click="selectImage(index)" />
+                    </div>
+
+                </div>
+                <div style="
+            font-size: 64px;
+            color: black;
+            width: 96px;
+            height: 96px;
+            text-align: center;
+            border: 1px solid skyblue;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          " @click="openFile()">
+                    <span style="margin-top: -11px"> + </span>
                 </div>
             </div>
             <div class="nikkeedit">
-                <div class="selectNikkeInfo" @click="show()"
-                    :style="{ backgroundImage: 'url(/pic/' + dialogData?.projectNikkes[currentNikke].img + '.png)' }"
-                    :class="{ zhg: isZHG }">
-                    <span v-if="isZHG"
-                        style="color: rgb(92, 58, 58);line-height: 32px;text-align: center;width: 100%;display: inline-block;">指挥官</span>
+                <div class="selectNikkeInfo" @click="show()" :style="{
+                    backgroundImage:
+                        'url(/pic/' + dialogData?.projectNikkes[currentNikke].img + '.png)',
+                }" :class="{ zhg: isZHG }">
+                    <span v-if="isZHG" style="
+              color: rgb(92, 58, 58);
+              line-height: 32px;
+              text-align: center;
+              width: 100%;
+              display: inline-block;
+            ">指挥官</span>
                 </div>
-                <input type="text" class="nikkeInput dinput" v-model="inputContent" name="" id="">
+                <div class="upload" @click="openFileInput()">
+                    <img src="/image.png" />
+                </div>
+                <input id="fileInput" type="file" ref="fileInput" style="display: none" @change.stop="handleFileUpload"
+                    accept="image/*" multiple />
+                <input type="text" class="nikkeInput dinput" v-model="inputContent" @input="check()" @focus="check()"
+                    name="" id="" />
                 <div class="add newadd" @click="add()">新增</div>
-                <div class="add oldadd" @click="append()">追加</div>
+                <div class="add oldadd" @click="append()"
+                    v-if="currentModel != msgType.aside && currentModel != msgType.partition">追加</div>
             </div>
         </div>
-
     </div>
 
-    <div class="dialogImg"
-        :style="{ height: (dialogHeader == undefined ? 80 : clamp(dialogHeader.clientHeight, 70, 90)) + (dialogContent == undefined ? 50 : clamp((dialogContent.scrollHeight + 30), 700, 99999999)) + 'px !important' }"
-        ref="dialogImg" v-if="isImg">
+    <div class="dialogImg" :style="{
+        height:
+            (dialogHeader == undefined ? 80 : clamp(dialogHeader.clientHeight, 70, 90)) +
+            (dialogContent == undefined
+                ? 50
+                : clamp(dialogContent.scrollHeight + imgConfig.bottomHeigth, 700, 99999999)) +
+            'px !important',
+    }" ref="dialogImg" v-if="isImg">
         <div class="dheader himg" ref="dialogHeader">
             <div class="tilte">
-                <span style="vertical-align: middle;">
-                    <img src="/wifi.png" style="width: 18px;">
+                <span style="vertical-align: middle">
+                    <img src="/wifi.png" style="width: 18px" />
                 </span>
                 {{ currentTime }}
             </div>
             <div class="dback" @click="$props.back(dialogData)">
                 <div class="dtilte">
-                    <img src="/back.png" alt="" style="width: 25px;margin-top: 2px;">
-                    <span style="vertical-align: middle;">{{ dialogData?.name }}</span>
+                    <img src="/back.png" alt="" style="width: 25px; margin-top: 2px" />
+                    <span style="vertical-align: middle">{{ dialogData?.name }}</span>
                 </div>
             </div>
-
-            <!-- <div class="floorInfo">
-                <span>@{{ dialogData?.author }}</span>
-                <span>
-                    balabala 生成器制作@流浪鬼
-                </span>
-            </div> -->
         </div>
         <div class="dcontent toimg" ref="dialogContent">
-            <NikkeMessage v-for="value, index in dialogData?.messageData.list" :type="value.msgType" :msgs="value.msg"
+            <NikkeMessage v-for="(value, index) in dialogData?.messageData.list" :type="value.msgType" :msgs="value.msg"
                 :nikke="value.nikke" :key="index"></NikkeMessage>
         </div>
     </div>
@@ -291,53 +480,89 @@ function cancel() {
             <div class="label">
                 <div class="pcontent">
                     <span>图片名称 *</span>
-                    <input class="nikkeInput" v-model="imgData.imgName" type="text">
+                    <input class="nikkeInput" v-model="imgData.imgName" type="text" />
                 </div>
                 <div class="pcontent">
                     <span>导出图片格式</span>
-                    <NikkeRadio :checked="true" label="任务" style="flex: 1;">
-                        <div style="margin: 0; display: flex; justify-content: space-between;">
-
+                    <NikkeRadio :checked="true" label="任务" style="flex: 1">
+                        <div style="margin: 0; display: flex; justify-content: space-between">
                             <div>
                                 <input id="png" type="radio" value="0" name="projectType" v-model="imgData.exportType"
-                                    checked>
+                                    checked />
                                 <label for="png">png</label>
                             </div>
                             <div>
-                                <input id="jpeg" type="radio" value="1" name="projectType" v-model="imgData.exportType">
+                                <input id="jpeg" type="radio" value="1" name="projectType" v-model="imgData.exportType" />
                                 <label for="jpeg">jpeg</label>
                             </div>
                         </div>
-
                     </NikkeRadio>
                 </div>
                 <div class="pcontent" v-if="parseInt(imgData.exportType) == exportImgType.jpeg">
                     <span>质量</span>
-                    <input class="nikkeInput" v-model="imgData.quality" type="number" min="0" max="1">
-                    <div>
-
-                    </div>
-
+                    <input class="nikkeInput" v-model="imgData.quality" type="number" min="0" max="1" />
+                    <div></div>
                 </div>
                 <NikkeInfo v-if="parseInt(imgData.exportType) == exportImgType.jpeg">
                     jepg导出时的质量取值范围{0-1}
                 </NikkeInfo>
                 <div class="pcontent">
                     <span>缩放</span>
-                    <input style="flex: 0;width: 120px;" class="nikkeInput" type="number" maxlength="20"  min="1" max="10"
-                        v-model="imgData.scale" placeholder="your name">
+                    <input style="flex: 0; width: 120px" class="nikkeInput" type="number" maxlength="20" min="1" max="10"
+                        v-model="imgData.scale" />
                 </div>
                 <NikkeInfo>
                     图片的缩放比例，值越高画面越清晰，但大小则会变得更大 推荐范围{1-10}
                 </NikkeInfo>
-                <div style="height: 1px;background-color: #e6e7e6;"></div>
+                <div style="height: 1px; background-color: #e6e7e6"></div>
             </div>
-
         </div>
     </NikkeWindow>
 </template>
 
 <style>
+.isSelectImageView {
+    border: 5px #32b1f4 solid !important;
+}
+
+.isback {
+    position: absolute;
+    display: block;
+    width: 96px;
+    height: 96px;
+    background-color: #1a151559;
+    background-image: url("/select.png");
+    background-repeat: no-repeat;
+    background-size: 48px;
+    background-position: center center;
+    opacity: 0.8;
+}
+
+.imgList {
+    height: 230px;
+    max-height: 230px;
+    overflow-y: scroll;
+    background-color: #fcfcfc;
+    border-top: 1px solid #f1f1f1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+}
+
+.imgList>div {
+    margin: 5px;
+}
+
+.upload {
+    width: 32px;
+    height: 32px;
+}
+
+.upload>img {
+    width: 32px;
+    height: 32px;
+}
+
 .label div {
     margin: 5px 0;
 }
@@ -362,7 +587,7 @@ function cancel() {
 }
 
 .export {
-    transition: transform .1s ease-in-out !important;
+    transition: transform 0.1s ease-in-out !important;
 }
 
 .export:active {
@@ -373,10 +598,6 @@ div.toimg {
     overflow: hidden !important;
 }
 
-
-
-
-
 div.dialogImg {
     position: absolute;
     right: -999999px;
@@ -384,7 +605,6 @@ div.dialogImg {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-radius: 15px !important;
     overflow: hidden;
     min-width: 500px;
     max-width: 550px;
@@ -401,7 +621,7 @@ div.himg {
     display: flex;
     width: 100%;
     height: 40px;
-    --line-color: rgba(60, 10, 30, .02);
+    --line-color: rgba(60, 10, 30, 0.02);
     background-image: linear-gradient(90deg, var(--line-color) 3%, transparent 0),
         linear-gradient(1turn, var(--line-color) 3%, transparent 0);
     background-size: 30px 30px;
@@ -426,9 +646,9 @@ div>.slectModel {
     display: inline-block;
     width: 60px;
     line-height: 28px;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
     margin: 5px;
-    transition: all .1s ease-in-out;
+    transition: all 0.1s ease-in-out;
 }
 
 .tilte {
@@ -460,7 +680,6 @@ div>.slectModel {
     height: 50px;
 }
 
-
 .last {
     position: absolute;
     color: rgb(92, 58, 58);
@@ -469,7 +688,6 @@ div>.slectModel {
     text-align: center;
     background-color: #fda912 !important;
 }
-
 
 .selectNikkeInfo {
     display: inline-block;
@@ -481,7 +699,7 @@ div>.slectModel {
     background-repeat: no-repeat;
     background-size: 32px;
     border-radius: 32px;
-    transition: transform .06s ease-in-out;
+    transition: transform 0.06s ease-in-out;
 }
 
 .dselectnikke>.selectNikkeInfo:first-child {
@@ -499,7 +717,7 @@ div>.slectModel {
     text-align: center;
     height: 80%;
     margin: 0 5px;
-    transition: all .1s ease-in;
+    transition: all 0.1s ease-in;
 }
 
 .newadd {
@@ -522,8 +740,6 @@ div>.slectModel {
     background-color: #67caff;
 }
 
-
-
 .add:active {
     transform: scale(0.9);
 }
@@ -543,7 +759,7 @@ div>.slectModel {
     flex: 1;
     padding-bottom: 10px;
     align-items: center;
-    transition: all .1s ease-in-out;
+    transition: all 0.1s ease-in-out;
 }
 
 .dtilte>img {
@@ -562,7 +778,7 @@ div>.slectModel {
     height: 100%;
     width: 100%;
     z-index: 99999;
-    animation: dposInOut .25s ease-in-out;
+    animation: dposInOut 0.25s ease-in-out;
 }
 
 @keyframes dposInOut {
@@ -604,9 +820,9 @@ div>.slectModel {
     box-sizing: border-box;
     z-index: -1;
     width: 100%;
-    transition: all .1s ease-in-out;
+    transition: all 0.1s ease-in-out;
     color: black;
-    --line-color: rgba(60, 10, 30, .02);
+    --line-color: rgba(60, 10, 30, 0.02);
     background-image: linear-gradient(90deg, var(--line-color) 3%, transparent 0),
         linear-gradient(1turn, var(--line-color) 3%, transparent 0);
     background-size: 30px 30px;
@@ -637,9 +853,8 @@ div::-webkit-scrollbar {
     display: flex;
     flex-direction: column;
     height: 12%;
-    min-height:110px;
-    box-shadow:
-        0px 0px 10px rgba(0, 0, 0, 0.4);
+    min-height: 110px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
     background: linear-gradient(transparent 50%, #fda912 50%),
         linear-gradient(90deg, transparent 50%, #f8be53bb 50%);
     background-size: 5px 5px;

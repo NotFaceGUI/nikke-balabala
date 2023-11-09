@@ -1,5 +1,5 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light dark;
@@ -127,27 +127,29 @@ input[type="radio"]:checked+label {
   outline-color: #32b1f4;
 }
 
-@font-face {
+/* @font-face {
   font-family: 'webfont';
   font-display: swap;
   src: url('./assets/fonts/webfont.eot');
-  /* IE9 */
   src: url('./assets/fonts/webfont.eot?#iefix') format('embedded-opentype'),
-    /* IE6-IE8 */
     url('./assets/fonts/webfont.woff2') format('woff2'),
     url('./assets/fonts/webfont.woff') format('woff'),
-    /* chrome、firefox */
     url('./assets/fonts/webfont.ttf') format('truetype'),
-    /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
     url('./assets/fonts/webfont.svg#webfont') format('svg');
-  /* iOS 4.1- */
+} */
+
+@font-face {
+
+  font-family: "sourcehansans";
+  /* 这个名字可以自己定义 */
+  src:
+    url("./assets/fonts/SourceHanSansSC-Bold-Min.ttf");
+  /* Legacy iOS */
+  font-weight: bold;
+  font-style: normal;
 }
 
+
 * {
-  /* font-family: "webfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
-  font-family: "Noto Sans SC" !important;
+  font-family: "sourcehansans";
 }
