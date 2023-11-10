@@ -143,7 +143,7 @@ input[type="radio"]:checked+label {
   font-family: "sourcehansans";
   /* 这个名字可以自己定义 */
   src:
-    url("./assets/fonts/SourceHanSansSC-Bold-Min.ttf");
+    url("./assets/fonts/SourceHanSansSC-Bold.ttf");
   /* Legacy iOS */
   font-weight: bold;
   font-style: normal;
