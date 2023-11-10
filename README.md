@@ -2,7 +2,7 @@
 
 仿照游戏内巴拉巴拉聊天框开发的一款对话生成器，方便玩家进行剧情上的创作，包含游戏内大部分的妮姬和NPC。
 
-- [在线地址](notfacegui.github.io)
+- [在线地址](https://notfacegui.github.io/)
 
 ## 使用教程
 
