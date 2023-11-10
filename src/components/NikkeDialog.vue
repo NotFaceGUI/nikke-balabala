@@ -56,7 +56,7 @@ function append() {
         // 如果想最加图片则必须使得msgType为追加图片
         dialogData.value.messageData.list[
             dialogData.value.messageData.list.length - 1
-        ].msg.push("[url][base64:] [" + totalImages.value[currentSelectImgae.value] + "]");
+        ].msg.push("[url][base64:] [" + currentSelectImgae.value + "]");
     } else if (dialogData.value.messageData.list[dialogData.value.messageData.list.length - 1].msgType == msgType.img) {
         let model: msgType = msgType.nikke;
         // 如果最后一项是指挥官则修改为指挥官
@@ -103,7 +103,7 @@ function add() {
     // 如果消息类型是图片 则进行图片文本
     if (currentModel.value == msgType.img && currentSelectImgae.value != -1) {
         info.msgType = msgType.img;
-        info.msg.push("[url][base64:] [" + totalImages.value[currentSelectImgae.value] + "]");
+        info.msg.push("[url][base64:] [" + currentSelectImgae.value + "]");
     } else {
         info.msg.push(inputContent.value);
     }
@@ -379,7 +379,7 @@ const openFile = () => {
             </div> -->
         </div>
         <div class="dcontent" ref="scrollContainer">
-            <NikkeMessage v-for="(value, index) in dialogData?.messageData.list" :type="value.msgType" :msgs="value.msg"
+            <NikkeMessage :current-data="totalImages" v-for="(value, index) in dialogData?.messageData.list" :type="value.msgType" :msgs="value.msg"
                 :nikke="value.nikke" :key="index"></NikkeMessage>
         </div>
 
@@ -397,7 +397,6 @@ const openFile = () => {
             <div class="imgList" v-if="isImgListView">
                 <div v-for="(value, index) in totalImages" :key="index">
                     <div style="width: 96px;height: 96px;">
-                        
                         <img :src="value" :class="{ isSelectImageView: currentSelectImgae === index }"
                             style="box-sizing: border-box;width: 96px;background-color: #c6c6c6;border-radius: 5px;border: 2px #c6c6c6 solid;transition: all .1s ease-in-out;"
                             @click="selectImage(index)" />
@@ -469,7 +468,7 @@ const openFile = () => {
             </div>
         </div>
         <div class="dcontent toimg" ref="dialogContent">
-            <NikkeMessage v-for="(value, index) in dialogData?.messageData.list" :type="value.msgType" :msgs="value.msg"
+            <NikkeMessage :current-data="totalImages" v-for="(value, index) in dialogData?.messageData.list" :type="value.msgType" :msgs="value.msg"
                 :nikke="value.nikke" :key="index"></NikkeMessage>
         </div>
     </div>

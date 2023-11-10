@@ -153,3 +153,14 @@ input[type="radio"]:checked+label {
 * {
   font-family: "sourcehansans";
 }
+
+.contentBox {
+  overflow: hidden;
+}
+
+.pcontent > span {
+  font-size: 12px;
+  min-width:96px;  /*限制宽度*/
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}

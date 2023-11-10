@@ -5,6 +5,7 @@ defineProps<{
     msgs: Array<string>
     nikke: INikkeData
     type: msgType
+    currentData: string[]
 }>()
 
 
@@ -26,11 +27,9 @@ function parseImg(content: string) {
 
 function parseImgToDataURL(content: string) {
     let value = content.split(" ");
-    let path: string = value[1].substring(1, value[1].length - 1);
-    return path;
+    let index: string = value[1].substring(1, value[1].length - 1);
+    return parseInt(index);
 }
-
-
 
 </script>
 
@@ -42,7 +41,7 @@ function parseImgToDataURL(content: string) {
             <div class="textbox" v-for="value, index in msgs" :key="index">
                 <span class="text" v-if="!parseImg(value)">{{ value }}</span>
                 <span v-else class="text mzhg toimg">
-                    <img :src="parseImgToDataURL(value)" class="imgType" />
+                    <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
                 </span>
                 <img src="/g.png" class="nikkeImg" />
             </div>
@@ -53,7 +52,7 @@ function parseImgToDataURL(content: string) {
         <div class="ztextbox" v-for="value, index in msgs" :key="index">
             <span v-if="!parseImg(value)" class="text mzhg">{{ value }}</span>
             <span v-else class="text mzhg toimg">
-                <img :src="parseImgToDataURL(value)" class="imgType" />
+                <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
             </span>
             <img src="/rg.png" class="znikkeImg" />
         </div>
@@ -61,7 +60,7 @@ function parseImgToDataURL(content: string) {
     <div class="zmsg" v-else-if="type == msgType.img && nikke.img == '指挥官'">
         <div class="ztextbox" v-for="value,index in msgs" :key="index">
             <span class="text mzhg toimg">
-                <img :src="parseImgToDataURL(value)" class="imgType" />
+                <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
             </span>
             <img src="/rg.png" class="znikkeImg" />
         </div>
@@ -72,7 +71,7 @@ function parseImgToDataURL(content: string) {
             <div class="name">{{ nikke.name }}</div>
             <div class="textbox" v-for="value,index in msgs" :key="index">
                 <span class="text toimg">
-                    <img :src="parseImgToDataURL(value)" class="imgType" />
+                    <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
 
                 </span>
                 <img src="/g.png" class="nikkeImg" />

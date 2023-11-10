@@ -20,7 +20,7 @@ defineProps<{
         <div class="wcontent">
             <span class="title">{{ title }}</span>
             <img src="/gg_top.png" class="windowImg" alt="" style="width: 100%;">
-        </div>``
+        </div>
         <div class="contentBox">
             <slot></slot>
         </div>
@@ -80,6 +80,7 @@ defineProps<{
     z-index: 9999999999;
     max-width: 450px;
     width: 90%;
+    min-width: 380px;
     height: 70%;
     background-color: #f1f1f1;
     left: 0;

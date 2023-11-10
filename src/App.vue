@@ -509,12 +509,11 @@ onBeforeUnmount(() => {
   }
 
   99% {
-    opacity: 1;
+    transform: translateY(-100vh) scaleY(0.4);
   }
 
   100% {
-    transform: translateY(-100vh) scaleY(0.4);
-    opacity: 0;
+    transform: translateY(-99999px) scaleY(0.4);
   }
 }
 
