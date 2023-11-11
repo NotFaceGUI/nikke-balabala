@@ -4,6 +4,10 @@
 
 - [在线地址](https://notfacegui.github.io/)
 
+## 效果预览
+
+![]("docs/images/view.png")
+
 ## 待开发项目
 
 - [x] 仿 nikke UI界面开发
