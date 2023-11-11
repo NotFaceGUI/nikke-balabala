@@ -6,7 +6,7 @@
 
 ## 效果预览
 
-![]("docs/images/view.png")
+![](docs/images/view.png)
 
 ## 待开发项目
 
