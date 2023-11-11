@@ -10,7 +10,7 @@ import {
 import NikkeMessage from "./NikkeMessage.vue";
 import domtoimage from "dom-to-image-more";
 import { ref, onMounted, nextTick, reactive } from "vue";
-import { saveAs } from "file-saver";
+// import { saveAs } from "file-saver";
 import NikkeWindow from "./NikkeWindow.vue";
 import NikkeInfo from "./NikkeInfo.vue";
 
@@ -135,8 +135,19 @@ function exprotRealToImg() {
                                 transformOrigin: "top left",
                             },
                         })
-                        .then(function (blob: string | Blob) {
-                            saveAs(blob, imgData.imgName + ".png");
+                        .then(function (blob: Blob) {
+                            // saveAs(blob, imgData.imgName + ".png");
+
+                            const downloadButton = document.createElement('a');
+                            downloadButton.href = window.URL.createObjectURL(blob);
+                            downloadButton.download = imgData.imgName + ".png";
+                            downloadButton.style.display = 'none';
+
+                            // Trigger the download button click
+                            document.body.appendChild(downloadButton);
+                            downloadButton.click();
+                            document.body.removeChild(downloadButton);
+
                             if (dialogImg.value != undefined) {
                                 dialogImg.value.style.transform = `scale(${1})`;
                             }
@@ -162,7 +173,18 @@ function exprotRealToImg() {
                             },
                         })
                         .then(function (dataUrl: string) {
-                            saveAs(dataUrl, imgData.imgName + ".jpeg");
+                            // saveAs(dataUrl, imgData.imgName + ".jpeg");
+
+                            const downloadButton = document.createElement('a');
+                            downloadButton.href = dataUrl;
+                            downloadButton.download = imgData.imgName + ".jpeg";
+                            downloadButton.style.display = 'none';
+
+                            // Trigger the download button click
+                            document.body.appendChild(downloadButton);
+                            downloadButton.click();
+                            document.body.removeChild(downloadButton);
+
                             if (dialogImg.value != undefined) {
                                 dialogImg.value.style.transform = `scale(${1})`;
                             }
