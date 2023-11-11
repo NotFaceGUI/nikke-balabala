@@ -10,7 +10,7 @@ import {
 import NikkeMessage from "./NikkeMessage.vue";
 import domtoimage from "dom-to-image-more";
 import { ref, onMounted, nextTick, reactive } from "vue";
-// import { saveAs } from "file-saver";
+import { saveAs } from "file-saver";
 import NikkeWindow from "./NikkeWindow.vue";
 import NikkeInfo from "./NikkeInfo.vue";
 
@@ -25,6 +25,14 @@ let imgConfig: ImgConfig = reactive({
     maxWidth: 550,
     bottomHeigth: 15 // 最下面对话与图片最底部的距离 用于方便查看
 });
+
+
+enum exportImgState {
+    pause,
+    run
+}
+
+let currentExportImgState = ref<exportImgState>(exportImgState.pause);
 
 let currentModel = ref(msgType.nikke);
 
@@ -124,10 +132,11 @@ var imgData = reactive({
 function exprotRealToImg() {
     switch (imgData.exportType) {
         case exportImgType.png.toString():
+            currentExportImgState.value = exportImgState.run;
             nextTick(() => {
                 if (dialogImg.value != undefined) {
                     domtoimage
-                        .toBlob(dialogImg.value, {
+                        .toPng(dialogImg.value, {
                             width: dialogImg.value.clientWidth * imgData.scale,
                             height: dialogImg.value.clientHeight * imgData.scale,
                             style: {
@@ -135,31 +144,30 @@ function exprotRealToImg() {
                                 transformOrigin: "top left",
                             },
                         })
-                        .then(function (blob: Blob) {
-                            // saveAs(blob, imgData.imgName + ".png");
+                        .then(function (dataUrl: string) {
+                            saveAs(dataUrl, imgData.imgName + ".png");
 
-                            const downloadButton = document.createElement('a');
-                            downloadButton.href = window.URL.createObjectURL(blob);
-                            downloadButton.download = imgData.imgName + ".png";
-                            downloadButton.style.display = 'none';
-
-                            // Trigger the download button click
-                            document.body.appendChild(downloadButton);
-                            downloadButton.click();
-                            document.body.removeChild(downloadButton);
+                            var img = new Image();
+                            img.src = dataUrl;
+                            preview.value?.appendChild(img);
 
                             if (dialogImg.value != undefined) {
                                 dialogImg.value.style.transform = `scale(${1})`;
                             }
-                            isImg.value = false;
+                            currentExportImgState.value = exportImgState.pause;
+
+                            // isImg.value = false;
                         })
                         .catch(function (error: any) {
+                            currentExportImgState.value = exportImgState.pause;
+
                             console.error("oops, something went wrong!", error);
                         });
                 }
             });
             break;
         case exportImgType.jpeg.toString():
+            currentExportImgState.value = exportImgState.run;
             nextTick(() => {
                 if (dialogImg.value != undefined) {
                     domtoimage
@@ -173,24 +181,20 @@ function exprotRealToImg() {
                             },
                         })
                         .then(function (dataUrl: string) {
-                            // saveAs(dataUrl, imgData.imgName + ".jpeg");
+                            saveAs(dataUrl, imgData.imgName + ".jpeg");
 
-                            const downloadButton = document.createElement('a');
-                            downloadButton.href = dataUrl;
-                            downloadButton.download = imgData.imgName + ".jpeg";
-                            downloadButton.style.display = 'none';
-
-                            // Trigger the download button click
-                            document.body.appendChild(downloadButton);
-                            downloadButton.click();
-                            document.body.removeChild(downloadButton);
+                            var img = new Image();
+                            img.src = dataUrl;
+                            preview.value?.appendChild(img);
 
                             if (dialogImg.value != undefined) {
                                 dialogImg.value.style.transform = `scale(${1})`;
                             }
-                            isImg.value = false;
+                            currentExportImgState.value = exportImgState.pause;
+                            // isImg.value = false;
                         })
                         .catch(function (error: any) {
+                            currentExportImgState.value = exportImgState.pause;
                             console.error("oops, something went wrong!", error);
                         });
                 }
@@ -202,19 +206,15 @@ function exprotRealToImg() {
 }
 
 function exportImg() {
-    //   if (dialogImg.value != undefined) {
-    //     console.log("test");
-    //     html2canvas(document.body).then(function (canvas) {
-    //       document.body.appendChild(canvas);
-    //     });
-    //   }
     isImg.value = true;
+    // 添加预览图
 }
 
 const dialogImg = ref<HTMLElement | null>(null);
 
 const dialogHeader = ref<HTMLElement | null>(null);
 const dialogContent = ref<HTMLElement | null>(null);
+const preview = ref<HTMLElement | null>(null);
 
 
 
@@ -401,8 +401,8 @@ const openFile = () => {
             </div> -->
         </div>
         <div class="dcontent" ref="scrollContainer">
-            <NikkeMessage :current-data="totalImages" v-for="(value, index) in dialogData?.messageData.list" :type="value.msgType" :msgs="value.msg"
-                :nikke="value.nikke" :key="index"></NikkeMessage>
+            <NikkeMessage :current-data="totalImages" v-for="(value, index) in dialogData?.messageData.list"
+                :type="value.msgType" :msgs="value.msg" :nikke="value.nikke" :key="index"></NikkeMessage>
         </div>
 
         <div style="position: relative; bottom: 0; width: 100%">
@@ -490,12 +490,12 @@ const openFile = () => {
             </div>
         </div>
         <div class="dcontent toimg" ref="dialogContent">
-            <NikkeMessage :current-data="totalImages" v-for="(value, index) in dialogData?.messageData.list" :type="value.msgType" :msgs="value.msg"
-                :nikke="value.nikke" :key="index"></NikkeMessage>
+            <NikkeMessage :current-data="totalImages" v-for="(value, index) in dialogData?.messageData.list"
+                :type="value.msgType" :msgs="value.msg" :nikke="value.nikke" :key="index"></NikkeMessage>
         </div>
     </div>
 
-    <NikkeWindow id="createProject" title="导出图片" :confirm="true" :show="isImg" v-if="isImg" button-cancel="取消"
+    <NikkeWindow id="createProject" title="导出图片" :confirm="true" :show="isImg" v-if="isImg" button-cancel="关闭"
         :cancel="cancel" :success="exprotRealToImg" button-success="导出">
         <div class="project">
             <div class="label">
@@ -536,12 +536,153 @@ const openFile = () => {
                     图片的缩放比例，值越高画面越清晰，但大小则会变得更大 推荐范围{1-10}
                 </NikkeInfo>
                 <div style="height: 1px; background-color: #e6e7e6"></div>
+                <div style="text-align: center;">预览</div>
+                <NikkeInfo>
+                    图片预览，如果无法在你的浏览器导出则保存预览图
+                </NikkeInfo>
+                <div ref="preview" class="preview">
+                </div>
+                <div class="loading"  v-if="currentExportImgState == exportImgState.run">Loading&#8230;</div>
+
             </div>
+
         </div>
     </NikkeWindow>
 </template>
 
 <style>
+.loading {
+    position: fixed;
+    height: 2em;
+    width: 2em;
+    overflow: visible;
+    margin: auto !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.loading:before {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.loading:not(:required) {
+    /* hide "loading..." text */
+    font: 0/0 a;
+    color: transparent;
+    text-shadow: none;
+    background-color: transparent;
+    border: 0;
+}
+
+.loading:not(:required):after {
+    content: '';
+    display: block;
+    font-size: 10px;
+    width: 1em;
+    height: 1em;
+    margin-top: -0.5em;
+    -webkit-animation: spinner 1500ms infinite linear;
+    -moz-animation: spinner 1500ms infinite linear;
+    -ms-animation: spinner 1500ms infinite linear;
+    -o-animation: spinner 1500ms infinite linear;
+    animation: spinner 1500ms infinite linear;
+    border-radius: 0.5em;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.5) -1.5em 0 0 0, rgba(0, 0, 0, 0.5) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
+    box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) -1.5em 0 0 0, rgba(0, 0, 0, 0.75) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
+}
+
+/* Animation */
+
+@-webkit-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-moz-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-o-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+.contentBox {
+    overflow-y: scroll;
+
+}
+
+.preview>img {
+    width: 100%;
+}
+
 .isSelectImageView {
     border: 5px #32b1f4 solid !important;
 }
