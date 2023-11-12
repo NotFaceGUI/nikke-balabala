@@ -6,6 +6,13 @@
 
 ## 效果预览
 
+### 界面
+
+![view](docs/images/maiin.png)
+![view](docs/images/create.png)
+
+### 导出预览
+
 ![view](docs/images/view.png)
 
 ## 待开发项目
