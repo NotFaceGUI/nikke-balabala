@@ -58,7 +58,7 @@ function parseImgToDataURL(content: string) {
         </div>
     </div>
     <div class="zmsg" v-else-if="type == msgType.img && nikke.img == '指挥官'">
-        <div class="ztextbox" v-for="value,index in msgs" :key="index">
+        <div class="ztextbox" v-for="value, index in msgs" :key="index">
             <span class="text mzhg toimg">
                 <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
             </span>
@@ -69,7 +69,7 @@ function parseImgToDataURL(content: string) {
         <div class="head" :style="{ backgroundImage: 'url(/pic/' + nikke.img + '.png)' }"></div>
         <div class="textgroup">
             <div class="name">{{ nikke.name }}</div>
-            <div class="textbox" v-for="value,index in msgs" :key="index">
+            <div class="textbox" v-for="value, index in msgs" :key="index">
                 <span class="text toimg">
                     <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
 
@@ -78,9 +78,43 @@ function parseImgToDataURL(content: string) {
             </div>
         </div>
     </div>
+    <div class="zmsg ntext" style="color: rgb(59, 50, 50);" v-else-if="type == msgType.aside">
+        <span >{{ msgs[0] === "" ?  "这里是旁白请讲" : msgs[0] }}</span>
+    </div>
+    <div class="zmsg ntext" v-else-if="type == msgType.partition">
+        <div class="partition">
+            <div class="line"></div>
+            <span class="partitionContent">{{ msgs[0] === "" ?  "END" : msgs[0]}}</span>
+            <div class="line"></div>
+        </div>
+    </div>
 </template>
 
 <style scoped>
+.ntext {
+    text-align: center;
+    margin: 10px 5px;
+    word-break: break-all;
+}
+
+.line {
+    flex: 1;
+    height: 2px;
+    background-color: #c7c7c7
+}
+
+.partition {
+    display: flex;
+    align-items: center;
+}
+
+.partitionContent {
+    display: inline-block;
+    margin: 0 5px;
+    font-size: 14px;
+    color: #5f5f5f;
+}
+
 .imgType {
     max-width: 200px;
     padding: 5px 5px 0 5px;

@@ -53,7 +53,7 @@ const scrollToBottom = () => {
 };
 
 function check() {
-    if (inputContent.value != "") {
+    if (inputContent.value != "" && currentModel.value != msgType.aside && currentModel.value != msgType.partition) {
         currentModel.value = msgType.nikke;
     }
 }
@@ -211,11 +211,13 @@ function exportImg() {
 }
 
 const dialogImg = ref<HTMLElement | null>(null);
-
 const dialogHeader = ref<HTMLElement | null>(null);
 const dialogContent = ref<HTMLElement | null>(null);
 const preview = ref<HTMLElement | null>(null);
+let totalImages = ref<string[]>([]); // 存储到 local 中
 
+const inputRef = ref<HTMLInputElement>();
+const inputPlaceholder = ref("请输入对话内容");
 
 
 function show() {
@@ -224,13 +226,24 @@ function show() {
 }
 
 function selectModel(type: msgType) {
+    inputPlaceholder.value = "请输入对话内容";
+
     if (type == msgType.img) {
         inputContent.value = "";
+        inputPlaceholder.value = "";
     }
+
+    if (type == msgType.partition) {
+        inputPlaceholder.value = "请输入分割内容，默认为END";
+    }
+
+    if (type == msgType.aside) {
+        inputPlaceholder.value = "请输入旁白内容"    
+    }
+
     currentModel.value = type;
 }
 
-let totalImages = ref<string[]>([]); // 存储到 local 中
 
 onMounted(() => {
     scrollToBottom();
@@ -248,8 +261,8 @@ var currentNikke = ref(0);
 var isSelectView = ref(false);
 var isZHG = ref(false);
 let isImgListView = ref(false);
-
 var inputContent = ref("");
+
 
 function selectNikke(index: number) {
     currentNikke.value = index;
@@ -458,8 +471,8 @@ const openFile = () => {
                 </div>
                 <input id="fileInput" type="file" ref="fileInput" style="display: none" @change.stop="handleFileUpload"
                     accept="image/*" multiple />
-                <input type="text" class="nikkeInput dinput" v-model="inputContent" @input="check()" @focus="check()"
-                    name="" id="" />
+                <input ref="inputRef" type="text" class="nikkeInput dinput" v-model="inputContent" @input="check()"
+                    @focus="check()" :placeholder="inputPlaceholder" />
                 <div class="add newadd" @click="add()">新增</div>
                 <div class="add oldadd" @click="append()"
                     v-if="currentModel != msgType.aside && currentModel != msgType.partition">追加</div>
@@ -542,10 +555,8 @@ const openFile = () => {
                 </NikkeInfo>
                 <div ref="preview" class="preview">
                 </div>
-                <div class="loading"  v-if="currentExportImgState == exportImgState.run">Loading&#8230;</div>
-
+                <div class="loading" v-if="currentExportImgState == exportImgState.run">Loading&#8230;</div>
             </div>
-
         </div>
     </NikkeWindow>
 </template>
