@@ -26,7 +26,6 @@ let imgConfig: ImgConfig = reactive({
     bottomHeigth: 15 // 最下面对话与图片最底部的距离 用于方便查看
 });
 
-
 enum exportImgState {
     pause,
     run
@@ -53,6 +52,11 @@ const scrollToBottom = () => {
 };
 
 function check() {
+
+    // 如果当前模式是图片
+    if (currentSelectImgae.value != -1) {
+        return;
+    }
     if (inputContent.value != "" && currentModel.value != msgType.aside && currentModel.value != msgType.partition) {
         currentModel.value = msgType.nikke;
     }
@@ -238,7 +242,7 @@ function selectModel(type: msgType) {
     }
 
     if (type == msgType.aside) {
-        inputPlaceholder.value = "请输入旁白内容"    
+        inputPlaceholder.value = "请输入旁白内容"
     }
 
     currentModel.value = type;
@@ -414,8 +418,9 @@ const openFile = () => {
             </div> -->
         </div>
         <div class="dcontent" ref="scrollContainer">
-            <NikkeMessage :current-data="totalImages" v-for="(value, index) in dialogData?.messageData.list"
-                :type="value.msgType" :msgs="value.msg" :nikke="value.nikke" :key="index"></NikkeMessage>
+            <NikkeMessage :is-edit="true" :dialog-data="dialogData" :current-data="totalImages"
+                v-for="(value, index) in dialogData?.messageData.list" :type="value.msgType" :msgs="value.msg"
+                :nikke="value.nikke" :index="index" :key="index"></NikkeMessage>
         </div>
 
         <div style="position: relative; bottom: 0; width: 100%">
@@ -424,6 +429,7 @@ const openFile = () => {
                     @click="selectModel(value)">{{ value }}</span>
                 <span class="dmodelView export" style="margin-left: auto; width: 80px" @click="exportImg()">导出图片</span>
             </div>
+            <!-- <div class="editBar"></div> -->
             <div class="selectNikkeInfo last" v-if="isSelectView" @click="selectZ()">指</div>
             <div class="dselectnikke" v-if="isSelectView">
                 <div class="selectNikkeInfo" v-for="(value, index) in dialogData?.projectNikkes" :key="index"
@@ -472,7 +478,7 @@ const openFile = () => {
                 <input id="fileInput" type="file" ref="fileInput" style="display: none" @change.stop="handleFileUpload"
                     accept="image/*" multiple />
                 <input ref="inputRef" type="text" class="nikkeInput dinput" v-model="inputContent" @input="check()"
-                    @focus="check()" :placeholder="inputPlaceholder" />
+                    @focus="check()" @keyup.enter="add()" @keydown.tab="append()" :placeholder="inputPlaceholder" />
                 <div class="add newadd" @click="add()">新增</div>
                 <div class="add oldadd" @click="append()"
                     v-if="currentModel != msgType.aside && currentModel != msgType.partition">追加</div>
@@ -503,8 +509,9 @@ const openFile = () => {
             </div>
         </div>
         <div class="dcontent toimg" ref="dialogContent">
-            <NikkeMessage :current-data="totalImages" v-for="(value, index) in dialogData?.messageData.list"
-                :type="value.msgType" :msgs="value.msg" :nikke="value.nikke" :key="index"></NikkeMessage>
+            <NikkeMessage :is-edit="false" :dialog-data="dialogData" :current-data="totalImages"
+                v-for="(value, index) in dialogData?.messageData.list" :type="value.msgType" :msgs="value.msg"
+                :nikke="value.nikke" :index="index" :key="index"></NikkeMessage>
         </div>
     </div>
 
@@ -562,6 +569,15 @@ const openFile = () => {
 </template>
 
 <style>
+
+
+.editBar {
+    width: 100%;
+    height: 40px;
+    background-color: rgb(255, 243, 243);
+
+}
+
 .loading {
     position: fixed;
     height: 2em;

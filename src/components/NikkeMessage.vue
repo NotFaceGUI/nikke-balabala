@@ -1,16 +1,26 @@
 <script setup lang="ts">
-import { INikkeData, msgType } from '../script/project';
+import { ref } from 'vue';
+import { INikkeData, Project, msgType } from '../script/project';
+import NikkeMessageEdit from './NikkeMessageEdit.vue';
 
-defineProps<{
+const props = defineProps<{
     msgs: Array<string>
     nikke: INikkeData
     type: msgType
-    currentData: string[]
+    index: number,
+    currentData: string[],
+    dialogData: Project,
+
+    isEdit: boolean,
 }>()
 
+const dialogData = ref(props.dialogData);
+const spaceRefs = ref([]);
+let editContent = ref("");
+
+let editInputs = ref<Array<number>>([])
 
 function parseImg(content: string) {
-
     let value = content.split(" ");
 
     if (value.length = 2) {
@@ -25,10 +35,46 @@ function parseImg(content: string) {
     return false;
 }
 
+function deleteMsg(index: number) {
+    if (props.msgs.length == 1) {
+        props.msgs.splice(index, 1);
+        dialogData.value.messageData.list.splice(props.index, 1);
+    } else {
+        props.msgs.splice(index, 1);
+    }
+    console.log("删除");
+}
+
+function addMsg(index: number, isUpOrDown: number) {
+    if (isUpOrDown == 0) {
+        props.msgs.splice(index, 0, "插入的数据")
+    } else if (isUpOrDown == 1) {
+        props.msgs.splice(index + 1, 0, "插入的数据")
+    }
+}
+
+function editMsg(index: number) {
+
+    if (!editInputs.value.indexOf(index)) {
+        lostfocus(index);
+    } else {
+        editInputs.value[0] = index;
+        editContent.value = props.msgs[index];
+    }
+
+    console.log(index);
+}
+
 function parseImgToDataURL(content: string) {
     let value = content.split(" ");
     let index: string = value[1].substring(1, value[1].length - 1);
     return parseInt(index);
+}
+
+function lostfocus(index: number) {
+    editInputs.value.length = 0;
+    props.msgs[index] = editContent.value;
+    console.log("失去焦点");
 }
 
 </script>
@@ -39,22 +85,38 @@ function parseImgToDataURL(content: string) {
         <div class="textgroup">
             <div class="name">{{ nikke.name }}</div>
             <div class="textbox" v-for="value, index in msgs" :key="index">
-                <span class="text" v-if="!parseImg(value)">{{ value }}</span>
+                <span class="text" v-if="!parseImg(value)">
+                    <input ref="spaceRefs" v-if="!editInputs.indexOf(index)" v-model="editContent" type="text"
+                        @blur="lostfocus(index)" class="nikkeInput msgInput">
+                    <div v-else>
+                        {{ value }}
+                    </div>
+                </span>
+
                 <span v-else class="text mzhg toimg">
                     <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
                 </span>
                 <img src="/g.png" class="nikkeImg" />
+                <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg"></NikkeMessageEdit>
             </div>
         </div>
     </div>
 
     <div class="zmsg" v-else-if="type == msgType.commander">
         <div class="ztextbox" v-for="value, index in msgs" :key="index">
-            <span v-if="!parseImg(value)" class="text mzhg">{{ value }}</span>
+            <span v-if="!parseImg(value)" class="text mzhg">
+                <input ref="spaceRefs" v-if="!editInputs.indexOf(index)" v-model="editContent" type="text"
+                    @blur="lostfocus(index)" class="nikkeInput msgInput">
+                <div v-else>
+                    {{ value }}
+                </div>
+            </span>
             <span v-else class="text mzhg toimg">
                 <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
             </span>
             <img src="/rg.png" class="znikkeImg" />
+            <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg"></NikkeMessageEdit>
+
         </div>
     </div>
     <div class="zmsg" v-else-if="type == msgType.img && nikke.img == '指挥官'">
@@ -63,6 +125,8 @@ function parseImgToDataURL(content: string) {
                 <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
             </span>
             <img src="/rg.png" class="znikkeImg" />
+            <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg"></NikkeMessageEdit>
+
         </div>
     </div>
     <div class="msg" v-else-if="type == msgType.img">
@@ -75,22 +139,29 @@ function parseImgToDataURL(content: string) {
 
                 </span>
                 <img src="/g.png" class="nikkeImg" />
+                <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg"></NikkeMessageEdit>
             </div>
         </div>
     </div>
     <div class="zmsg ntext" style="color: rgb(59, 50, 50);" v-else-if="type == msgType.aside">
-        <span >{{ msgs[0] === "" ?  "这里是旁白请讲" : msgs[0] }}</span>
+        <span style="margin: 3px 0;">{{ msgs[0] === "" ? "这里是旁白请讲" : msgs[0] }}</span>
     </div>
     <div class="zmsg ntext" v-else-if="type == msgType.partition">
         <div class="partition">
             <div class="line"></div>
-            <span class="partitionContent">{{ msgs[0] === "" ?  "END" : msgs[0]}}</span>
+            <span class="partitionContent">{{ msgs[0] === "" ? "END" : msgs[0] }}</span>
             <div class="line"></div>
         </div>
     </div>
 </template>
 
 <style scoped>
+.msgInput {
+    border: 0px solid transparent !important;
+    height: 100%;
+    width: 100%;
+}
+
 .ntext {
     text-align: center;
     margin: 10px 5px;
@@ -106,6 +177,8 @@ function parseImgToDataURL(content: string) {
 .partition {
     display: flex;
     align-items: center;
+    margin-top: 30px;
+    margin-bottom: 40px;
 }
 
 .partitionContent {
@@ -144,12 +217,13 @@ function parseImgToDataURL(content: string) {
     display: flex;
     flex-direction: column;
     justify-content: right;
-    margin-bottom: 0px;
+    margin-bottom: 10px;
     margin-right: 10px;
 }
 
 .ztextbox {
     display: flex;
+    flex-direction: row-reverse;
     align-items: center;
     justify-content: right;
     position: relative;

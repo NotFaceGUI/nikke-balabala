@@ -191,7 +191,11 @@ onBeforeUnmount(() => {
   clearTimer();
 })
 
+function updateCancel() {
+  isUpdate.value = false;
+}
 
+let isUpdate = ref(true);
 
 </script>
 
@@ -203,6 +207,40 @@ onBeforeUnmount(() => {
   </div> -->
   <div style="height: 100%;" v-if="currentProject !== -1">
     <NikkeDialog :current-time="currentTime" :back="back" :dialog-data="filteredData[currentProject]"></NikkeDialog>
+  </div>
+  <div style="height: 100%;" v-if="isUpdate">
+    <NikkeWindow title="巴拉巴拉生成器 v1.1 更新日志" :cancel="updateCancel" :confirm="false">
+      <div class="updateContent">
+        <h3 style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">巴拉巴拉 1.1 发布，感谢各位的支持</h3>
+        <span>1. 退化字体大小 1M → 8M。</span>
+        <NikkeInfo>
+          <span style="font-size: 14px;">（如有系统字体请等待站内字体加载完毕后进行生成操作）</span>
+        </NikkeInfo>
+        <span>2. 添加消息编辑：</span>
+        <p class="updateText">
+          新增上添加、编辑、删除，下添加的编辑功能。具体使用教程请关注<a href="https://space.bilibili.com/215262853/">B站凤雏庙</a>的教程视频。
+        </p>
+        <span>3. 优化文本编辑逻辑：</span>
+        <p class="updateText">
+          1. 在输入框内按 <a href="#">enter</a> 可让文本直接新增
+        </p>
+        <p class="updateText">
+          2. 在输入框内按 <a href="#">tab</a> 可让文本直接新增
+        </p>
+        <span>4. 详细项：</span>
+        <p class="updateText">
+          <div>1.添加了导出图片的具体设置</div>
+          <div>2.新增png和jepg两种图片格式</div>
+          <div>3.新增图片缩放大小选项解决图片中文字模糊的问题</div>
+          <div>4.修复对话过少导致对话图片导出不正确的问题</div>
+          <div>5.添加新的对话nikke：白雪公主：纯真年代、朵拉、布兰尔、波利、坎西以及大部分nikke皮肤头像 </div>
+          <div>6.添加了图片消息 支持本地导入图片 也可导入动图</div>
+          <div>7.优化UI显示效果 和游戏的效果大差不差了</div>
+          <div>8.添加旁白消息类型和分割消息类型并优化其布局</div>
+        </p>
+
+      </div>
+    </NikkeWindow>
   </div>
   <div>
     <div style="height: 100%;" class="btnbox">
@@ -296,7 +334,7 @@ onBeforeUnmount(() => {
           </span>
           {{ currentTime }}
           <span class="logoText">生成器
-            v1.0</span>
+            v1.1</span>
         </div>
         <div class="logo"><span>balabala</span></div>
         <div class="tab">
@@ -326,6 +364,19 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.updateText {
+  font-size: 16px;
+  text-indent: 2em;
+  margin: 0;
+}
+
+.updateContent {
+  display: flex;
+  flex-direction: column;
+  font-size: 18px;
+  color: #1a1515;
+}
+
 @media (min-width: 578px) {
   .box {
     width: 520px;

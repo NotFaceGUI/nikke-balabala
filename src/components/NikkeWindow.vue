@@ -4,12 +4,12 @@ import NikkeButton from './NikkeButton.vue';
 
 defineProps<{
     title: string,
-    show: boolean,
+    show?: boolean,
     confirm: boolean,
     buttonSuccess?: string,
     buttonCancel?: string,
     cancel: Function,
-    success: Function
+    success?: Function
 }>()
 
 </script>
@@ -18,6 +18,8 @@ defineProps<{
     <div class="black"></div>
     <div class="window">
         <div class="wcontent">
+            <div class="x" v-if="!confirm" @click="$props.cancel()"></div>
+
             <span class="title">{{ title }}</span>
             <img src="/gg_top.png" class="windowImg" alt="" style="width: 100%;">
         </div>
@@ -25,10 +27,12 @@ defineProps<{
             <slot></slot>
         </div>
         <div class="btnBox" v-if="confirm">
-            <NikkeButton :type="buttonType.Cancel" :content="buttonCancel" @click="$props.cancel()"
+            <NikkeButton :type="buttonType.Cancel" :content="buttonCancel"
+                @click="$props.cancel != undefined ? $props.cancel() : undefined"
                 style="width: 170px;height: 50px;margin:5px;">
             </NikkeButton>
-            <NikkeButton :type="buttonType.Success" :content="buttonSuccess" @click="$props.success()"
+            <NikkeButton :type="buttonType.Success" :content="buttonSuccess"
+                @click="$props.success != undefined ? $props.success() : undefined"
                 style="width: 170px;height: 50px;margin: 5px;">
             </NikkeButton>
         </div>
@@ -36,6 +40,21 @@ defineProps<{
 </template>
 
 <style scoped>
+.x {
+    width: 48px;
+    height:48px;
+    background: url("icon/close.svg") no-repeat center;
+    background-size: 48px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transition: all .1s ease-in-out;
+}
+
+.x:active {
+    transform: scale(0.9);
+}
+
 .wcontent {
     position: relative;
     display: flex;
