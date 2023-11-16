@@ -36,5 +36,5 @@ jobs:
           build_dir: ./dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_PAT: ${{ secrets.DEPLOY_TOKEN }}
+          GH_PAT: NotFaceGUI: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
 
