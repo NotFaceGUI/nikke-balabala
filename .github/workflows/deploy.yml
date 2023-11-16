@@ -31,7 +31,7 @@ jobs:
       - name: 部署到 Github Pages
         uses: crazy-max/ghaction-github-pages@v2.1.3
         with:
-          target_repository: https://github.com/NotFaceGUI/NotFaceGUI.github.io.git
+          repo: https://github.com/NotFaceGUI/NotFaceGUI.github.io.git
           target_branch: gh-pages
           build_dir: ./dist
         env:
