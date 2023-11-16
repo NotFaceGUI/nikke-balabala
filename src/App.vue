@@ -225,7 +225,7 @@ let isUpdate = ref(true);
           1. 在输入框内按 <a href="#">enter</a> 可让文本直接新增
         </p>
         <p class="updateText">
-          2. 在输入框内按 <a href="#">tab</a> 可让文本直接追加
+          2. 在输入框内按 <a href="#">tab</a> 可让文本直接新增
         </p>
         <span>4. 详细项：</span>
         <p class="updateText">
