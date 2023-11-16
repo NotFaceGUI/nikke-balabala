@@ -35,5 +35,5 @@ jobs:
           target_branch: gh-pages
           build_dir: ./dist
         env:
-          GH_PAT: ${{ secrets.DEPLOY_TOKEN }}
+          GH_PAT: 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
 
