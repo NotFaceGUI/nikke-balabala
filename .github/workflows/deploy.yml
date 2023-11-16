@@ -5,15 +5,12 @@ on:
     branches:
       - master
 
-  workflow_dispatch:
-
-permissions: write-all
-
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: 检出仓库
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
@@ -21,25 +18,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '16'
-      - name: 安装 pnpm
-        run: pnpm install --no-frozen-lockfile
 
-      - name: 缓存依赖
-        uses: actions/cache@v2
-        id: pnpm-cache
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
+      - name: 安装 pnpm
+        run: npm install -g pnpm
 
       - name: 安装依赖
-        if: steps.pnpm-cache.outputs.cache-hit != 'true'
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: 构建
-        run: pnpm run build
+        run: pnpm build
 
       - name: 部署到 Github Pages
         uses: crazy-max/ghaction-github-pages@v2.1.3
