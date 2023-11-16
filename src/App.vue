@@ -225,7 +225,7 @@ let isUpdate = ref(true);
           1. 在输入框内按 <a href="#">enter</a> 可让文本直接新增
         </p>
         <p class="updateText">
-          2. 在输入框内按 <a href="#">tab</a> 可让文本直接新增
+          2. 在输入框内按 <a href="#">tab</a> 可让文本直接追加
         </p>
         <span>4. 详细项：</span>
         <p class="updateText">
@@ -238,7 +238,6 @@ let isUpdate = ref(true);
           <div>7.优化UI显示效果 和游戏的效果大差不差了</div>
           <div>8.添加旁白消息类型和分割消息类型并优化其布局</div>
         </p>
-
       </div>
     </NikkeWindow>
   </div>
@@ -365,7 +364,7 @@ let isUpdate = ref(true);
 
 <style scoped>
 .updateText {
-  font-size: 16px;
+  font-size: 15px;
   text-indent: 2em;
   margin: 0;
 }
@@ -373,7 +372,7 @@ let isUpdate = ref(true);
 .updateContent {
   display: flex;
   flex-direction: column;
-  font-size: 18px;
+  font-size: 16px;
   color: #1a1515;
 }
 

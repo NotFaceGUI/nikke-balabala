@@ -524,6 +524,13 @@ const openFile = () => {
                     <input class="nikkeInput" v-model="imgData.imgName" type="text" />
                 </div>
                 <div class="pcontent">
+                    <span>是否添加水印 </span>
+                    <input type="checkbox">
+                </div>
+                <NikkeInfo>
+                    将会在头部添加作者名字、使用的工具等信息 (临时)
+                </NikkeInfo>
+                <div class="pcontent">
                     <span>导出图片格式</span>
                     <NikkeRadio :checked="true" label="任务" style="flex: 1">
                         <div style="margin: 0; display: flex; justify-content: space-between">

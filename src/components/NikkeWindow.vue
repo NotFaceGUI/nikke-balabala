@@ -43,7 +43,7 @@ defineProps<{
 .x {
     width: 48px;
     height:48px;
-    background: url("icon/close.svg") no-repeat center;
+    background: url("/icon/close.svg") no-repeat center;
     background-size: 48px;
     position: absolute;
     top: 10px;
