@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '16'
       - name: 安装 pnpm
-        run: npm install -g pnpm
+        run: pnpm install --no-frozen-lockfile
 
       - name: 缓存依赖
         uses: actions/cache@v2
