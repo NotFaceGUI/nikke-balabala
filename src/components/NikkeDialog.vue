@@ -131,6 +131,7 @@ var imgData = reactive({
     quality: 0.95,
     exportType: "0",
     imgName: dialogData.value.name,
+    mark: true
 });
 
 function exprotRealToImg() {
@@ -408,6 +409,7 @@ const openFile = () => {
                     <img src="/back.png" alt="" style="width: 25px; margin-top: 2px" />
                     <span style="vertical-align: middle">{{ dialogData?.name }}</span>
                 </div>
+                
             </div>
 
             <!-- <div class="floorInfo">
@@ -491,7 +493,7 @@ const openFile = () => {
             (dialogHeader == undefined ? 80 : clamp(dialogHeader.clientHeight, 70, 90)) +
             (dialogContent == undefined
                 ? 50
-                : clamp(dialogContent.scrollHeight + imgConfig.bottomHeigth, 700, 99999999)) +
+                : clamp(dialogContent.scrollHeight + imgConfig.bottomHeigth, 150, 99999999)) +
             'px !important',
     }" ref="dialogImg" v-if="isImg">
         <div class="dheader himg" ref="dialogHeader">
@@ -505,6 +507,9 @@ const openFile = () => {
                 <div class="dtilte">
                     <img src="/back.png" alt="" style="width: 25px; margin-top: 2px" />
                     <span style="vertical-align: middle">{{ dialogData?.name }}</span>
+                </div>
+                <div class="dtilte" style="margin-left: auto;display: flex;margin-right: 10px;font-size: 16px;margin-top: 5px;" v-if="imgData.mark">
+                    由 @{{ dialogData.author }} 使用 巴拉巴拉生成器 制作
                 </div>
             </div>
         </div>
@@ -525,7 +530,7 @@ const openFile = () => {
                 </div>
                 <div class="pcontent">
                     <span>是否添加水印 </span>
-                    <input type="checkbox">
+                    <input type="checkbox" v-model="imgData.mark">
                 </div>
                 <NikkeInfo>
                     将会在头部添加作者名字、使用的工具等信息 (临时)
@@ -576,8 +581,6 @@ const openFile = () => {
 </template>
 
 <style>
-
-
 .editBar {
     width: 100%;
     height: 40px;
@@ -802,7 +805,7 @@ div.dialogImg {
     flex-direction: column;
     justify-content: space-between;
     overflow: hidden;
-    min-width: 500px;
+    min-width: 500px !important;
     max-width: 550px;
     z-index: 99999;
 }
