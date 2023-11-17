@@ -4,7 +4,7 @@
       class="role"
       :style="{
         backgroundImage:
-          'url(../public/avatars/' + selectNikkes.projectNikkes[0].img + '.png)',
+          'url(avatars/' + selectNikkes.projectNikkes[0].img + '.png)',
       }"
     ></div>
     <!-- <img :src="'/pic/' + selectNikkes.projectNikkes[0].img + '.png'" alt="" srcset="" style="width: 128px;position: absolute;"> -->

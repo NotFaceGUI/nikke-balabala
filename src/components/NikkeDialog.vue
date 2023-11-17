@@ -433,7 +433,7 @@ const openFile = () => {
             <div class="selectNikkeInfo last" v-if="isSelectView" @click="selectZ()">指</div>
             <div class="dselectnikke" v-if="isSelectView">
                 <div class="selectNikkeInfo" v-for="(value, index) in dialogData?.projectNikkes" :key="index"
-                    :style="{ backgroundImage: 'url(../public/avatars/' + value.img + '.png)' }" @click="selectNikke(index)"></div>
+                    :style="{ backgroundImage: 'url(avatars/' + value.img + '.png)' }" @click="selectNikke(index)"></div>
             </div>
             <div class="imgList" v-if="isImgListView">
                 <div v-for="(value, index) in totalImages" :key="index">
@@ -462,7 +462,7 @@ const openFile = () => {
             <div class="nikkeedit">
                 <div class="selectNikkeInfo" @click="show()" :style="{
                     backgroundImage:
-                        'url(../public/avatars/' + dialogData?.projectNikkes[currentNikke].img + '.png)',
+                        'url(avatars/' + dialogData?.projectNikkes[currentNikke].img + '.png)',
                 }" :class="{ zhg: isZHG }">
                     <span v-if="isZHG" style="
               color: rgb(92, 58, 58);
