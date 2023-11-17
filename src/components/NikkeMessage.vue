@@ -81,7 +81,7 @@ function lostfocus(index: number) {
 
 <template>
     <div class="msg" v-if="type == msgType.nikke">
-        <div class="head" :style="{ backgroundImage: 'url(/pic/' + nikke.img + '.png)' }"></div>
+        <div class="head" :style="{ backgroundImage: 'url(../public/avatars/' + nikke.img + '.png)' }"></div>
         <div class="textgroup">
             <div class="name">{{ nikke.name }}</div>
             <div class="textbox" v-for="value, index in msgs" :key="index">
@@ -130,7 +130,7 @@ function lostfocus(index: number) {
         </div>
     </div>
     <div class="msg" v-else-if="type == msgType.img">
-        <div class="head" :style="{ backgroundImage: 'url(/pic/' + nikke.img + '.png)' }"></div>
+        <div class="head" :style="{ backgroundImage: 'url(../public/avatars/' + nikke.img + '.png)' }"></div>
         <div class="textgroup">
             <div class="name">{{ nikke.name }}</div>
             <div class="textbox" v-for="value, index in msgs" :key="index">
@@ -272,7 +272,7 @@ function lostfocus(index: number) {
     width: 64px;
     margin-right: 10px;
     min-width: 64px;
-    background-image: url("/pic/am.png");
+    background-image: url("../public/avatars/am.png");
     background-repeat: no-repeat;
     background-size: 64px;
     border-radius: 32px;

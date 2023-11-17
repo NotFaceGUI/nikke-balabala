@@ -307,7 +307,7 @@ let isUpdate = ref(true);
               <div class="nikkeGrid">
                 <div class="nikke" :class="{ nikkeCheck: isSelect[index] }" @click="select(value, index)"
                   v-for="(value, index) in nikkeData.nikkes" :key="index"
-                  :style="{ backgroundImage: 'url(/pic/' + value.img + '.png)' }">
+                  :style="{ backgroundImage: 'url(../public/avatars/' + value.img + '.png)' }">
                 </div>
               </div>
             </div>
