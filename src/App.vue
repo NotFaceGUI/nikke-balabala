@@ -10,7 +10,7 @@ import NikkeRadio from './components/NikkeRadio.vue';
 import NikkeInfo from './components/NikkeInfo.vue';
 
 import { useI18n } from 'vue-i18n'
-const { locale } = useI18n();
+// const { locale } = useI18n();
 
 const data = reactive([
   { id: ProjectType.Task, type: 'task' },
