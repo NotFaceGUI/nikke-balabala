@@ -199,11 +199,11 @@ function updateCancel() {
 }
 
 
-const changeLang = (lang: string) => {
+/* const changeLang = (lang: string) => {
   locale['value'] = lang
   localStorage.setItem('localLang', lang)
   console.log(lang);
-}
+} */
 
 let isUpdate = ref(true);
 
