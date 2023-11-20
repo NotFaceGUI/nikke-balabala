@@ -9,10 +9,13 @@ import NikkeDialog from './components/NikkeDialog.vue';
 import NikkeRadio from './components/NikkeRadio.vue';
 import NikkeInfo from './components/NikkeInfo.vue';
 
+import { useI18n } from 'vue-i18n'
+const { locale } = useI18n();
+
 const data = reactive([
-  { id: ProjectType.Task, type: '任务' },
-  { id: ProjectType.Nikke, type: '妮姬' },
-  { id: ProjectType.Group, type: '群组' }
+  { id: ProjectType.Task, type: 'task' },
+  { id: ProjectType.Nikke, type: 'nikke' },
+  { id: ProjectType.Group, type: 'group' }
 ]);
 
 var filteredData: Project[] = reactive([]);
@@ -195,11 +198,19 @@ function updateCancel() {
   isUpdate.value = false;
 }
 
+
+const changeLang = (lang: string) => {
+  locale['value'] = lang
+  localStorage.setItem('localLang', lang)
+  console.log(lang);
+}
+
 let isUpdate = ref(true);
 
 </script>
 
 <template>
+  <!-- <div @click="changeLang('en')">{{ $t('menu.task') }}</div> -->
   <!-- :class="{ noList: filteredData.length == 0 }" -->
   <!-- <div style="position: absolute;width: 500px;height: 100%;left: 0;" ref="dialogImg" >
     <NikkeDialog  :current-time="currentTime" :back="back" 
@@ -265,15 +276,15 @@ let isUpdate = ref(true);
                 <div style="margin: 0; display: flex; justify-content: space-between;">
                   <div>
                     <input id="task" type="radio" value="0" name="projectType" v-model="selectType">
-                    <label for="task">任务</label>
+                    <label for="task">{{ $t('menu.task') }}</label>
                   </div>
                   <div>
                     <input id="nikke" type="radio" value="1" name="projectType" v-model="selectType" checked>
-                    <label for="nikke">妮姬</label>
+                    <label for="nikke">{{ $t('menu.nikke') }}</label>
                   </div>
                   <div>
                     <input id="group" type="radio" value="2" name="projectType" v-model="selectType">
-                    <label for="group">群组</label>
+                    <label for="group">{{ $t('menu.group') }}</label>
                   </div>
                 </div>
                 <NikkeInfo>
@@ -302,7 +313,7 @@ let isUpdate = ref(true);
                 <div class="enterpriseBox">米西利斯</div>
                 <div class="enterpriseBox">泰特拉</div>
                 <div class="enterpriseBox">朝圣者</div>
-                <div class="enterpriseBox">反常</div>
+                <div class="enterpriseBox">NPC</div>
               </div>
               <div class="nikkeGrid">
                 <div class="nikke" :class="{ nikkeCheck: isSelect[index] }" @click="select(value, index)"
@@ -339,7 +350,7 @@ let isUpdate = ref(true);
         <div class="tab">
           <span class="tabName" :class="{ show: value.id == currentTabId }" v-for="value in data"
             @click="selectTab(value.id)">
-            {{ value.type }}
+            {{ $t(`menu.${value.type}`) }}
           </span>
         </div>
       </div>
