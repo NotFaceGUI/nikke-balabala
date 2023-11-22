@@ -605,7 +605,7 @@ let isUpdate = ref(true);
   background-color: #fda912;
 }
 
-.header::after {
+/* .header::after {
   content: "";
   z-index: 1;
   position: absolute;
@@ -617,7 +617,7 @@ let isUpdate = ref(true);
   top: -100px;
   right: -40px;
   opacity: 0.6;
-}
+} */
 
 .content {
   max-height: 82.2%;

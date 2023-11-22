@@ -1070,7 +1070,7 @@ div::-webkit-scrollbar {
     background-color: #fda912;
 }
 
-.dheader::after {
+/* .dheader::after {
     content: "";
     z-index: 1;
     position: absolute;
@@ -1083,5 +1083,5 @@ div::-webkit-scrollbar {
     right: -50px;
     opacity: 0.65;
     transform: rotate(4deg);
-}
+} */
 </style>
