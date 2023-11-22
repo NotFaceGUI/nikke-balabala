@@ -409,7 +409,7 @@ const openFile = () => {
                     <img src="/back.png" alt="" style="width: 25px; margin-top: 2px" />
                     <span style="vertical-align: middle">{{ dialogData?.name }}</span>
                 </div>
-                
+
             </div>
 
             <!-- <div class="floorInfo">
@@ -508,7 +508,9 @@ const openFile = () => {
                     <img src="/back.png" alt="" style="width: 25px; margin-top: 2px" />
                     <span style="vertical-align: middle">{{ dialogData?.name }}</span>
                 </div>
-                <div class="dtilte" style="margin-left: auto;display: flex;margin-right: 10px;font-size: 16px;margin-top: 5px;" v-if="imgData.mark">
+                <div class="dtilte"
+                    style="margin-left: auto;display: flex;margin-right: 10px;font-size: 16px;margin-top: 5px;"
+                    v-if="imgData.mark">
                     由 @{{ dialogData.author }} 使用 巴拉巴拉生成器 制作
                 </div>
             </div>
@@ -953,7 +955,14 @@ div>.slectModel {
     height: 100%;
 }
 
+.tilte {
+    position: relative;
+    z-index: 10;
+}
+
 .dback {
+    position: relative;
+    z-index: 10;
     display: flex;
     flex: 1;
     padding-bottom: 10px;
@@ -1059,5 +1068,20 @@ div::-webkit-scrollbar {
     background-size: 5px 5px;
     background-position: center;
     background-color: #fda912;
+}
+
+.dheader::after {
+    content: "";
+    z-index: 1;
+    position: absolute;
+    background-image: url('data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHcAAABiAgMAAAAXTKQxAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACVBMVEX3t0X3t0X///+98LFLAAAAAXRSTlMAQObYZgAAAAFiS0dEAmYLfGQAAAAHdElNRQfnCxYRBSCeyqUCAAABAUlEQVRIx+2WyxHDIAxExYES1A8l6GD6byWO7RAw0q5nOCa6vtHu+oOEyLdyPaqIW1qvMkhdnmtXk36qQ93xSOsGpGf5Ox3bp+axfaZ9e3JwF149bEi7U88ubuHUx4a0m3oKcIXWH3ONsCHryzy0Ps1zjAvHGmNDyc5sGIPg7+gEZ4QLw4qwLWJE9wf/49/CivDqv5YRpsdg7QiuHX82W0D0B4OLTEUyU9lEDs3Lk21AdgnbRIF5W7JQm+5QsoHJ/mbbn9wd2M2D3FvYrYfcmQZsgrBDO1wkxi5rn2UTiKNmwc2CmxNuzu6rHLDFWJH0kQzQBFIf1kh6t0ZUoLSk6JleKJaqutiaJukAAAAASUVORK5CYII=');
+    background-repeat: no-repeat;
+    background-size: 256px;
+    width: 256px;
+    height: 256px;
+    top: -109px;
+    right: -50px;
+    opacity: 0.65;
+    transform: rotate(4deg);
 }
 </style>

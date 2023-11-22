@@ -222,7 +222,9 @@ let isUpdate = ref(true);
   <div style="height: 100%;" v-if="isUpdate">
     <NikkeWindow title="巴拉巴拉生成器 v1.1 更新日志" :cancel="updateCancel" :confirm="false">
       <div class="updateContent">
-        <h3 style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">巴拉巴拉 1.1 发布，感谢各位的支持</h3>
+        <h3
+          style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">
+          巴拉巴拉 1.1 发布，感谢各位的支持</h3>
         <span>1. 退化字体大小 1M → 8M。</span>
         <NikkeInfo>
           <span style="font-size: 14px;">（如有系统字体请等待站内字体加载完毕后进行生成操作）</span>
@@ -240,14 +242,14 @@ let isUpdate = ref(true);
         </p>
         <span>4. 详细项：</span>
         <p class="updateText">
-          <div>1.添加了导出图片的具体设置</div>
-          <div>2.新增png和jepg两种图片格式</div>
-          <div>3.新增图片缩放大小选项解决图片中文字模糊的问题</div>
-          <div>4.修复对话过少导致对话图片导出不正确的问题</div>
-          <div>5.添加新的对话nikke：白雪公主：纯真年代、朵拉、布兰尔、波利、坎西以及大部分nikke皮肤头像 </div>
-          <div>6.添加了图片消息 支持本地导入图片 也可导入动图</div>
-          <div>7.优化UI显示效果 和游戏的效果大差不差了</div>
-          <div>8.添加旁白消息类型和分割消息类型并优化其布局</div>
+        <div>1.添加了导出图片的具体设置</div>
+        <div>2.新增png和jepg两种图片格式</div>
+        <div>3.新增图片缩放大小选项解决图片中文字模糊的问题</div>
+        <div>4.修复对话过少导致对话图片导出不正确的问题</div>
+        <div>5.添加新的对话nikke：白雪公主：纯真年代、朵拉、布兰尔、波利、坎西以及大部分nikke皮肤头像 </div>
+        <div>6.添加了图片消息 支持本地导入图片 也可导入动图</div>
+        <div>7.优化UI显示效果 和游戏的效果大差不差了</div>
+        <div>8.添加旁白消息类型和分割消息类型并优化其布局</div>
         </p>
       </div>
     </NikkeWindow>
@@ -346,7 +348,9 @@ let isUpdate = ref(true);
           <span class="logoText">生成器
             v1.1</span>
         </div>
-        <div class="logo"><span>balabala</span></div>
+        <div class="logo">
+          <span>balabala</span>
+        </div>
         <div class="tab">
           <span class="tabName" :class="{ show: value.id == currentTabId }" v-for="value in data"
             @click="selectTab(value.id)">
@@ -546,6 +550,8 @@ let isUpdate = ref(true);
 }
 
 .tilte {
+  position: relative;
+  z-index: 10;
   font-size: 14px;
   padding: 2px 10px;
 }
@@ -593,10 +599,24 @@ let isUpdate = ref(true);
     0.7px 0.7px 46.3px rgba(0, 0, 0, 0.061),
     1px 1px 94px rgba(0, 0, 0, 0.08);
   background: linear-gradient(transparent 50%, #fda912 50%),
-    linear-gradient(90deg, transparent 50%, #f8be53bb 50%);
+    linear-gradient(90deg, transparent 50%, #f8be5379 50%);
   background-size: 5px 5px;
   background-position: center;
   background-color: #fda912;
+}
+
+.header::after {
+  content: "";
+  z-index: 1;
+  position: absolute;
+  background-image: url('data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHcAAABiAgMAAAAXTKQxAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACVBMVEX3t0X3t0X///+98LFLAAAAAXRSTlMAQObYZgAAAAFiS0dEAmYLfGQAAAAHdElNRQfnCxYRBSCeyqUCAAABAUlEQVRIx+2WyxHDIAxExYES1A8l6GD6byWO7RAw0q5nOCa6vtHu+oOEyLdyPaqIW1qvMkhdnmtXk36qQ93xSOsGpGf5Ox3bp+axfaZ9e3JwF149bEi7U88ubuHUx4a0m3oKcIXWH3ONsCHryzy0Ps1zjAvHGmNDyc5sGIPg7+gEZ4QLw4qwLWJE9wf/49/CivDqv5YRpsdg7QiuHX82W0D0B4OLTEUyU9lEDs3Lk21AdgnbRIF5W7JQm+5QsoHJ/mbbn9wd2M2D3FvYrYfcmQZsgrBDO1wkxi5rn2UTiKNmwc2CmxNuzu6rHLDFWJH0kQzQBFIf1kh6t0ZUoLSk6JleKJaqutiaJukAAAAASUVORK5CYII=');
+  background-repeat: no-repeat;
+  background-size: 256px;
+  width: 256px;
+  height: 256px;
+  top: -100px;
+  right: -40px;
+  opacity: 0.6;
 }
 
 .content {
@@ -640,6 +660,7 @@ div::-webkit-scrollbar {
   justify-content: center;
   align-items: center;
   font-size: 32px;
+  z-index: 10;
   line-height: 35px;
 }
 
