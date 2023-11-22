@@ -35,7 +35,7 @@ let currentExportImgState = ref<exportImgState>(exportImgState.pause);
 
 let currentModel = ref(msgType.nikke);
 
-var typeList = ref([msgType.nikke, msgType.img, msgType.aside, msgType.partition]);
+var typeList = ref([msgType.nikke, msgType.img, msgType.aside, msgType.partition, msgType.branch]);
 
 // 使用ref包装dialogData，使其变成响应式
 const dialogData = ref(props.dialogData);
@@ -54,7 +54,7 @@ const scrollToBottom = () => {
 function check() {
 
     // 如果当前模式是图片
-    if (currentSelectImgae.value != -1) {
+    if (currentSelectImgae.value != -1 || currentModel.value == msgType.branch) {
         return;
     }
     if (inputContent.value != "" && currentModel.value != msgType.aside && currentModel.value != msgType.partition) {

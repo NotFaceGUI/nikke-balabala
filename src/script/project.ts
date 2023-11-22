@@ -16,7 +16,8 @@ export enum msgType {
     commander = "指挥官",
     img = "图片",
     aside = "旁白",
-    partition = "分割"
+    partition = "分割",
+    branch = "分支"
 }
 
 export enum exportImgType {

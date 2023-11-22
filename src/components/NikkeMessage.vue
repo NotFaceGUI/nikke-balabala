@@ -10,7 +10,6 @@ const props = defineProps<{
     index: number,
     currentData: string[],
     dialogData: Project,
-
     isEdit: boolean,
 }>()
 
@@ -54,7 +53,6 @@ function addMsg(index: number, isUpOrDown: number) {
 }
 
 function editMsg(index: number) {
-
     if (!editInputs.value.indexOf(index)) {
         lostfocus(index);
     } else {
@@ -97,7 +95,8 @@ function lostfocus(index: number) {
                     <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
                 </span>
                 <img src="/g.png" class="nikkeImg" />
-                <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg"></NikkeMessageEdit>
+                <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg">
+                </NikkeMessageEdit>
             </div>
         </div>
     </div>
@@ -115,8 +114,8 @@ function lostfocus(index: number) {
                 <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
             </span>
             <img src="/rg.png" class="znikkeImg" />
-            <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg"></NikkeMessageEdit>
-
+            <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg">
+            </NikkeMessageEdit>
         </div>
     </div>
     <div class="zmsg" v-else-if="type == msgType.img && nikke.img == '指挥官'">
@@ -125,8 +124,8 @@ function lostfocus(index: number) {
                 <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
             </span>
             <img src="/rg.png" class="znikkeImg" />
-            <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg"></NikkeMessageEdit>
-
+            <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg">
+            </NikkeMessageEdit>
         </div>
     </div>
     <div class="msg" v-else-if="type == msgType.img">
@@ -136,26 +135,102 @@ function lostfocus(index: number) {
             <div class="textbox" v-for="value, index in msgs" :key="index">
                 <span class="text toimg">
                     <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
-
                 </span>
                 <img src="/g.png" class="nikkeImg" />
-                <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg"></NikkeMessageEdit>
+                <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg">
+                </NikkeMessageEdit>
             </div>
         </div>
     </div>
     <div class="zmsg ntext" style="color: rgb(59, 50, 50);" v-else-if="type == msgType.aside">
-        <span style="margin: 3px 0;">{{ msgs[0] === "" ? "这里是旁白请讲" : msgs[0] }}</span>
+        <div class="textbox aside" style="justify-content: center;">
+            <span style="margin: 3px 0;">
+                <input ref="spaceRefs" v-if="!editInputs.indexOf(0)" v-model="editContent" type="text" @blur="lostfocus(0)"
+                    class="nikkeInput msgInput">
+                <div v-else>
+                    {{ msgs[0] === "" ? "这里是旁白请讲" : msgs[0] }}
+                </div>
+            </span>
+            <div style="display: none;height: 100%;">
+                <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="0" :delete="deleteMsg">
+                </NikkeMessageEdit>
+            </div>
+
+        </div>
+
     </div>
     <div class="zmsg ntext" v-else-if="type == msgType.partition">
         <div class="partition">
             <div class="line"></div>
             <span class="partitionContent">{{ msgs[0] === "" ? "END" : msgs[0] }}</span>
+            <div style="display: none;">
+                <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="0" :delete="deleteMsg">
+                </NikkeMessageEdit>
+            </div>
+
             <div class="line"></div>
+        </div>
+    </div>
+    <div class="zmsg" v-else-if="type == msgType.branch">
+        <div class="ztextbox">
+            <span class="text mzhg zb">
+                <div class="branch" v-for="value, index in msgs" :key="index">
+                    {{ value }}
+                </div>
+            </span>
+            <img src="/rg.png" class="znikkeImg" />
+            <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="0" :delete="deleteMsg">
+            </NikkeMessageEdit>
         </div>
     </div>
 </template>
 
 <style scoped>
+.partition:hover>div {
+    max-height: 21px;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+
+.aside:hover>div {
+    max-height: 24px;
+
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+
+.zb {
+    min-width: 280px !important;
+    padding: 8px 20px !important;
+}
+
+.branch:hover {
+    background-color: #ffc04b;
+}
+
+.branch {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    box-shadow: 0 4px 7px #00000010;
+    border-radius: 20px;
+    color: #272727;
+    margin: 5px 0;
+    margin-bottom: 8px;
+    min-height: 51px;
+    padding: 12px 18px;
+
+}
+
+.branch:last-child {
+    margin-bottom: 5px;
+
+}
+
 .msgInput {
     border: 0px solid transparent !important;
     height: 100%;
