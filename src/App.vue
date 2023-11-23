@@ -227,6 +227,14 @@ let isUpdate = ref(true);
         <h3
           style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">
           巴拉巴拉 1.1 发布，感谢各位的支持</h3>
+        <span>11.23 日更新：</span>
+        <p class="updateText">
+          1. 添加红莲、长发公主（一周年形态）头像
+        </p>
+        <p class="updateText">
+          2. 添加反馈入口
+        </p>
+        <h3 class="hline"></h3>
         <span>11.22 日更新：</span>
         <p class="updateText">
           1. 添加了“分支消息模块”。
@@ -240,9 +248,7 @@ let isUpdate = ref(true);
         <p class="updateText">
           4. 添加导出图片是否显示水印功能。
         </p>
-        <h3
-          style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">
-        </h3>
+        <h3 class="hline"></h3>
         <span>1. 退化字体大小 1M → 8M。</span>
         <NikkeInfo>
           <span style="font-size: 14px;">（如有系统字体请等待站内字体加载完毕后进行生成操作）</span>
@@ -398,6 +404,14 @@ let isUpdate = ref(true);
 </template>
 
 <style scoped>
+.hline {
+  text-align: center;
+  color: #32b1f4;
+  border-bottom: 1px solid #c7c7c7;
+  padding-bottom: 5px;
+  box-sizing: content-box;
+}
+
 .updateText {
   font-size: 15px;
   text-indent: 2em;
