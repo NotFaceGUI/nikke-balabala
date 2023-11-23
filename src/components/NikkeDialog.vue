@@ -13,6 +13,7 @@ import { ref, onMounted, nextTick, reactive } from "vue";
 import { saveAs } from "file-saver";
 import NikkeWindow from "./NikkeWindow.vue";
 import NikkeInfo from "./NikkeInfo.vue";
+import NikkeIcon from "./NikkeIcon.vue";
 
 let props = defineProps<{
     dialogData: Project;
@@ -524,8 +525,10 @@ const openFile = () => {
 
     <NikkeWindow id="createProject" title="导出图片" :confirm="true" :show="isImg" v-if="isImg" button-cancel="关闭"
         :cancel="cancel" :success="exprotRealToImg" button-success="导出">
+        <NikkeIcon></NikkeIcon>
         <div class="project">
             <div class="label">
+                <NikkeInfo>如果出现问题可以通过点击上面的图标进行跳转反馈，包括bug、想要添加的功能等等都可以在上反馈。</NikkeInfo>
                 <div class="pcontent">
                     <span>图片名称 *</span>
                     <input class="nikkeInput" v-model="imgData.imgName" type="text" />

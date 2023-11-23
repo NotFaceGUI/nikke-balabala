@@ -8,6 +8,7 @@ import NikkeWindow from './components/NikkeWindow.vue';
 import NikkeDialog from './components/NikkeDialog.vue';
 import NikkeRadio from './components/NikkeRadio.vue';
 import NikkeInfo from './components/NikkeInfo.vue';
+import NikkeIcon from './components/NikkeIcon.vue';
 
 // import { useI18n } from 'vue-i18n'
 // const { locale } = useI18n();
@@ -199,6 +200,7 @@ function updateCancel() {
 }
 
 
+
 /* const changeLang = (lang: string) => {
   locale['value'] = lang
   localStorage.setItem('localLang', lang)
@@ -365,7 +367,9 @@ let isUpdate = ref(true);
             v1.1</span>
         </div>
         <div class="logo">
+          <NikkeIcon></NikkeIcon>
           <span>balabala</span>
+
         </div>
         <div class="tab">
           <span class="tabName" :class="{ show: value.id == currentTabId }" v-for="value in data"
