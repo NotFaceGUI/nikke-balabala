@@ -139,16 +139,13 @@ input[type="radio"]:checked+label {
 } */
 
 @font-face {
-
   font-family: "sourcehansans";
-  /* 这个名字可以自己定义 */
   src:
-    url("./assets/fonts/SourceHanSansSC-Bold.ttf");
-  /* Legacy iOS */
+    url("./assets/fonts/SourceHanSansSC-Bold.woff2?v=1.0") format('woff2'),
+    url("./assets/fonts/SourceHanSansSC-Bold.ttf?v=1.0") format('truetype');
   font-weight: bold;
   font-style: normal;
 }
-
 
 * {
   font-family: "sourcehansans";
