@@ -141,8 +141,7 @@ input[type="radio"]:checked+label {
 @font-face {
   font-family: "sourcehansans";
   src:
-    url("./assets/fonts/SourceHanSansSC-Bold.woff2?v=1.0") format('woff2'),
-    url("./assets/fonts/SourceHanSansSC-Bold.ttf?v=1.0") format('truetype');
+    url("./assets/fonts/SourceHanSansSC-Bold.ttf");
   font-weight: bold;
   font-style: normal;
 }
@@ -155,9 +154,10 @@ input[type="radio"]:checked+label {
   overflow: hidden;
 }
 
-.pcontent > span {
+.pcontent>span {
   font-size: 12px;
-  min-width:96px;  /*限制宽度*/
+  min-width: 96px;
+  /*限制宽度*/
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
 }
