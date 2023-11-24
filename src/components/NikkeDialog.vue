@@ -529,6 +529,12 @@ const openFile = () => {
         <div class="project">
             <div class="label">
                 <NikkeInfo>如果出现问题可以通过点击上面的图标进行跳转反馈，包括bug、想要添加的功能等等都可以在上反馈。</NikkeInfo>
+                <NikkeInfo>
+                    <div  class="error">
+                        <span style="color: rgb(182, 93, 93);font-size: 10px;background-color: ">如果主页的字体不是 “sourcehansans”
+                            请尝试等待或者切换网络环境等待字体加载完毕，可避免部分导出图片的问题。</span>
+                    </div>
+                </NikkeInfo>
                 <div class="pcontent">
                     <span>图片名称 *</span>
                     <input class="nikkeInput" v-model="imgData.imgName" type="text" />
@@ -575,6 +581,12 @@ const openFile = () => {
                 <div style="height: 1px; background-color: #e6e7e6"></div>
                 <div style="text-align: center;">预览</div>
                 <NikkeInfo>
+                    <div class="error">
+                        <span
+                            style="color: rgb(182, 93, 93);font-size: 10px;background-color: ">网络环境不好可能会导致导出加载一直转圈，请等待。</span>
+                    </div>
+                </NikkeInfo>
+                <NikkeInfo>
                     图片预览，如果无法在你的浏览器导出则保存预览图
                 </NikkeInfo>
                 <div ref="preview" class="preview">
@@ -586,6 +598,13 @@ const openFile = () => {
 </template>
 
 <style>
+.error {
+    background-color: #fcfafa;
+    border-radius: 10px;
+    padding: 5px;
+    border: #f3f1f1 1px solid;
+}
+
 .editBar {
     width: 100%;
     height: 40px;
@@ -1086,5 +1105,4 @@ div::-webkit-scrollbar {
     right: -50px;
     opacity: 0.65;
     transform: rotate(4deg);
-} */
-</style>
+} */</style>

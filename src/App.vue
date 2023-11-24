@@ -180,12 +180,44 @@ function back(pro: Project) {
   currentProject.value = -1;
 }
 
+function getFontName() {
+  var hiddenElement = document.getElementById("fontCheckElement");
+
+  // 如果元素不存在，创建一个
+  if (!hiddenElement) {
+    hiddenElement = document.createElement("div");
+    hiddenElement.id = "fontCheckElement";
+    hiddenElement.style.visibility = "hidden";
+    hiddenElement.style.position = "absolute";
+    hiddenElement.style.fontSize = "12px"; // 设置一个已知的字体大小
+    document.body.appendChild(hiddenElement);
+  }
+
+  // 获取计算后的样式
+  var computedStyle = window.getComputedStyle(hiddenElement);
+
+  // 获取字体名称
+  var fontFamily = computedStyle.fontFamily;
+
+  // 返回字体名称
+  return fontFamily;
+}
+
+// 每10秒获取一次字体信息
+setInterval(function () {
+  currcurentFont.value = getFontName();
+  console.log("当前页面使用的字体名称：" + currcurentFont.value);
+}, 10000);
+
+let currcurentFont = ref('');
+
 onMounted(() => {
   initProject();
   updateTime();
   showTimes();
   selectTab(1);
   initData();
+  currcurentFont.value = getFontName();
   nikkeData.nikkes.forEach(() => {
     isSelect.push(false);
   })
@@ -198,8 +230,6 @@ onBeforeUnmount(() => {
 function updateCancel() {
   isUpdate.value = false;
 }
-
-
 
 /* const changeLang = (lang: string) => {
   locale['value'] = lang
@@ -227,6 +257,14 @@ let isUpdate = ref(true);
         <h3
           style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">
           巴拉巴拉 1.1 发布，感谢各位的支持</h3>
+        <span>11.24 日更新：</span>
+        <p class="updateText">
+          1. 添加当前使用的字体显示
+        </p>
+        <p class="updateText">
+          2. 添加警告消息
+        </p>
+        <h3 class="hline"></h3>
         <span>11.23 日更新：</span>
         <p class="updateText">
           1. 添加红莲、长发公主（一周年形态）头像
@@ -369,6 +407,7 @@ let isUpdate = ref(true);
             <img src="/wifi.png" style="width: 18px;">
           </span>
           {{ currentTime }}
+          <span style="font-size: 12px;margin-left: auto;">当前字体：{{ currcurentFont }}</span>
           <span class="logoText">生成器
             v1.1</span>
         </div>
