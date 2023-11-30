@@ -9,6 +9,7 @@ import NikkeDialog from './components/NikkeDialog.vue';
 import NikkeRadio from './components/NikkeRadio.vue';
 import NikkeInfo from './components/NikkeInfo.vue';
 import NikkeIcon from './components/NikkeIcon.vue';
+// import NikkeSelect from './components/NikkeSelect.vue';
 
 // import { useI18n } from 'vue-i18n'
 // const { locale } = useI18n();
@@ -144,7 +145,6 @@ function checkData() {
 
 function success() {
   if (checkData()) {  // 检查数据
-
     var msgData: ChatMessageData = {
       list: []
     }
@@ -203,11 +203,11 @@ function getFontName() {
   return fontFamily;
 }
 
-// 每10秒获取一次字体信息
-setInterval(function () {
-  currcurentFont.value = getFontName();
-  console.log("当前页面使用的字体名称：" + currcurentFont.value);
-}, 10000);
+// // 每10秒获取一次字体信息
+// setInterval(function () {
+//   currcurentFont.value = getFontName();
+//   console.log("当前页面使用的字体名称：" + currcurentFont.value);
+// }, 10000);
 
 let currcurentFont = ref('');
 
@@ -385,6 +385,7 @@ let isUpdate = ref(true);
                   :style="{ backgroundImage: 'url(avatars/' + value.img + '.png)' }">
                 </div>
               </div>
+              <!-- <NikkeSelect></NikkeSelect> -->
             </div>
           </div>
           <!-- <div class="pcontent">

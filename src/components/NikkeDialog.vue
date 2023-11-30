@@ -14,6 +14,7 @@ import { saveAs } from "file-saver";
 import NikkeWindow from "./NikkeWindow.vue";
 import NikkeInfo from "./NikkeInfo.vue";
 import NikkeIcon from "./NikkeIcon.vue";
+import NikkeSelect from "./NikkeSelect.vue";
 
 let props = defineProps<{
     dialogData: Project;
@@ -24,25 +25,30 @@ let props = defineProps<{
 let imgConfig: ImgConfig = reactive({
     width: 500,
     maxWidth: 550,
-    bottomHeigth: 15 // 最下面对话与图片最底部的距离 用于方便查看
+    bottomHeigth: 15, // 最下面对话与图片最底部的距离 用于方便查看
 });
 
 enum exportImgState {
     pause,
-    run
+    run,
 }
 
 let currentExportImgState = ref<exportImgState>(exportImgState.pause);
 
 let currentModel = ref(msgType.nikke);
 
-var typeList = ref([msgType.nikke, msgType.img, msgType.aside, msgType.partition, msgType.branch]);
+var typeList = ref([
+    msgType.nikke,
+    msgType.img,
+    msgType.aside,
+    msgType.partition,
+    msgType.branch,
+]);
 
 // 使用ref包装dialogData，使其变成响应式
 const dialogData = ref(props.dialogData);
 const scrollContainer = ref<HTMLElement | null>(null);
 const currentSelectImgae = ref<number>(-1);
-
 
 const scrollToBottom = () => {
     nextTick(() => {
@@ -53,12 +59,15 @@ const scrollToBottom = () => {
 };
 
 function check() {
-
     // 如果当前模式是图片
     if (currentSelectImgae.value != -1 || currentModel.value == msgType.branch) {
         return;
     }
-    if (inputContent.value != "" && currentModel.value != msgType.aside && currentModel.value != msgType.partition) {
+    if (
+        inputContent.value != "" &&
+        currentModel.value != msgType.aside &&
+        currentModel.value != msgType.partition
+    ) {
         currentModel.value = msgType.nikke;
     }
 }
@@ -70,18 +79,27 @@ function append() {
         dialogData.value.messageData.list[
             dialogData.value.messageData.list.length - 1
         ].msg.push("[url][base64:] [" + currentSelectImgae.value + "]");
-    } else if (dialogData.value.messageData.list[dialogData.value.messageData.list.length - 1].msgType == msgType.img) {
+    } else if (
+        dialogData.value.messageData.list[dialogData.value.messageData.list.length - 1]
+            .msgType == msgType.img
+    ) {
         let model: msgType = msgType.nikke;
         // 如果最后一项是指挥官则修改为指挥官
-        if (dialogData.value.messageData.list[dialogData.value.messageData.list.length - 1].nikke.img == "指挥官") {
+        if (
+            dialogData.value.messageData.list[dialogData.value.messageData.list.length - 1]
+                .nikke.img == "指挥官"
+        ) {
             model = msgType.commander;
         }
         // 如果最后一项是图片 且追加类型不等于图片则修改最后一项的类型
-        dialogData.value.messageData.list[dialogData.value.messageData.list.length - 1].msgType = model;
-        dialogData.value.messageData.list[dialogData.value.messageData.list.length - 1].msg.push(inputContent.value);
+        dialogData.value.messageData.list[
+            dialogData.value.messageData.list.length - 1
+        ].msgType = model;
+        dialogData.value.messageData.list[
+            dialogData.value.messageData.list.length - 1
+        ].msg.push(inputContent.value);
         inputContent.value = "";
-    }
-    else {
+    } else {
         dialogData.value.messageData.list[
             dialogData.value.messageData.list.length - 1
         ].msg.push(inputContent.value);
@@ -132,7 +150,7 @@ var imgData = reactive({
     quality: 0.95,
     exportType: "0",
     imgName: dialogData.value.name,
-    mark: true
+    mark: true,
 });
 
 function exprotRealToImg() {
@@ -225,7 +243,6 @@ let totalImages = ref<string[]>([]); // 存储到 local 中
 const inputRef = ref<HTMLInputElement>();
 const inputPlaceholder = ref("请输入对话内容");
 
-
 function show() {
     isSelectView.value = !isSelectView.value;
     scrollToBottom();
@@ -244,12 +261,11 @@ function selectModel(type: msgType) {
     }
 
     if (type == msgType.aside) {
-        inputPlaceholder.value = "请输入旁白内容"
+        inputPlaceholder.value = "请输入旁白内容";
     }
 
     currentModel.value = type;
 }
-
 
 onMounted(() => {
     scrollToBottom();
@@ -268,7 +284,6 @@ var isSelectView = ref(false);
 var isZHG = ref(false);
 let isImgListView = ref(false);
 var inputContent = ref("");
-
 
 function selectNikke(index: number) {
     currentNikke.value = index;
@@ -387,6 +402,18 @@ const openFileInput = () => {
 const openFile = () => {
     fileInput.value?.click();
 };
+
+let isAddNikkeWindow = ref(false);
+
+const addNikke = () => {
+    isAddNikkeWindow.value = true;
+}
+
+const cancelAdition = () => {
+    isAddNikkeWindow.value = false;
+}
+
+
 </script>
 
 <template>
@@ -397,7 +424,17 @@ const openFile = () => {
         </div>
         <button @click="saveImages">Save Images</button>
     </div> -->
+    <div style="width: 100%;height: 75%;position: absolute;">
+        <NikkeWindow id="createProject" title="添加新的妮姬对象" :confirm="false" :show="isImg" v-if="isAddNikkeWindow"
+            button-cancel="取消添加" :cancel="cancelAdition"  button-success="确认添加">
+            <div>
+                <NikkeSelect :filter-data="dialogData?.projectNikkes" ></NikkeSelect>
+            </div>
+        </NikkeWindow>
+    </div>
+
     <div class="dialog">
+
         <div class="dheader">
             <div class="tilte">
                 <span style="vertical-align: middle">
@@ -410,7 +447,6 @@ const openFile = () => {
                     <img src="/back.png" alt="" style="width: 25px; margin-top: 2px" />
                     <span style="vertical-align: middle">{{ dialogData?.name }}</span>
                 </div>
-
             </div>
 
             <!-- <div class="floorInfo">
@@ -437,15 +473,21 @@ const openFile = () => {
             <div class="dselectnikke" v-if="isSelectView">
                 <div class="selectNikkeInfo" v-for="(value, index) in dialogData?.projectNikkes" :key="index"
                     :style="{ backgroundImage: 'url(avatars/' + value.img + '.png)' }" @click="selectNikke(index)"></div>
+                <div class="selectNikkeInfo nadd" @click="addNikke()"></div>
+
             </div>
             <div class="imgList" v-if="isImgListView">
                 <div v-for="(value, index) in totalImages" :key="index">
-                    <div style="width: 96px;height: 96px;">
-                        <img :src="value" :class="{ isSelectImageView: currentSelectImgae === index }"
-                            style="box-sizing: border-box;width: 96px;background-color: #c6c6c6;border-radius: 5px;border: 2px #c6c6c6 solid;transition: all .1s ease-in-out;"
-                            @click="selectImage(index)" />
+                    <div style="width: 96px; height: 96px">
+                        <img :src="value" :class="{ isSelectImageView: currentSelectImgae === index }" style="
+                box-sizing: border-box;
+                width: 96px;
+                background-color: #c6c6c6;
+                border-radius: 5px;
+                border: 2px #c6c6c6 solid;
+                transition: all 0.1s ease-in-out;
+              " @click="selectImage(index)" />
                     </div>
-
                 </div>
                 <div style="
             font-size: 64px;
@@ -484,7 +526,9 @@ const openFile = () => {
                     @focus="check()" @keyup.enter="add()" @keydown.tab="append()" :placeholder="inputPlaceholder" />
                 <div class="add newadd" @click="add()">新增</div>
                 <div class="add oldadd" @click="append()"
-                    v-if="currentModel != msgType.aside && currentModel != msgType.partition">追加</div>
+                    v-if="currentModel != msgType.aside && currentModel != msgType.partition">
+                    追加
+                </div>
             </div>
         </div>
     </div>
@@ -509,9 +553,13 @@ const openFile = () => {
                     <img src="/back.png" alt="" style="width: 25px; margin-top: 2px" />
                     <span style="vertical-align: middle">{{ dialogData?.name }}</span>
                 </div>
-                <div class="dtilte"
-                    style="margin-left: auto;display: flex;margin-right: 10px;font-size: 16px;margin-top: 5px;"
-                    v-if="imgData.mark">
+                <div class="dtilte" style="
+            margin-left: auto;
+            display: flex;
+            margin-right: 10px;
+            font-size: 16px;
+            margin-top: 5px;
+          " v-if="imgData.mark">
                     由 @{{ dialogData.author }} 使用 巴拉巴拉生成器 制作
                 </div>
             </div>
@@ -530,8 +578,8 @@ const openFile = () => {
             <div class="label">
                 <NikkeInfo>如果出现问题可以通过点击上面的图标进行跳转反馈，包括bug、想要添加的功能等等都可以在上反馈。</NikkeInfo>
                 <NikkeInfo>
-                    <div  class="error">
-                        <span style="color: rgb(182, 93, 93);font-size: 10px;background-color: ">如果主页的字体不是 “sourcehansans”
+                    <div class="error">
+                        <span style="color: rgb(182, 93, 93); font-size: 10px; background-color: ">如果主页的字体不是 “sourcehansans”
                             请尝试等待或者切换网络环境等待字体加载完毕，可避免部分导出图片的问题。</span>
                     </div>
                 </NikkeInfo>
@@ -541,11 +589,9 @@ const openFile = () => {
                 </div>
                 <div class="pcontent">
                     <span>是否添加水印 </span>
-                    <input type="checkbox" v-model="imgData.mark">
+                    <input type="checkbox" v-model="imgData.mark" />
                 </div>
-                <NikkeInfo>
-                    将会在头部添加作者名字、使用的工具等信息 (临时)
-                </NikkeInfo>
+                <NikkeInfo> 将会在头部添加作者名字、使用的工具等信息 (临时) </NikkeInfo>
                 <div class="pcontent">
                     <span>导出图片格式</span>
                     <NikkeRadio :checked="true" label="任务" style="flex: 1">
@@ -579,19 +625,18 @@ const openFile = () => {
                     图片的缩放比例，值越高画面越清晰，但大小则会变得更大 推荐范围{1-10}
                 </NikkeInfo>
                 <div style="height: 1px; background-color: #e6e7e6"></div>
-                <div style="text-align: center;">预览</div>
+                <div style="text-align: center">预览</div>
                 <NikkeInfo>
                     <div class="error">
                         <span
-                            style="color: rgb(182, 93, 93);font-size: 10px;background-color: ">网络环境不好可能会导致导出加载一直转圈，请等待。</span>
+                            style="color: rgb(182, 93, 93); font-size: 10px; background-color: ">网络环境不好可能会导致导出加载一直转圈，请等待。</span>
                     </div>
                 </NikkeInfo>
-                <NikkeInfo>
-                    图片预览，如果无法在你的浏览器导出则保存预览图
-                </NikkeInfo>
-                <div ref="preview" class="preview">
+                <NikkeInfo> 图片预览，如果无法在你的浏览器导出则保存预览图 </NikkeInfo>
+                <div ref="preview" class="preview"></div>
+                <div class="loading" v-if="currentExportImgState == exportImgState.run">
+                    Loading&#8230;
                 </div>
-                <div class="loading" v-if="currentExportImgState == exportImgState.run">Loading&#8230;</div>
             </div>
         </div>
     </NikkeWindow>
@@ -609,7 +654,6 @@ const openFile = () => {
     width: 100%;
     height: 40px;
     background-color: rgb(255, 243, 243);
-
 }
 
 .loading {
@@ -625,7 +669,7 @@ const openFile = () => {
 }
 
 .loading:before {
-    content: '';
+    content: "";
     display: block;
     position: fixed;
     top: 0;
@@ -645,7 +689,7 @@ const openFile = () => {
 }
 
 .loading:not(:required):after {
-    content: '';
+    content: "";
     display: block;
     font-size: 10px;
     width: 1em;
@@ -657,8 +701,14 @@ const openFile = () => {
     -o-animation: spinner 1500ms infinite linear;
     animation: spinner 1500ms infinite linear;
     border-radius: 0.5em;
-    -webkit-box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.5) -1.5em 0 0 0, rgba(0, 0, 0, 0.5) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
-    box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) -1.5em 0 0 0, rgba(0, 0, 0, 0.75) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0,
+        rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0,
+        rgba(0, 0, 0, 0.5) -1.5em 0 0 0, rgba(0, 0, 0, 0.5) -1.1em -1.1em 0 0,
+        rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
+    box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0,
+        rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0,
+        rgba(0, 0, 0, 0.75) -1.5em 0 0 0, rgba(0, 0, 0, 0.75) -1.1em -1.1em 0 0,
+        rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
 }
 
 /* Animation */
@@ -737,7 +787,6 @@ const openFile = () => {
 
 .contentBox {
     overflow-y: scroll;
-
 }
 
 .preview>img {
@@ -900,7 +949,7 @@ div>.slectModel {
 .dselectnikke {
     background-color: white;
     align-items: center;
-    height: 50px;
+    /* height: 50px; */
 }
 
 .last {
@@ -911,6 +960,25 @@ div>.slectModel {
     text-align: center;
     background-color: #fda912 !important;
 }
+
+.nadd {
+    box-sizing: border-box;
+    border: #027fc2 1px dashed;
+
+    background-image: url("/icon/addNikke.svg");
+    background-position: center;
+    background-size: 24px !important;
+}
+
+/* .selectNikkeInfo::after {
+    content: "";
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    background-image: url("/icon/delete.svg");
+    background-size: 32px;
+    opacity: .9;
+} */
 
 .selectNikkeInfo {
     display: inline-block;
@@ -1105,4 +1173,5 @@ div::-webkit-scrollbar {
     right: -50px;
     opacity: 0.65;
     transform: rotate(4deg);
-} */</style>
+} */
+</style>
