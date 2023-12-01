@@ -255,6 +255,22 @@ let isUpdate = ref(true);
     <NikkeWindow title="巴拉巴拉生成器 v1.1 更新日志" :cancel="updateCancel" :confirm="false">
       <div class="updateContent">
         <h3
+          style="text-align: center;color: #940606;border-bottom: 1px solid #940606;padding-bottom: 5px;box-sizing: content-box;">
+          巴拉巴拉 1.2 发布预告 12.1/12:30</h3>
+        <p class="updateText" style="color: #940606;text-align: center;">
+          ！！！！更新了对话数据结构！！！！
+        </p>
+        <p class="updateText" style="color: #940606;text-align: center;">
+          ！！！！更新了对话数据结构！！！！
+        </p>
+        <p class="updateText" style="color: #940606;text-align: center;">
+          ！！！！更新了对话数据结构！！！！
+        </p>
+        <p class="updateText" style="color: #940606;text-align: center;">
+          请在晚上七点前将未完成的对话导出，不然将无法正常过渡到新版本
+        </p>
+        
+        <h3
           style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">
           巴拉巴拉 1.1 发布，感谢各位的支持</h3>
         <span>11.24 日更新：</span>
