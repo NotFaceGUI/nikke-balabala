@@ -85,7 +85,7 @@ function append() {
         } else if (currentImageType.value == ImgType.builtinImage) {
             dialogData.value.messageData.list[
                 dialogData.value.messageData.list.length - 1
-            ].msg.push("[url][base64:] [/public/avatars/ " + builtinImageDatas[currentSelectImgae.value] + ".png]");
+            ].msg.push("[url][base64:] [" + builtinImageDatas[currentSelectImgae.value] + "]");
         }else {
             dialogData.value.messageData.list[
                 dialogData.value.messageData.list.length - 1
@@ -149,7 +149,7 @@ function add() {
         if (currentImageType.value == ImgType.localImage) {
             info.msg.push("[url][base64:] [" + totalImages.value[currentSelectImgae.value] + "]");
         } else if (currentImageType.value == ImgType.builtinImage) {
-            info.msg.push("[url][base64:] [/public/avatars/ " + builtinImageDatas[currentSelectImgae.value] + ".png]");
+            info.msg.push("[url][base64:] [" + builtinImageDatas[currentSelectImgae.value] + "]");
         } else {
             info.msg.push("[表情]");
         }
@@ -531,7 +531,7 @@ const selectType = (index: number) => {
                 <div class="imgList" v-if="currentImageType == ImgType.builtinImage">
                     <div v-for="(value, index) in builtinImageDatas" :key="index">
                         <div style="width: 96px; ">
-                            <img :src="'/public/avatars/ ' + value + '.png'" :class="{ isSelectImageView: currentSelectImgae === index }"
+                            <img :src="value" :class="{ isSelectImageView: currentSelectImgae === index }"
                                 style="box-sizing: border-box;width: 96px;background-color: #c6c6c6;border-radius: 5px;border: 2px #c6c6c6 solid;transition: all 0.1s ease-in-out;"
                                 @click="selectImage(index)">
                         </div>

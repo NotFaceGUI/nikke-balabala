@@ -266,7 +266,7 @@ let isUpdate = ref(true);
               <li>添加内置图片内容如下:</li>
               <li>
                 <div style="display: inline;margin: 2px;" v-for="value in builtinImageDatas">
-                  <img :src="'/public/avatars/' + value + '.png'" style="width: 32px;">
+                  <img :src="value" style="width: 32px;">
                 </div>
               </li>
             </ul>

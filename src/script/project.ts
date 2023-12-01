@@ -96,18 +96,18 @@ export interface INikkeData {
 }
 
 export let builtinImageDatas: Array<string> = [
-    "icn_emote_anger",
-    "icn_emote_cheerup",
-    "icn_emote_delight",
-    "icn_emote_hello",
-    "icn_emote_kidkid",
-    "icn_emote_sad",
-    "icn_emote_suprise",
-    "icn_emote_thanks",
-    "icn_currency_friend_point",
-    "icn_currency_summon_scroll",
-    "icn_currency_summon_scroll_character_customize",
-    "icn_currency_summon_scroll_company"
+    "https://s2.loli.net/2023/12/01/vy4JO3apusDLZjR.png",
+    "https://s2.loli.net/2023/12/01/wxY5MP7HAaeN8js.png",
+    "https://s2.loli.net/2023/12/01/EnhasZoLiFm3Pyu.png",
+    "https://s2.loli.net/2023/12/01/eYOfRQ1BcqXbzaH.png",
+    "https://s2.loli.net/2023/12/01/gL2NleqUuXybBRJ.png",
+    "https://s2.loli.net/2023/12/01/S8VNgCTyWsHLOq6.png",
+    "https://s2.loli.net/2023/12/01/cSs98mHpoIZeLbM.png",
+    "https://s2.loli.net/2023/12/01/xuqTpV2GtBR6zDy.png",
+    "https://s2.loli.net/2023/12/01/a1rmkng6FlUBA5d.png",
+    "https://s2.loli.net/2023/12/01/cNOA23b6fvnGJRF.png",
+    "https://s2.loli.net/2023/12/01/kJzmf2s4u6EFrdy.png",
+    "https://s2.loli.net/2023/12/01/zJwd9mHWtPyUc4f.png"
 ]
 
 // nikke 数据
