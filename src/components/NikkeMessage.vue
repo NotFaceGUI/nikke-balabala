@@ -66,7 +66,7 @@ function editMsg(index: number) {
 function parseImgToDataURL(content: string) {
     let value = content.split(" ");
     let index: string = value[1].substring(1, value[1].length - 1);
-    return parseInt(index);
+    return index;
 }
 
 function lostfocus(index: number) {
@@ -92,7 +92,7 @@ function lostfocus(index: number) {
                 </span>
 
                 <span v-else class="text mzhg toimg">
-                    <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
+                    <img :src="parseImgToDataURL(value)" class="imgType" />
                 </span>
                 <img src="/g.png" class="nikkeImg" />
                 <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg">
@@ -111,7 +111,7 @@ function lostfocus(index: number) {
                 </div>
             </span>
             <span v-else class="text mzhg toimg">
-                <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
+                <img :src="parseImgToDataURL(value)" class="imgType" />
             </span>
             <img src="/rg.png" class="znikkeImg" />
             <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg">
@@ -121,7 +121,7 @@ function lostfocus(index: number) {
     <div class="zmsg" v-else-if="type == msgType.img && nikke.img == '指挥官'">
         <div class="ztextbox" v-for="value, index in msgs" :key="index">
             <span class="text mzhg toimg">
-                <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
+                <img :src="parseImgToDataURL(value)" class="imgType" />
             </span>
             <img src="/rg.png" class="znikkeImg" />
             <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg">
@@ -134,7 +134,7 @@ function lostfocus(index: number) {
             <div class="name">{{ nikke.name }}</div>
             <div class="textbox" v-for="value, index in msgs" :key="index">
                 <span class="text toimg">
-                    <img :src="currentData[parseImgToDataURL(value)]" class="imgType" />
+                    <img :src="parseImgToDataURL(value)" class="imgType" />
                 </span>
                 <img src="/g.png" class="nikkeImg" />
                 <NikkeMessageEdit v-if="isEdit" :add="addMsg" :edit="editMsg" :current-index="index" :delete="deleteMsg">

@@ -25,6 +25,11 @@ export enum exportImgType {
     jpeg
 }
 
+export enum ImgType {
+    localImage, // 本地表情
+    builtinImage, // 内置表情
+    difference, // 差分
+}
 
 export enum enterprise {
     极乐净土,
@@ -89,6 +94,21 @@ export interface INikkeData {
     img: string
     enterprise: enterprise
 }
+
+export let builtinImageDatas: Array<string> = [
+    "/emojis/icn_emote_anger.png",
+    "/emojis/icn_emote_cheerup.png",
+    "/emojis/icn_emote_delight.png",
+    "/emojis/icn_emote_hello.png",
+    "/emojis/icn_emote_kidkid.png",
+    "/emojis/icn_emote_sad.png",
+    "/emojis/icn_emote_suprise.png",
+    "/emojis/icn_emote_thanks.png",
+    "/emojis/icn_currency_friend_point.png",
+    "/emojis/icn_currency_summon_scroll.png",
+    "/emojis/icn_currency_summon_scroll_character_customize.png",
+    "/emojis/icn_currency_summon_scroll_company.png"
+]
 
 // nikke 数据
 export var nikkeData: Inikkes = {
@@ -208,6 +228,7 @@ export var nikkeData: Inikkes = {
         { name: "gg", img: "gg", enterprise: enterprise.配角 },
         { name: "莱伊", img: "ly", enterprise: enterprise.泰特拉 },
         { name: "诺亚尔", img: "nye", enterprise: enterprise.泰特拉 },
+        { name: "诺亚尔", img: "nye1", enterprise: enterprise.泰特拉 },
         { name: "布兰儿", img: "ble", enterprise: enterprise.泰特拉 },
         { name: "梅里：海湾女神", img: "sml", enterprise: enterprise.泰特拉 },
         { name: "阿妮斯：闪耀夏日", img: "sans", enterprise: enterprise.泰特拉 },
@@ -231,6 +252,9 @@ export var nikkeData: Inikkes = {
         { name: "玛丽安", img: "sf1", enterprise: enterprise.朝圣者 },
         { name: "桃乐丝", img: "ctls", enterprise: enterprise.朝圣者 },
         { name: "小红帽", img: "xhm", enterprise: enterprise.朝圣者 },
+        { name: "莉莉维丝", img: "clls", enterprise: enterprise.朝圣者 },
+        { name: "灰姑娘", img: "chgn", enterprise: enterprise.朝圣者 },
+        { name: "指挥官", img: "cdzhg", enterprise: enterprise.朝圣者 },
         { name: "Npc 1", img: "npc1", enterprise: enterprise.配角 },
         { name: "Npc 2", img: "npc2", enterprise: enterprise.配角 },
         { name: "Npc 3", img: "npc3", enterprise: enterprise.配角 },
@@ -242,6 +266,8 @@ export var nikkeData: Inikkes = {
         { name: "Npc 9", img: "npc9", enterprise: enterprise.配角 },
         { name: "Npc 10", img: "npc10", enterprise: enterprise.配角 },
         { name: "Npc 11", img: "npc11", enterprise: enterprise.配角 },
+        { name: "芙蕾西亚", img: "npc12", enterprise: enterprise.配角 },
+        { name: "奥斯华", img: "npc13", enterprise: enterprise.配角 },
         { name: "量产妮姬 1", img: "lc1", enterprise: enterprise.配角 },
         { name: "量产妮姬 2", img: "lc2", enterprise: enterprise.配角 },
         { name: "量产妮姬 3", img: "lc3", enterprise: enterprise.配角 },

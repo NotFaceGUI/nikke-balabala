@@ -2,7 +2,7 @@
 import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
 import ProjectCard from './components/ProjectCard.vue';
 
-import { /* ChatMessageData, */ Project, ProjectType, buttonType, IProjectData, nikkeData, INikkeData, ChatMessageData, } from './script/project';
+import { /* ChatMessageData, */ Project, ProjectType, buttonType, IProjectData, nikkeData, INikkeData, ChatMessageData, builtinImageDatas, } from './script/project';
 import NikkeButton from './components/NikkeButton.vue';
 import NikkeWindow from './components/NikkeWindow.vue';
 import NikkeDialog from './components/NikkeDialog.vue';
@@ -253,7 +253,52 @@ let isUpdate = ref(true);
   </div>
   <div style="height: 100%;" v-if="isUpdate">
     <NikkeWindow title="巴拉巴拉生成器 v1.1 更新日志" :cancel="updateCancel" :confirm="false">
+
       <div class="updateContent">
+        <h3
+          style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">
+          巴拉巴拉 1.2 发布，感谢各位的支持</h3>
+        <ul class="updateText" style="list-style: decimal;text-indent: 0em;padding-left: 4em;">
+          <li>添加了在对话中添加妮姬的功能</li>
+          <li>
+            重写图片逻辑添加本地图片、内置图片、立绘差分的类别
+            <ul>
+              <li>添加内置图片内容如下:</li>
+              <li>
+                <div style="display: inline;margin: 2px;" v-for="value in builtinImageDatas">
+                  <img :src="value" style="width: 32px;">
+                </div>
+              </li>
+            </ul>
+          </li>
+          <li>
+            添加新的对话妮姬、具体如下：
+            <ul>
+              <li>
+                <div style="display: inline;margin: 2px;" >
+                  <img src="/avatars/clls.png" style="width: 32px;">
+                </div>
+                <div style="display: inline;margin: 2px;" >
+                  <img src="/avatars/chgn.png" style="width: 32px;">
+                </div>
+                <div style="display: inline;margin: 2px;" >
+                  <img src="/avatars/nye1.png" style="width: 32px;">
+                </div>
+                <div style="display: inline;margin: 2px;" >
+                  <img src="/avatars/cdzhg.png" style="width: 32px;">
+                </div>
+                <div style="display: inline;margin: 2px;" >
+                  <img src="/avatars/npc12.png" style="width: 32px;">
+                </div>
+                <div style="display: inline;margin: 2px;" >
+                  <img src="/avatars/npc13.png" style="width: 32px;">
+                </div>
+              </li>
+            </ul>
+          </li>
+          
+          <li>修复若干问题。</li>
+        </ul>
         <h3
           style="text-align: center;color: #940606;border-bottom: 1px solid #940606;padding-bottom: 5px;box-sizing: content-box;">
           巴拉巴拉 1.2 发布预告 12.1/12:30</h3>
@@ -269,7 +314,7 @@ let isUpdate = ref(true);
         <p class="updateText" style="color: #940606;text-align: center;">
           请在晚上七点前将未完成的对话导出，不然将无法正常过渡到新版本
         </p>
-        
+
         <h3
           style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">
           巴拉巴拉 1.1 发布，感谢各位的支持</h3>

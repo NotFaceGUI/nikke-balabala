@@ -6,6 +6,7 @@ import {
     msgType,
     exportImgType,
     ImgConfig,
+    builtinImageDatas,
 } from "../script/project";
 import NikkeMessage from "./NikkeMessage.vue";
 import domtoimage from "dom-to-image-more";
@@ -15,6 +16,7 @@ import NikkeWindow from "./NikkeWindow.vue";
 import NikkeInfo from "./NikkeInfo.vue";
 import NikkeIcon from "./NikkeIcon.vue";
 import NikkeSelect from "./NikkeSelect.vue";
+import { ImgType } from '../script/project';
 
 let props = defineProps<{
     dialogData: Project;
@@ -76,9 +78,19 @@ function append() {
     // 当前模式和最后对话的模式不同 即最后对话的是img则无需进行添加
     if (currentModel.value == msgType.img && currentSelectImgae.value != -1) {
         // 如果想最加图片则必须使得msgType为追加图片
-        dialogData.value.messageData.list[
-            dialogData.value.messageData.list.length - 1
-        ].msg.push("[url][base64:] [" + currentSelectImgae.value + "]");
+        if (currentImageType.value == ImgType.localImage) {
+            dialogData.value.messageData.list[
+                dialogData.value.messageData.list.length - 1
+            ].msg.push("[url][base64:] [" + totalImages.value[currentSelectImgae.value] + "]");
+        } else if (currentImageType.value == ImgType.builtinImage) {
+            dialogData.value.messageData.list[
+                dialogData.value.messageData.list.length - 1
+            ].msg.push("[url][base64:] [" + builtinImageDatas[currentSelectImgae.value] + "]");
+        }else {
+            dialogData.value.messageData.list[
+                dialogData.value.messageData.list.length - 1
+            ].msg.push("[差分]");
+        }
     } else if (
         dialogData.value.messageData.list[dialogData.value.messageData.list.length - 1]
             .msgType == msgType.img
@@ -134,7 +146,13 @@ function add() {
     // 如果消息类型是图片 则进行图片文本
     if (currentModel.value == msgType.img && currentSelectImgae.value != -1) {
         info.msgType = msgType.img;
-        info.msg.push("[url][base64:] [" + currentSelectImgae.value + "]");
+        if (currentImageType.value == ImgType.localImage) {
+            info.msg.push("[url][base64:] [" + totalImages.value[currentSelectImgae.value] + "]");
+        } else if (currentImageType.value == ImgType.builtinImage) {
+            info.msg.push("[url][base64:] [" + builtinImageDatas[currentSelectImgae.value] + "]");
+        } else {
+            info.msg.push("[表情]");
+        }
     } else {
         info.msg.push(inputContent.value);
     }
@@ -413,6 +431,12 @@ const cancelAdition = () => {
     isAddNikkeWindow.value = false;
 }
 
+let currentImageType = ref<ImgType>(ImgType.localImage);
+
+const selectType = (index: number) => {
+    currentImageType.value = index;
+    console.log(index);
+}
 
 </script>
 
@@ -426,9 +450,9 @@ const cancelAdition = () => {
     </div> -->
     <div style="width: 100%;height: 75%;position: absolute;">
         <NikkeWindow id="createProject" title="添加新的妮姬对象" :confirm="false" :show="isImg" v-if="isAddNikkeWindow"
-            button-cancel="取消添加" :cancel="cancelAdition"  button-success="确认添加">
+            button-cancel="取消添加" :cancel="cancelAdition" button-success="确认添加">
             <div>
-                <NikkeSelect :filter-data="dialogData?.projectNikkes" ></NikkeSelect>
+                <NikkeSelect :filter-data="dialogData?.projectNikkes"></NikkeSelect>
             </div>
         </NikkeWindow>
     </div>
@@ -476,34 +500,51 @@ const cancelAdition = () => {
                 <div class="selectNikkeInfo nadd" @click="addNikke()"></div>
 
             </div>
-            <div class="imgList" v-if="isImgListView">
-                <div v-for="(value, index) in totalImages" :key="index">
-                    <div style="width: 96px; height: 96px">
-                        <img :src="value" :class="{ isSelectImageView: currentSelectImgae === index }" style="
-                box-sizing: border-box;
-                width: 96px;
-                background-color: #c6c6c6;
-                border-radius: 5px;
-                border: 2px #c6c6c6 solid;
-                transition: all 0.1s ease-in-out;
-              " @click="selectImage(index)" />
+
+            <div style="background-color:#fcfcfc;" v-if="isImgListView">
+                <div class="imageType">
+                    <ul style="color: black;" class="itab">
+                        <li @click="selectType(0)" :class="{ selectType: currentImageType == ImgType.localImage }">
+                            <span>本地图片</span>
+                        </li>
+                        <li @click="selectType(1)" :class="{ selectType: currentImageType == ImgType.builtinImage }">
+                            <span>内置图片</span>
+                        </li>
+                        <li @click="selectType(2)" :class="{ selectType: currentImageType == ImgType.difference }">
+                            <span>表情差分</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="imgList" v-if="currentImageType == ImgType.localImage">
+                    <div v-for="(value, index) in totalImages" :key="index">
+                        <div style="width: 96px; height: 96px">
+                            <img :src="value" :class="{ isSelectImageView: currentSelectImgae === index }"
+                                style="box-sizing: border-box;width: 96px;background-color: #c6c6c6;border-radius: 5px;border: 2px #c6c6c6 solid;transition: all 0.1s ease-in-out;"
+                                @click="selectImage(index)" />
+                        </div>
+                    </div>
+                    <div style="font-size: 64px;color: black;width: 96px;height: 96px;text-align: center;border: 1px solid skyblue;border-radius: 10px;display: flex;justify-content: center;align-items: center;"
+                        @click="openFile()">
+                        <span style="margin-top: -11px"> + </span>
                     </div>
                 </div>
-                <div style="
-            font-size: 64px;
-            color: black;
-            width: 96px;
-            height: 96px;
-            text-align: center;
-            border: 1px solid skyblue;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          " @click="openFile()">
-                    <span style="margin-top: -11px"> + </span>
+                <div class="imgList" v-if="currentImageType == ImgType.builtinImage">
+                    <div v-for="(value, index) in builtinImageDatas" :key="index">
+                        <div style="width: 96px; ">
+                            <img :src="value" :class="{ isSelectImageView: currentSelectImgae === index }"
+                                style="box-sizing: border-box;width: 96px;background-color: #c6c6c6;border-radius: 5px;border: 2px #c6c6c6 solid;transition: all 0.1s ease-in-out;"
+                                @click="selectImage(index)">
+                        </div>
+                    </div>
+                </div>
+                <div class="imgList" v-if="currentImageType == ImgType.difference">
+                    <div v-for="(value, index) in builtinImageDatas" :key="index">
+                        {{ value }}
+                    </div>
+
                 </div>
             </div>
+
             <div class="nikkeedit">
                 <div class="selectNikkeInfo" @click="show()" :style="{
                     backgroundImage:
@@ -810,9 +851,36 @@ const cancelAdition = () => {
     opacity: 0.8;
 }
 
+.itab {
+    display: flex;
+    height: 35px;
+    align-items: center;
+}
+
+.itab>li {
+    height: 35px;
+    min-width: 80px;
+    padding: 0 5px;
+    color: rgb(80, 80, 80);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.selectType {
+    color: rgb(243, 124, 124) !important;
+    background-color: rgb(222, 224, 222);
+
+}
+
+.imageType {
+    height: 35px;
+}
+
 .imgList {
     height: 230px;
     max-height: 230px;
+    min-height: 230px;
     overflow-y: scroll;
     background-color: #fcfcfc;
     border-top: 1px solid #f1f1f1;

@@ -161,3 +161,10 @@ input[type="radio"]:checked+label {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  
+}
