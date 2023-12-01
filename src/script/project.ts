@@ -96,18 +96,18 @@ export interface INikkeData {
 }
 
 export let builtinImageDatas: Array<string> = [
-    "icn_emote_anger.png",
-    "icn_emote_cheerup.png",
-    "icn_emote_delight.png",
-    "icn_emote_hello.png",
-    "icn_emote_kidkid.png",
-    "icn_emote_sad.png",
-    "icn_emote_suprise.png",
-    "icn_emote_thanks.png",
-    "icn_currency_friend_point.png",
-    "icn_currency_summon_scroll.png",
-    "icn_currency_summon_scroll_character_customize.png",
-    "icn_currency_summon_scroll_company.png"
+    "/avatars/icn_emote_anger.png",
+    "/avatars/icn_emote_cheerup.png",
+    "/avatars/icn_emote_delight.png",
+    "/avatars/icn_emote_hello.png",
+    "/avatars/icn_emote_kidkid.png",
+    "/avatars/icn_emote_sad.png",
+    "/avatars/icn_emote_suprise.png",
+    "/avatars/icn_emote_thanks.png",
+    "/avatars/icn_currency_friend_point.png",
+    "/avatars/icn_currency_summon_scroll.png",
+    "/avatars/icn_currency_summon_scroll_character_customize.png",
+    "/avatars/icn_currency_summon_scroll_company.png"
 ]
 
 // nikke 数据
