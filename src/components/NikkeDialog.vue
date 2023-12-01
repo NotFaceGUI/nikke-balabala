@@ -85,7 +85,7 @@ function append() {
         } else if (currentImageType.value == ImgType.builtinImage) {
             dialogData.value.messageData.list[
                 dialogData.value.messageData.list.length - 1
-            ].msg.push("[url][base64:] [/emojis/" + builtinImageDatas[currentSelectImgae.value] + "]");
+            ].msg.push("[url][base64:] [/builtin/" + builtinImageDatas[currentSelectImgae.value] + "]");
         }else {
             dialogData.value.messageData.list[
                 dialogData.value.messageData.list.length - 1
@@ -149,7 +149,7 @@ function add() {
         if (currentImageType.value == ImgType.localImage) {
             info.msg.push("[url][base64:] [" + totalImages.value[currentSelectImgae.value] + "]");
         } else if (currentImageType.value == ImgType.builtinImage) {
-            info.msg.push("[url][base64:] [/emojis/" + builtinImageDatas[currentSelectImgae.value] + "]");
+            info.msg.push("[url][base64:] [/builtin/" + builtinImageDatas[currentSelectImgae.value] + "]");
         } else {
             info.msg.push("[表情]");
         }
