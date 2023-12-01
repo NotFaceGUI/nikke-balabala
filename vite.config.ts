@@ -4,7 +4,7 @@ import vue from '@vitejs/plugin-vue'
 const pathSrc = path.resolve(__dirname, 'src')
 
 export default defineConfig({
-  base:  "./nikke-balabala",
+  base: "./",
 
   resolve: {
     alias: {
