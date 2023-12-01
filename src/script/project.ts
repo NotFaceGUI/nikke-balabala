@@ -96,18 +96,18 @@ export interface INikkeData {
 }
 
 export let builtinImageDatas: Array<string> = [
-    "/emojis/icn_emote_anger.png",
-    "/emojis/icn_emote_cheerup.png",
-    "/emojis/icn_emote_delight.png",
-    "/emojis/icn_emote_hello.png",
-    "/emojis/icn_emote_kidkid.png",
-    "/emojis/icn_emote_sad.png",
-    "/emojis/icn_emote_suprise.png",
-    "/emojis/icn_emote_thanks.png",
-    "/emojis/icn_currency_friend_point.png",
-    "/emojis/icn_currency_summon_scroll.png",
-    "/emojis/icn_currency_summon_scroll_character_customize.png",
-    "/emojis/icn_currency_summon_scroll_company.png"
+    "/avatars/emojis/icn_emote_anger.png",
+    "/avatars/emojis/icn_emote_cheerup.png",
+    "/avatars/emojis/icn_emote_delight.png",
+    "/avatars/emojis/icn_emote_hello.png",
+    "/avatars/emojis/icn_emote_kidkid.png",
+    "/avatars/emojis/icn_emote_sad.png",
+    "/avatars/emojis/icn_emote_suprise.png",
+    "/avatars/emojis/icn_emote_thanks.png",
+    "/avatars/emojis/icn_currency_friend_point.png",
+    "/avatars/emojis/icn_currency_summon_scroll.png",
+    "/avatars/emojis/icn_currency_summon_scroll_character_customize.png",
+    "/avatars/emojis/icn_currency_summon_scroll_company.png"
 ]
 
 // nikke 数据
