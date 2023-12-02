@@ -1,4 +1,4 @@
-import { getDataByKey } from '../data/useIndexedDB';
+import { getDataByKey, addData } from '../data/useIndexedDB';
 
 export enum ProjectType {
     Task, // 任务
@@ -84,7 +84,6 @@ export interface Database {
     projects: string
 }
 
-import { getDataByKey,addData } from '../data/useIndexedDB'
 
 // 2. 添加数据
 export const addDataToDB = async (dbPromise: Promise<IDBDatabase>, storeName: string, data: any) => {
