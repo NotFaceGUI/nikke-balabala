@@ -121,6 +121,14 @@ function initProject() {
   //   v.projectNikkes = [{ name: "艾玛", img: "am", enterprise: enterprise.极乐净土 },]
   // })
 
+  var isV = localStorage.getItem('projects'); //'true' 字符串类型的
+  if (isV === null) {
+    // localStorage.setItem("projects", JSON.stringify(project))
+  } else {
+    project = JSON.parse(isV);
+    addDataToDB(dbPromise, NikkeDatabase.nikkeProject, { sequenceId: 1, projects: project })
+  }
+
   retrieveDataFromDB(dbPromise, NikkeDatabase.nikkeProject, NikkeDatabase.nikkeData).then((value) => {
     if (value) {
       project = JSON.parse(value.projects);
