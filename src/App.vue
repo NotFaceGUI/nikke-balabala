@@ -127,6 +127,8 @@ function initProject() {
   } else {
     project = JSON.parse(isV);
     addDataToDB(dbPromise, NikkeDatabase.nikkeProject, { sequenceId: 1, projects: project })
+    localStorage.setItem("cData", isV);
+    localStorage.removeItem("projects");
   }
 
   retrieveDataFromDB(dbPromise, NikkeDatabase.nikkeProject, NikkeDatabase.nikkeData).then((value) => {
