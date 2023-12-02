@@ -2,7 +2,7 @@
 import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
 import ProjectCard from './components/ProjectCard.vue';
 
-import { /* ChatMessageData, */ Project, ProjectType, buttonType, IProjectData, nikkeData, INikkeData, ChatMessageData, builtinImageDatas, } from './script/project';
+import { /* ChatMessageData, */ Project, ProjectType, buttonType, IProjectData, nikkeData, INikkeData, ChatMessageData, builtinImageDatas, NikkeDatabase, Database, addDataToDB, retrieveDataFromDB } from './script/project';
 import NikkeButton from './components/NikkeButton.vue';
 import NikkeWindow from './components/NikkeWindow.vue';
 import NikkeDialog from './components/NikkeDialog.vue';
@@ -12,6 +12,7 @@ import NikkeIcon from './components/NikkeIcon.vue';
 // import NikkeSelect from './components/NikkeSelect.vue';
 
 // import { useI18n } from 'vue-i18n'
+import { openDB } from './data/useIndexedDB';
 // const { locale } = useI18n();
 
 const data = reactive([
@@ -105,6 +106,8 @@ function clearTimer() {
   clearInterval(timer);
 }
 
+ const dbPromise: Promise<IDBDatabase> = openDB("nikkeDatabase");
+
 function initProject() {
   project = {
     datas: [
@@ -118,12 +121,23 @@ function initProject() {
   //   v.projectNikkes = [{ name: "艾玛", img: "am", enterprise: enterprise.极乐净土 },]
   // })
 
-  var isV = localStorage.getItem('projects'); //'true' 字符串类型的
-  if (isV === null) {
-    localStorage.setItem("projects", JSON.stringify(project))
-  } else {
-    project = JSON.parse(isV);
-  }
+  retrieveDataFromDB(dbPromise, NikkeDatabase.nikkeProject, NikkeDatabase.nikkeData).then((value) => {
+    if (value) {
+      project = JSON.parse(value.projects);
+      console.log("已经有数据了！", project);
+      selectTab(1);
+    } else {
+      console.log("没有数据，数据写入中……");
+      addDataToDB(dbPromise, NikkeDatabase.nikkeProject, { sequenceId: 1, projects: project })
+    }
+  });
+
+  // var isV = localStorage.getItem('projects'); //'true' 字符串类型的
+  // if (isV === null) {
+  //   localStorage.setItem("projects", JSON.stringify(project))
+  // } else {
+  //   project = JSON.parse(isV);
+  // }
 }
 
 function cancel() {
@@ -148,14 +162,19 @@ function success() {
     var msgData: ChatMessageData = {
       list: []
     }
+    console.log(project);
     var pro: Project = new Project(newProjecData.proName, newProjecData.proDesc, newProjecData.author, parseInt(selectType.value), msgData);
     selectNikke.forEach(item => pro.projectNikkes.push(item));
     isSelect.length = 0;
     selectNikke.length = 0;
     isShow.value = false;
     project.datas.push(pro);
-    console.log("更新对象项目到localStorage中");
-    localStorage.setItem("projects", JSON.stringify(project))
+
+    let str = JSON.stringify(project);
+    console.log("更新对象项目到indexDB中");
+    let data: Database = { sequenceId: 1, projects: str };
+    addDataToDB(dbPromise, NikkeDatabase.nikkeProject, data)
+
     selectTab(pro.type.valueOf());
     console.log("new Pro", project);
     console.log("success");
@@ -176,7 +195,9 @@ function initData() {
 
 function back(pro: Project) {
   project.datas[currentProject.value] = pro; // 更新数据
-  localStorage.setItem("projects", JSON.stringify(project)); //写入数据
+  // localStorage.setItem("projects", JSON.stringify(project)); //写入数据
+  let data: Database = { sequenceId: 1, projects: JSON.stringify(project) };
+  addDataToDB(dbPromise, NikkeDatabase.nikkeProject, data)
   currentProject.value = -1;
 }
 
@@ -211,6 +232,8 @@ function getFontName() {
 
 let currcurentFont = ref('');
 
+
+
 onMounted(() => {
   initProject();
   updateTime();
@@ -222,6 +245,26 @@ onMounted(() => {
     isSelect.push(false);
   })
 })
+
+// // 2. 添加数据
+// const addDataToDB = async (dbPromise: Promise<IDBDatabase>, storeName: string, data: any) => {
+//   const db: IDBDatabase = await dbPromise;
+//   addData(db, storeName, data);
+// };
+
+// // 获取数据
+// const retrieveDataFromDB = async (dbPromise: Promise<IDBDatabase>, storeName: string, key: number) => {
+//   const db = await dbPromise;
+//   const result: any = await getDataByKey(db, storeName, key);
+//   return result;
+// };
+
+// 删除数据
+// const deleteDataFromDB = async (dbPromise: Promise<IDBDatabase>, storeName: string, id: number) => {
+//   const db = await dbPromise;
+//   deleteDB(db, storeName, id);
+// };
+
 
 onBeforeUnmount(() => {
   clearTimer();
@@ -252,7 +295,7 @@ let isUpdate = ref(true);
     <NikkeDialog :current-time="currentTime" :back="back" :dialog-data="filteredData[currentProject]"></NikkeDialog>
   </div>
   <div style="height: 100%;" v-if="isUpdate">
-    <NikkeWindow title="巴拉巴拉生成器 v1.1 更新日志" :cancel="updateCancel" :confirm="false">
+    <NikkeWindow title="巴拉巴拉生成器 v1.2 更新日志" :cancel="updateCancel" :confirm="false">
 
       <div class="updateContent">
         <h3
@@ -275,28 +318,28 @@ let isUpdate = ref(true);
             添加新的对话妮姬、具体如下：
             <ul>
               <li>
-                <div style="display: inline;margin: 2px;" >
+                <div style="display: inline;margin: 2px;">
                   <img src="/avatars/clls.png" style="width: 32px;">
                 </div>
-                <div style="display: inline;margin: 2px;" >
+                <div style="display: inline;margin: 2px;">
                   <img src="/avatars/chgn.png" style="width: 32px;">
                 </div>
-                <div style="display: inline;margin: 2px;" >
+                <div style="display: inline;margin: 2px;">
                   <img src="/avatars/nye1.png" style="width: 32px;">
                 </div>
-                <div style="display: inline;margin: 2px;" >
+                <div style="display: inline;margin: 2px;">
                   <img src="/avatars/cdzhg.png" style="width: 32px;">
                 </div>
-                <div style="display: inline;margin: 2px;" >
+                <div style="display: inline;margin: 2px;">
                   <img src="/avatars/npc12.png" style="width: 32px;">
                 </div>
-                <div style="display: inline;margin: 2px;" >
+                <div style="display: inline;margin: 2px;">
                   <img src="/avatars/npc13.png" style="width: 32px;">
                 </div>
               </li>
             </ul>
           </li>
-          
+
           <li>修复若干问题。</li>
         </ul>
         <h3

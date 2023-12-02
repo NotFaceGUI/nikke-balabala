@@ -7,6 +7,7 @@ import {
     exportImgType,
     ImgConfig,
     builtinImageDatas,
+    retrieveDataFromDB,
 } from "../script/project";
 import NikkeMessage from "./NikkeMessage.vue";
 import domtoimage from "dom-to-image-more";
@@ -16,7 +17,8 @@ import NikkeWindow from "./NikkeWindow.vue";
 import NikkeInfo from "./NikkeInfo.vue";
 import NikkeIcon from "./NikkeIcon.vue";
 import NikkeSelect from "./NikkeSelect.vue";
-import { ImgType } from '../script/project';
+import { ImgType, NikkeDatabase, addDataToDB } from '../script/project';
+import { openDB } from '../data/useIndexedDB';
 
 let props = defineProps<{
     dialogData: Project;
@@ -86,7 +88,7 @@ function append() {
             dialogData.value.messageData.list[
                 dialogData.value.messageData.list.length - 1
             ].msg.push("[url][base64:] [" + builtinImageDatas[currentSelectImgae.value] + "]");
-        }else {
+        } else {
             dialogData.value.messageData.list[
                 dialogData.value.messageData.list.length - 1
             ].msg.push("[差分]");
@@ -285,16 +287,27 @@ function selectModel(type: msgType) {
     currentModel.value = type;
 }
 
+const dbPromise: Promise<IDBDatabase> = openDB("nikkeDatabase");
+
+
 onMounted(() => {
     scrollToBottom();
 
     // 判断有没有totalImages这个字段
-    var isV = localStorage.getItem("totalImages"); //'true' 字符串类型的
-    if (isV === null) {
-        localStorage.setItem("totalImages", JSON.stringify(totalImages.value));
-    } else {
-        totalImages.value = JSON.parse(isV);
-    }
+    // var isV = localStorage.getItem("totalImages"); //'true' 字符串类型的
+    // if (isV === null) {
+    //     localStorage.setItem("totalImages", JSON.stringify(totalImages.value));
+    // } else {
+    //     totalImages.value = JSON.parse(isV);
+    // }
+    retrieveDataFromDB(dbPromise, NikkeDatabase.nikkeProject, NikkeDatabase.nikkeTotalImages).then((value) => {
+        if (value) {
+            totalImages = JSON.parse(value.totalImages);
+        } else {
+            console.log("没有图片数据，数据写入中……");
+            addDataToDB(dbPromise, NikkeDatabase.nikkeProject, { sequenceId: NikkeDatabase.nikkeTotalImages, totalImages: JSON.stringify(totalImages.value) })
+        }
+    });
 });
 
 var currentNikke = ref(0);
@@ -366,7 +379,9 @@ const addImages = () => {
         }
     });
     if (sum > 0) {
-        localStorage.setItem("totalImages", JSON.stringify(totalImages.value));
+        // localStorage.setItem("totalImages", JSON.stringify(totalImages.value));
+        let data = { sequenceId: NikkeDatabase.nikkeTotalImages, totalImages: JSON.stringify(totalImages.value) };
+        addDataToDB(dbPromise, NikkeDatabase.nikkeProject, data);
     }
 };
 

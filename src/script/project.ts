@@ -1,3 +1,4 @@
+import { getDataByKey } from '../data/useIndexedDB';
 
 export enum ProjectType {
     Task, // 任务
@@ -78,6 +79,26 @@ export interface IProjectData {
     datas: Array<Project>;
 }
 
+export interface Database {
+    sequenceId: number;
+    projects: string
+}
+
+import { getDataByKey,addData } from '../data/useIndexedDB'
+
+// 2. 添加数据
+export const addDataToDB = async (dbPromise: Promise<IDBDatabase>, storeName: string, data: any) => {
+    const db: IDBDatabase = await dbPromise;
+    addData(db, storeName, data);
+};
+
+// 获取数据
+export const retrieveDataFromDB = async (dbPromise: Promise<IDBDatabase>, storeName: string, key: number) => {
+    const db = await dbPromise;
+    const result: any = await getDataByKey(db, storeName, key);
+    return result;
+};
+
 export interface ImgConfig {
     width: number,
     maxWidth: number,
@@ -93,6 +114,12 @@ export interface INikkeData {
     name: string,
     img: string
     enterprise: enterprise
+}
+
+export enum NikkeDatabase {
+    nikkeProject = "nikkeProject",
+    nikkeData = 1,
+    nikkeTotalImages = 2
 }
 
 export let builtinImageDatas: Array<string> = [
