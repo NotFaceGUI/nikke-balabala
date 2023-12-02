@@ -281,7 +281,7 @@ export var nikkeData: Inikkes = {
         { name: "莉莉维丝", img: "clls", enterprise: enterprise.朝圣者 },
         { name: "灰姑娘", img: "chgn", enterprise: enterprise.朝圣者 },
         { name: "指挥官", img: "cdzhg", enterprise: enterprise.朝圣者 },
-        { name: "Npc 1", img: "npc1", enterprise: enterprise.配角 },
+        { name: "露姬", img: "npc1", enterprise: enterprise.配角 },
         { name: "Npc 2", img: "npc2", enterprise: enterprise.配角 },
         { name: "Npc 3", img: "npc3", enterprise: enterprise.配角 },
         { name: "Npc 4", img: "npc4", enterprise: enterprise.配角 },
