@@ -147,6 +147,15 @@ function initProject() {
   var isV = localStorage.getItem('projects'); //'true' 字符串类型的
   if (isV === null) {
     // localStorage.setItem("projects", JSON.stringify(project))
+    isV = localStorage.getItem('cData');
+    if (isV === null) { 
+    } else {
+      project = JSON.parse(isV);
+      let data : Database = { sequenceId: 1, projects: JSON.stringify(project) };
+      addDataToDB(dbPromise, NikkeDatabase.nikkeProject,data );
+      localStorage.setItem("ccData", JSON.stringify(isV));
+      localStorage.removeItem("cData");
+    }
   } else {
     project = JSON.parse(isV);
     addDataToDB(dbPromise, NikkeDatabase.nikkeProject, { sequenceId: 1, projects: project })
