@@ -638,10 +638,8 @@ let isUpdate = ref(true);
       </div>
       <div class="content">
 
-
         <div class="cardList container">
           <TransitionGroup tag="ul" name="fade">
-
             <div v-for="(value, index) in filteredData" :key="index">
               <ProjectCard :select-nikkes="value" @click="openDialog(index)">
                 <div class="dialogDelete" @click.stop="deleteDialog(index)"></div>
@@ -961,7 +959,8 @@ let isUpdate = ref(true);
 .content {
   max-height: 82.2%;
 
-  /* overflow-y: scroll; */
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 div::-webkit-scrollbar {

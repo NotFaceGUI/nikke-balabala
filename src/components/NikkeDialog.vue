@@ -64,6 +64,7 @@ const scrollToBottom = () => {
 
 function check() {
     // 如果当前模式是图片
+
     if (currentSelectImgae.value != -1 || currentModel.value == msgType.branch) {
         return;
     }
@@ -289,7 +290,6 @@ function selectModel(type: msgType) {
 
 const dbPromise: Promise<IDBDatabase> = openDB("nikkeDatabase");
 
-
 onMounted(() => {
     scrollToBottom();
 
@@ -300,6 +300,7 @@ onMounted(() => {
     // } else {
     //     totalImages.value = JSON.parse(isV);
     // }
+
     retrieveDataFromDB(dbPromise, NikkeDatabase.nikkeProject, NikkeDatabase.nikkeTotalImages).then((value) => {
         if (value) {
             totalImages.value = JSON.parse(value.totalImages);
@@ -387,7 +388,9 @@ const addImages = () => {
 
 function selectImage(index: number) {
     console.log(1);
+    currentModel.value = msgType.img;
     if (currentSelectImgae.value == index) {
+        
         currentSelectImgae.value = -1;
     } else {
         currentSelectImgae.value = index;
@@ -578,7 +581,7 @@ const selectType = (index: number) => {
                 </div>
                 <input id="fileInput" type="file" ref="fileInput" style="display: none" @change.stop="handleFileUpload"
                     accept="image/*" multiple />
-                <input ref="inputRef" type="text" class="nikkeInput dinput" v-model="inputContent" @input="check()"
+                <input ref="inputRef" type="text" class="nikkeInput dinput" v-model="inputContent"  @input="check()"
                     @focus="check()" @keyup.enter="add()" @keydown.tab="append()" :placeholder="inputPlaceholder" />
                 <div class="add newadd" @click="add()">新增</div>
                 <div class="add oldadd" @click="append()"
