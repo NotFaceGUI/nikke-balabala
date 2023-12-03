@@ -22,6 +22,8 @@ const data = reactive([
   { id: ProjectType.Group, type: 'group' }
 ]);
 
+const appVersion = "v1.2";
+
 var filteredData = ref<Project[]>([]);
 var selectNikke: Array<INikkeData> = reactive([]);
 var isSelect: Array<boolean> = reactive([]);
@@ -400,6 +402,9 @@ let isUpdate = ref(true);
               <img src="/avatars/doro.png" style="width: 32px;">
             </div>
           </li>
+          <li>修复对话无法滚动的问题。</li>
+          <li>修复部分对话消失的问题。</li>
+          <li>修复图片类型的对话无法进行添加和删除，当一个消息类型为图片时会触发这个问题。</li>
         </ul>
         <h3 class="hline"></h3>
         <ul class="updateText" style="list-style: decimal;text-indent: 0em;padding-left: 4em;">
@@ -615,8 +620,7 @@ let isUpdate = ref(true);
           </span>
           {{ currentTime }}
           <span style="font-size: 12px;margin-left: auto;">当前字体：{{ currcurentFont }}</span>
-          <span class="logoText">生成器
-            v1.1</span>
+          <span class="logoText">生成器 {{ appVersion }}</span>
         </div>
         <div class="logo">
           <NikkeIcon></NikkeIcon>

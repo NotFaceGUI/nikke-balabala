@@ -45,6 +45,9 @@ function deleteMsg(index: number) {
 }
 
 function addMsg(index: number, isUpOrDown: number) {
+    if (props.dialogData.messageData.list[props.index].msgType == msgType.img) {
+        props.dialogData.messageData.list[props.index].msgType = msgType.nikke;
+    }
     if (isUpOrDown == 0) {
         props.msgs.splice(index, 0, "插入的数据")
     } else if (isUpOrDown == 1) {
@@ -65,7 +68,10 @@ function editMsg(index: number) {
 
 function parseImgToDataURL(content: string) {
     let value = content.split(" ");
-    let index: string = value[1].substring(1, value[1].length - 1);
+    let index: string = "";
+    console.log("为什么：", value);
+    index = value[1].substring(1, value[1].length - 1);
+
     return index;
 }
 
