@@ -104,7 +104,6 @@ export interface ImgConfig {
     bottomHeigth: number,
 }
 
-
 export interface Inikkes {
     nikkes: Array<INikkeData>
 }
@@ -202,6 +201,7 @@ export var nikkeData: Inikkes = {
         { name: "拉普拉斯", img: "lpls", enterprise: enterprise.米西利斯 },
         { name: "安妮：奇迹仙女", img: "sdan", enterprise: enterprise.米西利斯 },
         { name: "豺狼", img: "cl", enterprise: enterprise.米西利斯 },
+        { name: "克拉乌	", img: "klw", enterprise: enterprise.米西利斯 },
         { name: "吉尔提", img: "jet", enterprise: enterprise.米西利斯 },
         { name: "森", img: "s", enterprise: enterprise.米西利斯 },
         { name: "坎西", img: "kx", enterprise: enterprise.米西利斯 },
@@ -267,17 +267,26 @@ export var nikkeData: Inikkes = {
         { name: "iDoll太阳", img: "idty", enterprise: enterprise.泰特拉 },
         { name: "白雪公主", img: "cbxgz", enterprise: enterprise.朝圣者 },
         { name: "白雪公主：纯真年代", img: "cxbx", enterprise: enterprise.朝圣者 },
+        { name: "白雪公主", img: "cxsbx", enterprise: enterprise.朝圣者 },
         { name: "红莲", img: "chli", enterprise: enterprise.朝圣者 },
+        { name: "红莲", img: "cmmhl", enterprise: enterprise.朝圣者 },
         { name: "红莲", img: "clhl", enterprise: enterprise.朝圣者 },
+        { name: "红莲", img: "cxshl", enterprise: enterprise.朝圣者 },
         { name: "诺雅", img: "cny", enterprise: enterprise.朝圣者 },
         { name: "哈兰", img: "chl", enterprise: enterprise.朝圣者 },
         { name: "长发公主", img: "ccfgz", enterprise: enterprise.朝圣者 },
         { name: "长发公主", img: "clcfgz", enterprise: enterprise.朝圣者 },
+        { name: "长发公主", img: "cxscfgz", enterprise: enterprise.朝圣者 },
         { name: "伊莎贝尔", img: "cysbe", enterprise: enterprise.朝圣者 },
         { name: "玛丽安", img: "csf", enterprise: enterprise.朝圣者 },
+        { name: "玛丽安", img: "mla", enterprise: enterprise.朝圣者 },
         { name: "玛丽安", img: "sf1", enterprise: enterprise.朝圣者 },
         { name: "桃乐丝", img: "ctls", enterprise: enterprise.朝圣者 },
+        { name: "桃乐丝", img: "cxstls", enterprise: enterprise.朝圣者 },
+        { name: "doro", img: "doro", enterprise: enterprise.朝圣者 },
         { name: "小红帽", img: "xhm", enterprise: enterprise.朝圣者 },
+        { name: "小红帽", img: "cxsxhm", enterprise: enterprise.朝圣者 },
+        { name: "小红帽", img: "cxsdhm", enterprise: enterprise.朝圣者 },
         { name: "莉莉维丝", img: "clls", enterprise: enterprise.朝圣者 },
         { name: "灰姑娘", img: "chgn", enterprise: enterprise.朝圣者 },
         { name: "指挥官", img: "cdzhg", enterprise: enterprise.朝圣者 },

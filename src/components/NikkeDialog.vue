@@ -258,7 +258,7 @@ const dialogImg = ref<HTMLElement | null>(null);
 const dialogHeader = ref<HTMLElement | null>(null);
 const dialogContent = ref<HTMLElement | null>(null);
 const preview = ref<HTMLElement | null>(null);
-let totalImages = ref<string[]>([]); // 存储到 local 中
+const totalImages = ref<string[]>([]);
 
 const inputRef = ref<HTMLInputElement>();
 const inputPlaceholder = ref("请输入对话内容");
@@ -302,7 +302,7 @@ onMounted(() => {
     // }
     retrieveDataFromDB(dbPromise, NikkeDatabase.nikkeProject, NikkeDatabase.nikkeTotalImages).then((value) => {
         if (value) {
-            totalImages = JSON.parse(value.totalImages);
+            totalImages.value = JSON.parse(value.totalImages);
         } else {
             console.log("没有图片数据，数据写入中……");
             addDataToDB(dbPromise, NikkeDatabase.nikkeProject, { sequenceId: NikkeDatabase.nikkeTotalImages, totalImages: JSON.stringify(totalImages.value) })

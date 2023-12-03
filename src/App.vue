@@ -13,6 +13,7 @@ import NikkeIcon from './components/NikkeIcon.vue';
 
 // import { useI18n } from 'vue-i18n'
 import { openDB } from './data/useIndexedDB';
+import { saveAs } from 'file-saver';
 // const { locale } = useI18n();
 
 const data = reactive([
@@ -21,7 +22,7 @@ const data = reactive([
   { id: ProjectType.Group, type: 'group' }
 ]);
 
-var filteredData: Project[] = reactive([]);
+var filteredData = ref<Project[]>([]);
 var selectNikke: Array<INikkeData> = reactive([]);
 var isSelect: Array<boolean> = reactive([]);
 var newProjecData: { proName: string, proType: ProjectType, proDesc: string, author: string } = reactive({
@@ -35,6 +36,24 @@ var currentProject = ref(-1);
 
 function openDialog(index: number) {
   currentProject.value = index;
+}
+
+function deleteDialog(index: number) {
+  project.datas.splice(index, 1);
+  updateData(); // 更新数据
+  selectTab(1);
+}
+
+function dialogExport(index: number) {
+  let currentData = project.datas[index];
+  console.log("导出", currentData);
+  downloadJson(currentData, currentData.name || '对话数据');
+}
+
+function downloadJson(data: any, filename: string) {
+  const jsonData = JSON.stringify(data);
+  const blob = new Blob([jsonData], { type: 'application/json' });
+  saveAs(blob, filename || 'data.json');
 }
 
 function select(value: INikkeData, index: number) {
@@ -75,8 +94,8 @@ function createProject() {
 function selectTab(index: number) {
   currentTabId.value = index;
   // 过滤数据
-  filteredData = project.datas.filter(item => item.type === index);
-  listNumber.value = filteredData.length;
+  filteredData.value = project.datas.filter(item => item.type === index);
+  listNumber.value = filteredData.value.length;
 }
 
 function formatTime(time: number) {
@@ -94,6 +113,10 @@ function updateTime() {
   currentTime.value = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)} ${week}`
 }
 
+function jump(url: string) {
+  location.href = url;
+}
+
 var timer: any;
 
 function showTimes() {
@@ -106,7 +129,7 @@ function clearTimer() {
   clearInterval(timer);
 }
 
- const dbPromise: Promise<IDBDatabase> = openDB("nikkeDatabase");
+const dbPromise: Promise<IDBDatabase> = openDB("nikkeDatabase");
 
 function initProject() {
   project = {
@@ -165,6 +188,12 @@ function checkData() {
   return true;
 }
 
+function updateData() {
+  let str = JSON.stringify(project);
+  console.log("更新对象项目到indexDB中");
+  let data: Database = { sequenceId: 1, projects: str };
+  addDataToDB(dbPromise, NikkeDatabase.nikkeProject, data)
+}
 
 
 function success() {
@@ -180,13 +209,8 @@ function success() {
     isShow.value = false;
     project.datas.push(pro);
 
-    let str = JSON.stringify(project);
-    console.log("更新对象项目到indexDB中");
-    let data: Database = { sequenceId: 1, projects: str };
-    addDataToDB(dbPromise, NikkeDatabase.nikkeProject, data)
-
+    updateData();
     selectTab(pro.type.valueOf());
-    console.log("new Pro", project);
     console.log("success");
     initData();
   } else {
@@ -308,9 +332,67 @@ let isUpdate = ref(true);
     <NikkeWindow title="巴拉巴拉生成器 v1.2 更新日志" :cancel="updateCancel" :confirm="false">
 
       <div class="updateContent">
+
         <h3
           style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">
           巴拉巴拉 1.2 发布，感谢各位的支持</h3>
+        <span style="text-align: center;font-size: 18px;">12/03：重大更新</span>
+        <ul class="updateText" style="list-style: decimal;text-indent: 0em;padding-left: 4em;">
+          <li>
+            废弃原先的存储方式，采用IndexedDB，使得本地图片的大小没有限制。
+            <ul style="padding-left: 1em;">
+              <li>fix 1: 修复图片过大导致的无法保存的问题。</li>
+              <li>fix 2: 紧急修复数据消失的问题。</li>
+            </ul>
+          </li>
+          <li>添加导出对话的功能，可将对话导出至本地（日后将会开放在线巴拉巴拉的功能各位可以上传自己的对话数据，以供他人观看 具体内容请加群：<div class="qq"
+              @click="jump('http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=q58gDR3R88UQTboHAvFoUb0bImyL_IQc&authKey=iA8KsKpWt0QnhjhhCknz71hgR7NcDJ6tQcMvNgcwYvUWhGD1Pcb8%2B%2BoysZr6G1gk&noverify=0&group_code=629686535')">
+            </div>
+            ）</li>
+          <li>添加删除指定对话的功能。</li>
+          <li>添加对话的添加删除动画，使得更加顺滑。</li>
+          <li>修复对象：<div style="display: inline;margin: 2px;">
+              <img src="/avatars/npc1.png" style="width: 32px;">
+            </div> 由 <span style="color: red;">"NPC 1"</span> 修改为：<span style="color: green;">"露姬"</span>
+          </li>
+          <li>
+            添加新的对话妮姬：
+            <ul>
+              <li>
+                <div style="display: inline;margin: 2px;">
+                  <img src="/avatars/klw.png" style="width: 32px;">
+                </div>
+                <div style="display: inline;margin: 2px;">
+                  <img src="/avatars/cxsxhm.png" style="width: 32px;">
+                </div>
+                <div style="display: inline;margin: 2px;">
+                  <img src="/avatars/cxsdhm.png" style="width: 32px;">
+                </div>
+                <div style="display: inline;margin: 2px;">
+                  <img src="/avatars/cxsbx.png" style="width: 32px;">
+                </div>
+                <div style="display: inline;margin: 2px;">
+                  <img src="/avatars/cxstls.png" style="width: 32px;">
+                </div>
+                <div style="display: inline;margin: 2px;">
+                  <img src="/avatars/cxshl.png" style="width: 32px;">
+                </div>
+                <div style="display: inline;margin: 2px;">
+                  <img src="/avatars/cxscfgz.png" style="width: 32px;">
+                </div>
+              </li>
+            </ul>
+          </li>
+          <li>添加猫猫红莲：<div style="display: inline;margin: 2px;">
+              <img src="/avatars/cmmhl.png" style="width: 32px;">
+            </div>
+          </li>
+          <li>添加doro：<div style="display: inline;margin: 2px;">
+              <img src="/avatars/doro.png" style="width: 32px;">
+            </div>
+          </li>
+        </ul>
+        <h3 class="hline"></h3>
         <ul class="updateText" style="list-style: decimal;text-indent: 0em;padding-left: 4em;">
           <li>添加了在对话中添加妮姬的功能</li>
           <li>
@@ -352,6 +434,7 @@ let isUpdate = ref(true);
 
           <li>修复若干问题。</li>
         </ul>
+
         <h3
           style="text-align: center;color: #940606;border-bottom: 1px solid #940606;padding-bottom: 5px;box-sizing: content-box;">
           巴拉巴拉 1.2 发布预告 12.1/12:30</h3>
@@ -544,20 +627,78 @@ let isUpdate = ref(true);
         <span style="color: grey; margin: 0 5px;"> | </span>
         <span>图标 </span>
       </div>
-
       <div class="content">
-        <div class="cardList">
-          <ProjectCard v-for="value, index in filteredData" :key="index" :select-nikkes="value"
-            @click="openDialog(index)">
-          </ProjectCard>
+
+
+        <div class="cardList container">
+          <TransitionGroup tag="ul" name="fade">
+
+            <div v-for="(value, index) in filteredData" :key="index">
+              <ProjectCard :select-nikkes="value" @click="openDialog(index)">
+                <div class="dialogDelete" @click.stop="deleteDialog(index)"></div>
+                <div class="dialogExport" @click.stop="dialogExport(index)"></div>
+              </ProjectCard>
+            </div>
+          </TransitionGroup>
+
         </div>
+
       </div>
+
       <div class="floor"></div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.qq {
+  display: inline-block;
+  margin-right: 5px;
+  width: 32px;
+  height: 32px;
+  background: url("/icon/qq.svg") no-repeat;
+  background-size: 32px;
+}
+
+.container {
+  position: relative;
+  padding: 0;
+}
+
+.dialogDelete {
+  position: absolute;
+  background: url("/icon/delete.svg") center no-repeat;
+  right: 10px;
+  top: 35px;
+  width: 25px;
+  height: 25px;
+
+}
+
+.dialogExport {
+  position: absolute;
+  background: url("/icon/export.svg") center no-repeat;
+  background-size: 25px;
+  right: 40px;
+  top: 35px;
+  width: 25px;
+  height: 25px;
+}
+
+/* 1. 声明过渡效果 */
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+/* 2. 声明进入和离开的状态 */
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scaleY(0.01) translate(30px, 0);
+}
+
 .hline {
   text-align: center;
   color: #32b1f4;
@@ -696,6 +837,7 @@ let isUpdate = ref(true);
 }
 
 .cardList:last-child {
+  position: relative;
   margin-bottom: 150px;
 }
 
@@ -809,7 +951,8 @@ let isUpdate = ref(true);
 
 .content {
   max-height: 82.2%;
-  overflow-y: scroll;
+
+  /* overflow-y: scroll; */
 }
 
 div::-webkit-scrollbar {

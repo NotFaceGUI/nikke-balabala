@@ -1,27 +1,20 @@
 <template>
   <div class="card">
-    <div
-      class="role"
-      :style="{
-        backgroundImage:
-          'url(avatars/' + selectNikkes.projectNikkes[0].img + '.png)',
-      }"
-    ></div>
+    <div class="role" :style="{
+      backgroundImage:
+        'url(avatars/' + selectNikkes.projectNikkes[0].img + '.png)',
+    }"></div>
     <!-- <img :src="'/pic/' + selectNikkes.projectNikkes[0].img + '.png'" alt="" srcset="" style="width: 128px;position: absolute;"> -->
     <div class="textContent">
       <slot></slot>
-      <div
-        style="
+      <div style="
           display: flex;
           justify-content: space-between;
           align-items: center;
           padding-right: 5px;
-        "
-      >
+        ">
         <span style="font-size: 18px; font-weight: bold">{{ selectNikkes.name }}</span>
-        <span class="cardAuthor"
-          ><a href="#">[ {{ selectNikkes.author }} ]</a></span
-        >
+        <span class="cardAuthor"><a href="#">[ {{ selectNikkes.author }} ]</a></span>
       </div>
       <div style="flex: 1; font-size: 15px; margin-top: 2px; color: gray">
         <span>{{ selectNikkes.description }}</span>
@@ -54,27 +47,32 @@ defineProps<{
   transition: all 0.1s ease-in-out;
 }
 
+
 .cardAuthor {
   text-decoration: none;
   font-size: 14px;
 }
 
-.cardAuthor > a {
+.cardAuthor>a {
   color: #414141;
   transition: all 0.2s ease-in-out;
 }
 
-.cardAuthor > a:hover {
+.cardAuthor>a:hover {
   color: #fda912;
+}
+
+.card:hover {
+
+  background-color: aliceblue;
 }
 
 .card:active {
   transform: scaleY(0.9);
   transform: scaleX(0.98);
-  background-color: aliceblue;
 }
 
-.card:active .role::before {
+.card:hover .role::before {
   border-color: transparent aliceblue transparent transparent;
 }
 
