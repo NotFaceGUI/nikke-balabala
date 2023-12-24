@@ -150,11 +150,11 @@ function initProject() {
   if (isV === null) {
     // localStorage.setItem("projects", JSON.stringify(project))
     isV = localStorage.getItem('cData');
-    if (isV === null) { 
+    if (isV === null) {
     } else {
       project = JSON.parse(isV);
-      let data : Database = { sequenceId: 1, projects: JSON.stringify(project) };
-      addDataToDB(dbPromise, NikkeDatabase.nikkeProject,data );
+      let data: Database = { sequenceId: 1, projects: JSON.stringify(project) };
+      addDataToDB(dbPromise, NikkeDatabase.nikkeProject, data);
       localStorage.setItem("ccData", JSON.stringify(isV));
       localStorage.removeItem("cData");
     }
@@ -347,6 +347,17 @@ let isUpdate = ref(true);
         <h3
           style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">
           巴拉巴拉 1.2 发布，感谢各位的支持</h3>
+        <span style="text-align: center;font-size: 18px;">12/24：更新</span>
+        <ul class="updateText" style="list-style: decimal;text-indent: 0em;padding-left: 4em;">
+          <li>
+            添加新的对话妮姬：
+            <div style="display: inline;margin: 2px;">
+              <img src="/avatars/sdldml.png" style="width: 32px;">
+              <img src="/avatars/sdmk.png" style="width: 32px;">
+            </div>
+          </li>
+          <br>
+        </ul>
         <span style="text-align: center;font-size: 18px;">12/03：重大更新</span>
         <ul class="updateText" style="list-style: decimal;text-indent: 0em;padding-left: 4em;">
           <li>
