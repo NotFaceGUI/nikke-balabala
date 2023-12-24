@@ -181,7 +181,7 @@ function exprotRealToImg() {
             nextTick(() => {
                 if (dialogImg.value != undefined) {
                     domtoimage
-                        .toPng(dialogImg.value, {
+                        .toBlob(dialogImg.value, {
                             width: dialogImg.value.clientWidth * imgData.scale,
                             height: dialogImg.value.clientHeight * imgData.scale,
                             style: {
@@ -189,11 +189,11 @@ function exprotRealToImg() {
                                 transformOrigin: "top left",
                             },
                         })
-                        .then(function (dataUrl: string) {
+                        .then(function (dataUrl: Blob) {
                             saveAs(dataUrl, imgData.imgName + ".png");
 
                             var img = new Image();
-                            img.src = dataUrl;
+                            img.src = URL.createObjectURL(dataUrl);
                             preview.value?.appendChild(img);
 
                             if (dialogImg.value != undefined) {
