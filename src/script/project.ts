@@ -159,6 +159,7 @@ export var nikkeData: Inikkes = {
         { name: "索林", img: "sl", enterprise: enterprise.极乐净土 },
         { name: "梅登", img: "md", enterprise: enterprise.极乐净土 },
         { name: "贝斯蒂", img: "bsd", enterprise: enterprise.极乐净土 },
+        { name: "银华", img: "yh", enterprise: enterprise.极乐净土 },
         { name: "海伦", img: "hl", enterprise: enterprise.极乐净土 },
         { name: "海伦", img: "hl1", enterprise: enterprise.极乐净土 },
         { name: "马斯特", img: "mst", enterprise: enterprise.极乐净土 },
