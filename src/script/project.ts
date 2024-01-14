@@ -41,7 +41,8 @@ export enum enterprise {
     配角,
     主角,
     动物,
-    莱彻
+    莱彻,
+    自定义
 }
 
 // 角色信息
@@ -325,7 +326,7 @@ export var nikkeData: Inikkes = {
         { name: "爱德", img: "ad", enterprise: enterprise.配角 },
         { name: "阿尼克", img: "ank", enterprise: enterprise.配角 },
         { name: "舒恩", img: "ceo0", enterprise: enterprise.配角 },
-        { name: "ceo", img: "ceo1", enterprise: enterprise.配角 },
+        { name: "英格丽", img: "ceo1", enterprise: enterprise.配角 },
         { name: "ceo", img: "ceo2", enterprise: enterprise.配角 },
         { name: "fsl", img: "fs1", enterprise: enterprise.配角 },
         { name: "fsl", img: "fsl", enterprise: enterprise.配角 },
