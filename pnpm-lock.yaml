@@ -12,6 +12,7 @@ specifiers:
   vite: ^4.4.5
   vue: ^3.3.4
   vue-i18n: ^9.7.0
+  vue-picture-cropper: ^0.7.0
   vue-tsc: ^1.8.5
 
 dependencies:
@@ -20,6 +21,7 @@ dependencies:
   html2canvas: registry.npmmirror.com/html2canvas/1.4.1
   vue: registry.npmmirror.com/vue/3.3.7_typescript@5.2.2
   vue-i18n: registry.npmmirror.com/vue-i18n/9.7.0_vue@3.3.7
+  vue-picture-cropper: registry.npmmirror.com/vue-picture-cropper/0.7.0_vue@3.3.7
 
 devDependencies:
   '@types/dom-to-image': registry.npmmirror.com/@types/dom-to-image/2.6.6
@@ -38,6 +40,14 @@ packages:
     version: 7.23.0
     engines: {node: '>=6.0.0'}
     hasBin: true
+
+  registry.npmmirror.com/@bassist/utils/0.4.0:
+    resolution: {integrity: sha512-aoFTl0jUjm8/tDZodP41wnEkvB+C5O9NFCuYN/ztL6jSUSsuBkXq90/1ifBm1XhV/zySHgLYlU1+tgo3XtQ+nA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@bassist/utils/-/utils-0.4.0.tgz}
+    name: '@bassist/utils'
+    version: 0.4.0
+    dependencies:
+      '@withtypes/mime': registry.npmmirror.com/@withtypes/mime/0.1.2
+    dev: false
 
   registry.npmmirror.com/@esbuild/android-arm/0.18.20:
     resolution: {integrity: sha512-fyi7TDI/ijKKNZTUJAQqiG5T7YjJXgnzkURqmGj13C6dCqckZBLdl4h7bkhHt/t0WP+zO9/zwroDvANaOqO5Sw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@esbuild/android-arm/-/android-arm-0.18.20.tgz}
@@ -502,6 +512,14 @@ packages:
     name: '@vue/shared'
     version: 3.3.7
 
+  registry.npmmirror.com/@withtypes/mime/0.1.2:
+    resolution: {integrity: sha512-PB9BfZGzwblUONJY0LiOwsHCA6uV3DIPj/w9ReekdHxPOl0VdUFgI5s4avKycuuq9Gf5Nz2ZPA2O36GAUzlMPA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@withtypes/mime/-/mime-0.1.2.tgz}
+    name: '@withtypes/mime'
+    version: 0.1.2
+    dependencies:
+      mime: registry.npmmirror.com/mime/3.0.0
+    dev: false
+
   registry.npmmirror.com/balanced-match/1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/balanced-match/-/balanced-match-1.0.2.tgz}
     name: balanced-match
@@ -528,6 +546,12 @@ packages:
     name: computeds
     version: 0.0.1
     dev: true
+
+  registry.npmmirror.com/cropperjs/1.6.1:
+    resolution: {integrity: sha512-F4wsi+XkDHCOMrHMYjrTEE4QBOrsHHN5/2VsVAaRq8P7E5z7xQpT75S+f/9WikmBEailas3+yo+6zPIomW+NOA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/cropperjs/-/cropperjs-1.6.1.tgz}
+    name: cropperjs
+    version: 1.6.1
+    dev: false
 
   registry.npmmirror.com/css-line-break/2.1.0:
     resolution: {integrity: sha512-FHcKFCZcAha3LwfVBhCQbW2nCNbkZXn7KVUJcsT5/P8YmfsVja0FMPJr0B903j/E69HUphKiV9iQArX8SDYA4w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/css-line-break/-/css-line-break-2.1.0.tgz}
@@ -641,6 +665,14 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       '@jridgewell/sourcemap-codec': registry.npmmirror.com/@jridgewell/sourcemap-codec/1.4.15
+    dev: false
+
+  registry.npmmirror.com/mime/3.0.0:
+    resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/mime/-/mime-3.0.0.tgz}
+    name: mime
+    version: 3.0.0
+    engines: {node: '>=10.0.0'}
+    hasBin: true
     dev: false
 
   registry.npmmirror.com/minimatch/9.0.3:
@@ -793,6 +825,19 @@ packages:
       '@intlify/core-base': registry.npmmirror.com/@intlify/core-base/9.7.0
       '@intlify/shared': registry.npmmirror.com/@intlify/shared/9.7.0
       '@vue/devtools-api': registry.npmmirror.com/@vue/devtools-api/6.5.1
+      vue: registry.npmmirror.com/vue/3.3.7_typescript@5.2.2
+    dev: false
+
+  registry.npmmirror.com/vue-picture-cropper/0.7.0_vue@3.3.7:
+    resolution: {integrity: sha512-NF7+Dgso6d0GB16E5d/BbrcTIHm1VWz8dS3IjLhoBl+ZeC+yDA46CyJphQuO32SisaPmrKHN8VbiE2LgAfhnkQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-picture-cropper/-/vue-picture-cropper-0.7.0.tgz}
+    id: registry.npmmirror.com/vue-picture-cropper/0.7.0
+    name: vue-picture-cropper
+    version: 0.7.0
+    peerDependencies:
+      vue: '>=3.2.13'
+    dependencies:
+      '@bassist/utils': registry.npmmirror.com/@bassist/utils/0.4.0
+      cropperjs: registry.npmmirror.com/cropperjs/1.6.1
       vue: registry.npmmirror.com/vue/3.3.7_typescript@5.2.2
     dev: false
 

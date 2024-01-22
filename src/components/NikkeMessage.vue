@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { INikkeData, Project, msgType } from '../script/project';
+import { INikkeData, Project, enterprise, msgType } from '../script/project';
 import NikkeMessageEdit from './NikkeMessageEdit.vue';
 
 const props = defineProps<{
@@ -85,7 +85,7 @@ function lostfocus(index: number) {
 
 <template>
     <div class="msg" v-if="type == msgType.nikke">
-        <div class="head" :style="{ backgroundImage: 'url(avatars/' + nikke.img + '.png)' }"></div>
+        <div class="head" :style="{backgroundImage: nikke.enterprise != enterprise.自定义 ? 'url(avatars/' + nikke.img + '.png)' : 'url('  + nikke.img + ')' }"></div>
         <div class="textgroup">
             <div class="name">{{ nikke.name }}</div>
             <div class="textbox" v-for="value, index in msgs" :key="index">

@@ -390,7 +390,7 @@ function selectImage(index: number) {
     console.log(1);
     currentModel.value = msgType.img;
     if (currentSelectImgae.value == index) {
-        
+
         currentSelectImgae.value = -1;
     } else {
         currentSelectImgae.value = index;
@@ -514,7 +514,8 @@ const selectType = (index: number) => {
             <div class="selectNikkeInfo last" v-if="isSelectView" @click="selectZ()">指</div>
             <div class="dselectnikke" v-if="isSelectView">
                 <div class="selectNikkeInfo" v-for="(value, index) in dialogData?.projectNikkes" :key="index"
-                    :style="{ backgroundImage: 'url(avatars/' + value.img + '.png)' }" @click="selectNikke(index)"></div>
+                    :style="{ backgroundImage: value.enterprise != enterprise.自定义 ? 'url(avatars/' + value.img + '.png)' : 'url(' + value.img + ')' }"
+                    @click="selectNikke(index)"></div>
                 <div class="selectNikkeInfo nadd" @click="addNikke()"></div>
 
             </div>
@@ -565,8 +566,8 @@ const selectType = (index: number) => {
 
             <div class="nikkeedit">
                 <div class="selectNikkeInfo" @click="show()" :style="{
-                    backgroundImage:
-                        'url(avatars/' + dialogData?.projectNikkes[currentNikke].img + '.png)',
+                    backgroundImage: dialogData?.projectNikkes[currentNikke].enterprise != enterprise.自定义 ? 'url(avatars/' + dialogData?.projectNikkes[currentNikke].img + '.png)' : 'url(' + dialogData?.projectNikkes[currentNikke].img + ')'
+
                 }" :class="{ zhg: isZHG }">
                     <span v-if="isZHG" style="
               color: rgb(92, 58, 58);
@@ -581,7 +582,7 @@ const selectType = (index: number) => {
                 </div>
                 <input id="fileInput" type="file" ref="fileInput" style="display: none" @change.stop="handleFileUpload"
                     accept="image/*" multiple />
-                <input ref="inputRef" type="text" class="nikkeInput dinput" v-model="inputContent"  @input="check()"
+                <input ref="inputRef" type="text" class="nikkeInput dinput" v-model="inputContent" @input="check()"
                     @focus="check()" @keyup.enter="add()" @keydown.tab="append()" :placeholder="inputPlaceholder" />
                 <div class="add newadd" @click="add()">新增</div>
                 <div class="add oldadd" @click="append()"

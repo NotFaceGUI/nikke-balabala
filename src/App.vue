@@ -2,7 +2,7 @@
 import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
 import ProjectCard from './components/ProjectCard.vue';
 
-import { /* ChatMessageData, */ Project, ProjectType, buttonType, IProjectData, nikkeData, INikkeData, ChatMessageData, builtinImageDatas, NikkeDatabase, Database, addDataToDB, retrieveDataFromDB } from './script/project';
+import { /* ChatMessageData, */ Project, ProjectType, buttonType, IProjectData, nikkeData, INikkeData, ChatMessageData, builtinImageDatas, NikkeDatabase, Database, addDataToDB, retrieveDataFromDB, Inikkes, enterprise } from './script/project';
 import NikkeButton from './components/NikkeButton.vue';
 import NikkeWindow from './components/NikkeWindow.vue';
 import NikkeDialog from './components/NikkeDialog.vue';
@@ -14,7 +14,9 @@ import NikkeIcon from './components/NikkeIcon.vue';
 // import { useI18n } from 'vue-i18n'
 import { openDB } from './data/useIndexedDB';
 import { saveAs } from 'file-saver';
+import NikkeCropper from './components/NikkeCropper.vue';
 // const { locale } = useI18n();
+
 
 const data = reactive([
   { id: ProjectType.Task, type: 'task' },
@@ -22,7 +24,9 @@ const data = reactive([
   { id: ProjectType.Group, type: 'group' }
 ]);
 
-const appVersion = "v1.2";
+const appVersion = "v1.3";
+
+
 
 var filteredData = ref<Project[]>([]);
 var selectNikke: Array<INikkeData> = reactive([]);
@@ -35,6 +39,19 @@ var newProjecData: { proName: string, proType: ProjectType, proDesc: string, aut
 });
 
 var currentProject = ref(-1);
+
+let customNikkes = reactive<Inikkes>(nikkeData)
+
+var isV = localStorage.getItem("customNikkes"); //'true' 字符串类型的
+if (isV === null) {
+  localStorage.setItem("customNikkes", JSON.stringify(customNikkes));
+} else {
+
+}
+
+function addNikke() {
+  isCustomNikke.value = true;
+}
 
 function openDialog(index: number) {
   currentProject.value = index;
@@ -88,10 +105,49 @@ var currentTabId = ref(1);
 var listNumber = ref(0); // 清单数量
 var isShow = ref(false);
 var selectType = ref("1"); // 选择对话的模式
+var isCustomNikke = ref(false);
+
+let editNikke = ref(false);
+let customNikke = ref(false);
+
+const opneNikke = () => {
+  editNikke.value = true;
+  customNikke.value = false;
+}
+
+const opneCustomNikke = () => {
+  editNikke.value = false;
+  customNikke.value = true;
+}
+
+let customNikkeList = ref<Array<any>>([])
 
 function createProject() {
   isShow.value = true;
+
+  retrieveDataFromDB(dbPromise, NikkeDatabase.nikkeProject, 3).then((value) => {
+    if (value) {
+      customNikkeList.value = JSON.parse(value.customNikkeList);
+      console.log("已经有数据了！", customNikkeList.value);
+
+      customNikkeList.value.forEach(v => {
+        const isExisting = nikkeData.nikkes.some(existingNikke => existingNikke.img === v.url);
+        if (!isExisting) {
+          nikkeData.nikkes.push({
+            name: v.name,
+            img: v.url,
+            enterprise: enterprise.自定义
+          })
+        }
+
+      })
+    } else {
+      console.log("没有数据");
+    }
+  });
 }
+
+
 
 function selectTab(index: number) {
   currentTabId.value = index;
@@ -132,6 +188,27 @@ function clearTimer() {
 }
 
 const dbPromise: Promise<IDBDatabase> = openDB("nikkeDatabase");
+
+retrieveDataFromDB(dbPromise, NikkeDatabase.nikkeProject, 3).then((value) => {
+  if (value) {
+    customNikkeList.value = JSON.parse(value.customNikkeList);
+    console.log("已经有数据了！", customNikkeList.value);
+
+    customNikkeList.value.forEach(v => {
+      const isExisting = nikkeData.nikkes.some(existingNikke => existingNikke.img === v.url);
+      if (!isExisting) {
+        nikkeData.nikkes.push({
+          name: v.name,
+          img: v.url,
+          enterprise: enterprise.自定义
+        })
+      }
+
+    })
+  } else {
+    console.log("没有数据");
+  }
+});
 
 function initProject() {
   project = {
@@ -175,13 +252,11 @@ function initProject() {
       addDataToDB(dbPromise, NikkeDatabase.nikkeProject, { sequenceId: 1, projects: project })
     }
   });
+}
 
-  // var isV = localStorage.getItem('projects'); //'true' 字符串类型的
-  // if (isV === null) {
-  //   localStorage.setItem("projects", JSON.stringify(project))
-  // } else {
-  //   project = JSON.parse(isV);
-  // }
+function customCancel() {
+  isCustomNikke.value = false;
+  localStorage.setItem("customNikkes", JSON.stringify(nikkeData));
 }
 
 function cancel() {
@@ -205,7 +280,6 @@ function updateData() {
   let data: Database = { sequenceId: 1, projects: str };
   addDataToDB(dbPromise, NikkeDatabase.nikkeProject, data)
 }
-
 
 function success() {
   if (checkData()) {  // 检查数据
@@ -269,15 +343,7 @@ function getFontName() {
   return fontFamily;
 }
 
-// // 每10秒获取一次字体信息
-// setInterval(function () {
-//   currcurentFont.value = getFontName();
-//   console.log("当前页面使用的字体名称：" + currcurentFont.value);
-// }, 10000);
-
 let currcurentFont = ref('');
-
-
 
 onMounted(() => {
   initProject();
@@ -309,7 +375,6 @@ onMounted(() => {
 //   const db = await dbPromise;
 //   deleteDB(db, storeName, id);
 // };
-
 
 onBeforeUnmount(() => {
   clearTimer();
@@ -544,6 +609,9 @@ let isUpdate = ref(true);
       </NikkeButton>
       <NikkeButton :type="buttonType.Success" @click="createProject()" content="创建对话"
         style="width: 150px;height: 45px;margin: 5px;"></NikkeButton>
+      <NikkeButton :type="buttonType.Success" content="添加自定义对话对象" @click="addNikke"
+        style="width: 170px; height: 45px; margin: 5px">
+      </NikkeButton>
     </div>
   </div>
   <div style="height: 100%;width: 100%;">
@@ -604,22 +672,56 @@ let isUpdate = ref(true);
               <div class="nikkeGrid">
                 <div class="nikke" :class="{ nikkeCheck: isSelect[index] }" @click="select(value, index)"
                   v-for="(value, index) in nikkeData.nikkes" :key="index"
-                  :style="{ backgroundImage: 'url(avatars/' + value.img + '.png)' }">
+                  :style="{ backgroundImage: value.enterprise != enterprise.自定义 ? 'url(avatars/' + value.img + '.png)' : 'url(' + value.img + ')' }">
                 </div>
               </div>
-              <!-- <NikkeSelect></NikkeSelect> -->
             </div>
           </div>
-          <!-- <div class="pcontent">
-          <div style="">
-            <input type="text">
-
-            <input type="text">
-            <input type="text">
-          </div>
-        </div> -->
         </div>
       </NikkeWindow>
+      <div v-if="isCustomNikke" style="width: 100%;height: 100%;position: absolute;">
+        <NikkeWindow id="customNikke" title="添加自定义妮姬" :show="isCustomNikke" :confirm="false" :cancel="customCancel">
+          <div style="display: flex;justify-content: center;">
+            <NikkeButton :type="buttonType.Success" content="修改现有妮姬" @click="opneNikke"
+              style="width: 150px;height: 45px;margin: 5px;">
+            </NikkeButton>
+            <NikkeButton :type="buttonType.Success" content="添加自定义对象" @click="opneCustomNikke"
+              style="width: 150px;height: 45px;margin: 5px;">
+            </NikkeButton>
+          </div>
+
+          <NikkeInfo>
+
+            <div class="error">
+              <span style="color: rgb(93, 182, 93); font-size: 12px;">
+                请在需要修改的妮姬对象下填入新的名字，并保存。
+              </span>
+            </div>
+          </NikkeInfo>
+          <div class="nikkeInfo addNikke" style="margin: 10px 0;" v-if="editNikke">
+            <div v-for="(value, index) in nikkeData.nikkes" :key="index"
+              style="display: flex;align-items: center;margin: 0 5px;">
+              <div class="nikke" style="min-width: 64px;"
+                :style="{ backgroundImage: 'url(avatars/' + value.img + '.png)' }">
+              </div>
+              <div style="flex: 1;display: flex;justify-content: center;flex-direction: column;">
+                <input class="nikkeInput" style="margin-bottom: 5px;" type="text" disabled name="" id=""
+                  :value="value.name">
+                <input class="nikkeInput" type="text" name="" id="" v-model="value.name">
+              </div>
+            </div>
+          </div>
+          <div class="nikkeInfo addNikke" style="margin: 10px 0;" v-if="customNikke">
+            <div class="addCustomNikke">
+              <NikkeCropper></NikkeCropper>
+            </div>
+
+          </div>
+
+        </NikkeWindow>
+
+      </div>
+
 
       <div class="box back"><img src="/background.png" style="width: 100%;height: 100%;object-fit: cover;"></div>
 
@@ -662,17 +764,35 @@ let isUpdate = ref(true);
               </ProjectCard>
             </div>
           </TransitionGroup>
-
         </div>
-
       </div>
-
       <div class="floor"></div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.addCustomNikke {
+  color: black;
+}
+
+.addNikke {
+  max-height: 75%;
+  overflow-y: scroll;
+}
+
+.nikkeInfo {
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.customNikke {
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  padding: 5px;
+}
+
 .qq {
   display: inline-block;
   margin-right: 5px;

@@ -1,8 +1,7 @@
 <template>
   <div class="card">
     <div class="role" :style="{
-      backgroundImage:
-        'url(avatars/' + selectNikkes.projectNikkes[0].img + '.png)',
+      backgroundImage: selectNikkes.projectNikkes[0].enterprise != enterprise.自定义 ? 'url(avatars/' + selectNikkes.projectNikkes[0].img + '.png)' : 'url(' + selectNikkes.projectNikkes[0].img + ')'
     }"></div>
     <!-- <img :src="'/pic/' + selectNikkes.projectNikkes[0].img + '.png'" alt="" srcset="" style="width: 128px;position: absolute;"> -->
     <div class="textContent">
@@ -24,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { Project } from "../script/project";
+import { Project, enterprise } from "../script/project";
 
 defineProps<{
   selectNikkes: Project; // 对话的妮姬
