@@ -308,7 +308,7 @@ function initData() {
     proName: "默认对话",
     proType: ProjectType.Nikke,
     proDesc: "这是一个简单的小故事",
-    author: ""
+    author: "默认"
   }
 }
 
@@ -408,7 +408,17 @@ let isUpdate = ref(true);
     <NikkeWindow title="巴拉巴拉生成器 v1.2 更新日志" :cancel="updateCancel" :confirm="false">
 
       <div class="updateContent">
-
+        <h3
+          style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">
+          巴拉巴拉 1.3 发布，感谢各位的支持</h3>
+        <span style="text-align: center;font-size: 18px;">1/23：1.3更新</span>
+        <ul class="updateText" style="list-style: decimal;text-indent: 0em;padding-left: 4em;">
+          <li>
+            新增自定义妮姬。支持新增、修改、自定义头像等功能。
+          </li>
+          <li>修复部分妮姬名称显示</li>
+          <li>若干bug修复</li>
+        </ul>
         <h3
           style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">
           巴拉巴拉 1.2 发布，感谢各位的支持</h3>

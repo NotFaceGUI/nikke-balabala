@@ -254,7 +254,7 @@ export var nikkeData: Inikkes = {
         { name: "饼干", img: "bg1", enterprise: enterprise.泰特拉 },
         { name: "尼罗", img: "nl", enterprise: enterprise.泰特拉 },
         { name: "尼罗", img: "nl1", enterprise: enterprise.泰特拉 },
-        { name: "gg", img: "gg", enterprise: enterprise.配角 },
+        { name: "莱昂纳", img: "gg", enterprise: enterprise.配角 },
         { name: "莱伊", img: "ly", enterprise: enterprise.泰特拉 },
         { name: "诺亚尔", img: "nye", enterprise: enterprise.泰特拉 },
         { name: "诺亚尔", img: "nye1", enterprise: enterprise.泰特拉 },
