@@ -405,12 +405,31 @@ let isUpdate = ref(true);
     <NikkeDialog :current-time="currentTime" :back="back" :dialog-data="filteredData[currentProject]"></NikkeDialog>
   </div>
   <div style="height: 100%;" v-if="isUpdate">
-    <NikkeWindow title="巴拉巴拉生成器 v1.2 更新日志" :cancel="updateCancel" :confirm="false">
+    <NikkeWindow title="巴拉巴拉生成器 v1.3 更新日志" :cancel="updateCancel" :confirm="false">
 
       <div class="updateContent">
         <h3
           style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">
           巴拉巴拉 1.3 发布，感谢各位的支持</h3>
+        <span style="text-align: center;font-size: 18px;">2/19：1.3.1更新</span>
+        <ul class="updateText" style="list-style: decimal;text-indent: 0em;padding-left: 4em;">
+          <li>
+            添加新的对话妮姬：
+            <div style="display: inline;margin: 2px;">
+              <img src="/avatars/chl1.png" style="width: 32px;">
+              <img src="/avatars/ctls1.png" style="width: 32px;">
+              <img src="/avatars/plwd3.png" style="width: 32px;">
+            </div>
+          </li>
+          <li>
+            <span style="color: rgb(255, 78, 78);">修改名称必须修改完创建新对话才生效！</span>
+          </li>
+          <li>
+            <span style="color: rgb(255, 78, 78);">新建新角色时，选择角色时如果没有出现请选择其他角色刷新即可</span>
+          </li>
+          <br>
+        </ul>
+
         <span style="text-align: center;font-size: 18px;">1/23：1.3更新</span>
         <ul class="updateText" style="list-style: decimal;text-indent: 0em;padding-left: 4em;">
           <li>
