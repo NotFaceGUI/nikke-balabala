@@ -17,7 +17,6 @@ import { saveAs } from 'file-saver';
 import NikkeCropper from './components/NikkeCropper.vue';
 // const { locale } = useI18n();
 
-
 const data = reactive([
   { id: ProjectType.Task, type: 'task' },
   { id: ProjectType.Nikke, type: 'nikke' },
@@ -25,8 +24,6 @@ const data = reactive([
 ]);
 
 const appVersion = "v1.3";
-
-
 
 var filteredData = ref<Project[]>([]);
 var selectNikke: Array<INikkeData> = reactive([]);
