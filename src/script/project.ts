@@ -189,6 +189,7 @@ export var nikkeData: Inikkes = {
         { name: "麦斯威尔", img: "smwe1", enterprise: enterprise.米西利斯 },
         { name: "尤妮", img: "yn", enterprise: enterprise.米西利斯 },
         { name: "尤妮", img: "yn1", enterprise: enterprise.米西利斯 },
+        { name: "伊莱格", img: "ylg", enterprise: enterprise.米西利斯 },
         { name: "尤莉亚", img: "yly", enterprise: enterprise.米西利斯 },
         { name: "尤莉亚", img: "yly1", enterprise: enterprise.米西利斯 },
         { name: "德雷克", img: "dlk", enterprise: enterprise.米西利斯 },

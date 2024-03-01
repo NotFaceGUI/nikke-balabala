@@ -411,7 +411,23 @@ let isUpdate = ref(true);
         <h3
           style="text-align: center;color: #32b1f4;border-bottom: 1px solid #858383;padding-bottom: 5px;box-sizing: content-box;">
           巴拉巴拉 1.3 发布，感谢各位的支持</h3>
+        <span style="text-align: center;font-size: 18px;">3/1：更新</span>
+        <ul class="updateText" style="list-style: decimal;text-indent: 0em;padding-left: 4em;">
+          <li>
+            添加新的对话妮姬：
+            <div style="display: inline;margin: 2px;">
+              <img src="/avatars/ylg.png" style="width: 32px;">
+            </div>
+          </li>
+          <li>
+            <span>为window平台提供一个本地的巴拉巴拉生成器，网络环境不佳的可以尝试使用（下载地址：<a href="https://github.com/NotFaceGUI/nikke-balabala/releases/tag/1.3.1">点此跳转 v1.3.1</a>） </span>
+          </li>
+        </ul>
+        <br>
+
+
         <span style="text-align: center;font-size: 18px;">2/19：1.3.1更新</span>
+
         <ul class="updateText" style="list-style: decimal;text-indent: 0em;padding-left: 4em;">
           <li>
             添加新的对话妮姬：
