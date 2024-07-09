@@ -17,7 +17,7 @@ jobs:
       - name: 设置 Node.js 和 pnpm
         uses: actions/setup-node@v1
         with:
-          node-version: '16'
+          node-version: '18'
 
       - name: 安装 pnpm
         run: npm install -g pnpm
