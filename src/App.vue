@@ -8,7 +8,7 @@ import NikkeWindow from './components/NikkeWindow.vue';
 import NikkeDialog from './components/NikkeDialog.vue';
 import NikkeRadio from './components/NikkeRadio.vue';
 import NikkeInfo from './components/NikkeInfo.vue';
-import NikkeIcon from './components/NikkeIcon.vue';
+// import NikkeIcon from './components/NikkeIcon.vue';
 // import NikkeSelect from './components/NikkeSelect.vue';
 
 // import { useI18n } from 'vue-i18n'
@@ -147,8 +147,6 @@ function createProject() {
   });
 }
 
-
-
 function selectTab(index: number) {
   currentTabId.value = index;
   // 过滤数据
@@ -165,10 +163,10 @@ function updateTime() {
 
   const hours = now.getHours()  //小时数
   const minutes = now.getMinutes()  //分钟数
-  const seconds = now.getSeconds()  //秒数
-  const week = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"][now.getDay()]  //星期
+  // const seconds = now.getSeconds()  //秒数
+  // const week = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"][now.getDay()]  //星期
   //想展示什么  对应的展示即可 
-  currentTime.value = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)} ${week}`
+  currentTime.value = `${formatTime(hours)}:${formatTime(minutes)}`/* :${formatTime(seconds)} ${week} */
 }
 
 function jump(url: string) {
@@ -420,7 +418,8 @@ let isUpdate = ref(true);
             </div>
           </li>
           <li>
-            <span>为window平台提供一个本地的巴拉巴拉生成器，网络环境不佳的可以尝试使用（下载地址：<a href="https://github.com/NotFaceGUI/nikke-balabala/releases/tag/1.3.1">点此跳转 v1.3.1</a>） </span>
+            <span>为window平台提供一个本地的巴拉巴拉生成器，网络环境不佳的可以尝试使用（下载地址：<a
+                href="https://github.com/NotFaceGUI/nikke-balabala/releases/tag/1.3.1">点此跳转 v1.3.1</a>） </span>
           </li>
         </ul>
         <br>
@@ -777,13 +776,12 @@ let isUpdate = ref(true);
             <img src="/wifi.png" style="width: 18px;">
           </span>
           {{ currentTime }}
-          <span style="font-size: 12px;margin-left: auto;">当前字体：{{ currcurentFont }}</span>
+          <!-- <span style="font-size: 12px;margin-left: auto;">当前字体：{{ currcurentFont }}</span> -->
           <span class="logoText">生成器 {{ appVersion }}</span>
         </div>
         <div class="logo">
-          <NikkeIcon></NikkeIcon>
+          <!-- <NikkeIcon></NikkeIcon> -->
           <span>balabala</span>
-
         </div>
         <div class="tab">
           <span class="tabName" :class="{ show: value.id == currentTabId }" v-for="value in data"
@@ -1178,10 +1176,10 @@ div::-webkit-scrollbar {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 32px;
   z-index: 10;
   line-height: 35px;
 }
+
 
 .tab {
   display: flex;
@@ -1200,7 +1198,35 @@ div::-webkit-scrollbar {
   border: 7px transparent solid;
   transition: all 0.1s ease-in-out;
   font-weight: 600;
-  font-size: 18px;
+}
+
+@media (max-width: 1200px) {
+  .tabName {
+    font-size: 18px;
+  }
+  .logo {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tabName {
+      font-size: 16px;
+  }
+
+  .logo {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 375px) {
+  .tabName {
+      font-size: 14px;
+  }
+
+  .logo {
+    font-size: 24px;
+  }
 }
 
 .show {

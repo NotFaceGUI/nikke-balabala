@@ -103,7 +103,7 @@ defineProps<{
   z-index: 9999999999;
   max-width: 450px;
   width: 90%;
-  min-width: 380px;
+  min-width: 365px;
   height: 70%;
   background-color: #f1f1f1;
   left: 0;

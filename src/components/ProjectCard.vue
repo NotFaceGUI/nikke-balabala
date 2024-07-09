@@ -15,7 +15,7 @@
         <span style="font-size: 18px; font-weight: bold">{{ selectNikkes.name }}</span>
         <span class="cardAuthor"><a href="#">[ {{ selectNikkes.author }} ]</a></span>
       </div>
-      <div style="flex: 1; font-size: 15px; margin-top: 2px; color: gray">
+      <div style="flex: 1;  margin-top: 2px; color: gray">
         <span>{{ selectNikkes.description }}</span>
       </div>
     </div>
