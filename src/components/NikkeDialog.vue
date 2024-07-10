@@ -185,7 +185,7 @@ function exprotRealToImg() {
             nextTick(() => {
                 if (dialogImg.value != undefined) {
                     domtoimage
-                        .toBlob(dialogImg.value, {
+                        .toPng(dialogImg.value, {
                             width: dialogImg.value.clientWidth * imgData.scale,
                             height: dialogImg.value.clientHeight * imgData.scale,
                             style: {
@@ -193,13 +193,13 @@ function exprotRealToImg() {
                                 transformOrigin: "top left",
                             },
                         })
-                        .then(function (dataUrl: Blob) {
+                        .then(function (dataUrl: string) {
                             // saveAs(dataUrl, imgData.imgName + ".png");
 
                             download(dataUrl, imgData.imgName + ".png");
 
                             var img = new Image();
-                            img.src = URL.createObjectURL(dataUrl);
+                            img.src = dataUrl;
                             preview.value?.appendChild(img);
 
                             if (dialogImg.value != undefined) {
@@ -1081,7 +1081,7 @@ div.dialogImg {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    overflow: hidden;
+    /* overflow: hidden; */
     min-width: 500px !important;
     max-width: 550px;
     z-index: 99999;
