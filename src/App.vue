@@ -1178,6 +1178,7 @@ div::-webkit-scrollbar {
   align-items: center;
   z-index: 10;
   line-height: 35px;
+  font-size: 32px;
 }
 
 

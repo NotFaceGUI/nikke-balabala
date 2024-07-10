@@ -11,9 +11,15 @@ importers:
       dom-to-image-more:
         specifier: ^3.3.0
         version: 3.3.0
+      downloadjs:
+        specifier: ^1.4.7
+        version: 1.4.7
       file-saver:
         specifier: ^2.0.5
         version: 2.0.5
+      html-to-image:
+        specifier: ^1.11.11
+        version: 1.11.11
       html2canvas:
         specifier: ^1.4.1
         version: 1.4.1
@@ -314,6 +320,9 @@ packages:
   dom-to-image-more@3.3.0:
     resolution: {integrity: sha512-4k0oxVfQ4Nrv4/Iva6FpsXTAtPCp5JnZNO/n/hsuOpe3ANlMiK50URZDQKzJslthQD8k76z9vHS3usIzmJoFVw==}
 
+  downloadjs@1.4.7:
+    resolution: {integrity: sha512-LN1gO7+u9xjU5oEScGFKvXhYf7Y/empUIIEAGBs1LzUq/rg5duiDrkuH5A2lQGd5jfMOb9X9usDa2oVXwJ0U/Q==}
+
   entities@4.5.0:
     resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
     engines: {node: '>=0.12'}
@@ -337,6 +346,9 @@ packages:
   he@1.2.0:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
+
+  html-to-image@1.11.11:
+    resolution: {integrity: sha512-9gux8QhvjRO/erSnDPv28noDZcPZmYE7e1vFsBLKLlRlKDSqNJYebj6Qz1TGd5lsRV+X+xYyjCKjuZdABinWjA==}
 
   html2canvas@1.4.1:
     resolution: {integrity: sha512-fPU6BHNpsyIhr8yyMpTLLxAbkaK8ArIBcmZIRiBLiDhjeqvXolaEmDGmELFuX9I4xDcaKKcJl+TKZLqruBbmWA==}
@@ -682,6 +694,8 @@ snapshots:
 
   dom-to-image-more@3.3.0: {}
 
+  downloadjs@1.4.7: {}
+
   entities@4.5.0: {}
 
   esbuild@0.18.20:
@@ -717,6 +731,8 @@ snapshots:
     optional: true
 
   he@1.2.0: {}
+
+  html-to-image@1.11.11: {}
 
   html2canvas@1.4.1:
     dependencies:

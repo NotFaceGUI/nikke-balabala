@@ -11,14 +11,16 @@ import {
 } from "../script/project";
 import NikkeMessage from "./NikkeMessage.vue";
 import domtoimage from "dom-to-image-more";
+import { toPng, toJpeg } from 'html-to-image';
 import { ref, onMounted, nextTick, reactive } from "vue";
-import { saveAs } from "file-saver";
+// import { saveAs } from "file-saver";
 import NikkeWindow from "./NikkeWindow.vue";
 import NikkeInfo from "./NikkeInfo.vue";
 import NikkeIcon from "./NikkeIcon.vue";
 import NikkeSelect from "./NikkeSelect.vue";
 import { ImgType, NikkeDatabase, addDataToDB } from '../script/project';
 import { openDB } from '../data/useIndexedDB';
+import download from 'downloadjs';
 
 let props = defineProps<{
     dialogData: Project;
@@ -170,11 +172,13 @@ var imgData = reactive({
     scale: 2,
     quality: 0.95,
     exportType: "0",
+    exportHtmlType: "0",
     imgName: dialogData.value.name,
     mark: true,
 });
 
 function exprotRealToImg() {
+    console.log("dom-to-image-more");
     switch (imgData.exportType) {
         case exportImgType.png.toString():
             currentExportImgState.value = exportImgState.run;
@@ -190,7 +194,9 @@ function exprotRealToImg() {
                             },
                         })
                         .then(function (dataUrl: Blob) {
-                            saveAs(dataUrl, imgData.imgName + ".png");
+                            // saveAs(dataUrl, imgData.imgName + ".png");
+
+                            download(dataUrl, imgData.imgName + ".png");
 
                             var img = new Image();
                             img.src = URL.createObjectURL(dataUrl);
@@ -226,7 +232,9 @@ function exprotRealToImg() {
                             },
                         })
                         .then(function (dataUrl: string) {
-                            saveAs(dataUrl, imgData.imgName + ".jpeg");
+                            // saveAs(dataUrl, imgData.imgName + ".jpeg");
+
+                            download(dataUrl, imgData.imgName + ".jpeg");
 
                             var img = new Image();
                             img.src = dataUrl;
@@ -250,12 +258,101 @@ function exprotRealToImg() {
     }
 }
 
+
+function exportRealHtmlToImg() {
+    console.log("html-to-image");
+    switch (imgData.exportType) {
+        case exportImgType.png.toString():
+            currentExportImgState.value = exportImgState.run;
+            nextTick(() => {
+                if (dialog.value != undefined) {
+
+                    // 保存原始样式
+                    // const originalWidth = dialog.value?.style.width;
+                    // const originalHeight = dialog.value?.style.height;
+                    // const originalOverflow = dialog.value?.style.overflow;
+
+                    // // 设置新样式
+                    // dialog.value.style.width = `${dialog.value?.scrollWidth}px`;
+                    // dialog.value.style.height = `${dialog.value?.scrollHeight}px`;
+                    // dialog.value.style.overflow = 'visible';
+
+                    toPng(dialog.value, {
+                        width: dialog.value.scrollWidth * imgData.scale,
+                        height: dialog.value.scrollHeight * imgData.scale,
+                        style: {
+                            transform: "scale(" + imgData.scale + ")",
+                            transformOrigin: "top left",
+                        },
+                    })
+                        .then(function (dataUrl) {
+                            download(dataUrl, imgData.imgName + ".png");
+
+                            if (dialog.value) {
+                                // dialog.value.style.width = originalWidth;
+                                // dialog.value.style.height = originalHeight;
+                                // dialog.value.style.overflow = originalOverflow;
+
+                                dialog.value.style.transform = `scale(${1})`;
+                            }
+
+
+                            currentExportImgState.value = exportImgState.pause;
+                        })
+                        .catch(function (error: any) {
+                            currentExportImgState.value = exportImgState.pause;
+                            console.error("oops, something went wrong!", error);
+                        });
+                }
+            });
+            break;
+        case exportImgType.jpeg.toString():
+            currentExportImgState.value = exportImgState.run;
+            nextTick(() => {
+                if (dialog.value != undefined) {
+                    toJpeg(dialog.value, {
+                        width: dialog.value.clientWidth * imgData.scale,
+                        height: dialog.value.clientHeight * imgData.scale,
+                        quality: imgData.quality,
+                        style: {
+                            transform: "scale(" + imgData.scale + ")",
+                            transformOrigin: "top left",
+                        },
+                    })
+                        .then(function (dataUrl: string) {
+                            // saveAs(dataUrl, imgData.imgName + ".jpeg");
+
+                            // var img = new Image();
+                            // img.src = dataUrl;
+                            // preview.value?.appendChild(img);
+
+                            download(dataUrl, imgData.imgName + ".png");
+
+                            if (dialog.value != undefined) {
+                                dialog.value.style.transform = `scale(${1})`;
+                            }
+                            currentExportImgState.value = exportImgState.pause;
+                            // isImg.value = false;
+                        })
+                        .catch(function (error: any) {
+                            currentExportImgState.value = exportImgState.pause;
+                            console.error("oops, something went wrong!", error);
+                        });
+                }
+            });
+            break;
+        default:
+            break;
+    }
+}
+
 function exportImg() {
     isImg.value = true;
     // 添加预览图
 }
 
 const dialogImg = ref<HTMLElement | null>(null);
+const dialog = ref<HTMLElement | null>(null);
 const dialogHeader = ref<HTMLElement | null>(null);
 const dialogContent = ref<HTMLElement | null>(null);
 const preview = ref<HTMLElement | null>(null);
@@ -475,8 +572,7 @@ const selectType = (index: number) => {
         </NikkeWindow>
     </div>
 
-    <div class="dialog">
-
+    <div class="dialog" ref="dialog">
         <div class="dheader">
             <div class="tilte">
                 <span style="vertical-align: middle">
@@ -632,14 +728,16 @@ const selectType = (index: number) => {
     </div>
 
     <NikkeWindow id="createProject" title="导出图片" :confirm="true" :show="isImg" v-if="isImg" button-cancel="关闭"
-        :cancel="cancel" :success="exprotRealToImg" button-success="导出">
+        :cancel="cancel" :success="imgData.exportHtmlType == '0' ? exprotRealToImg : exportRealHtmlToImg"
+        button-success="导出">
         <NikkeIcon></NikkeIcon>
         <div class="project">
             <div class="label">
                 <NikkeInfo>如果出现问题可以通过点击上面的图标进行跳转反馈，包括bug、想要添加的功能等等都可以在上反馈。</NikkeInfo>
                 <NikkeInfo>
                     <div class="error">
-                        <span style="color: rgb(182, 93, 93); font-size: 10px; background-color: ">如果主页的字体不是 “sourcehansans”
+                        <span style="color: rgb(182, 93, 93); font-size: 10px; background-color: ">如果主页的字体不是
+                            “sourcehansans”
                             请尝试等待或者切换网络环境等待字体加载完毕，可避免部分导出图片的问题。</span>
                     </div>
                 </NikkeInfo>
@@ -662,9 +760,28 @@ const selectType = (index: number) => {
                                 <label for="png">png</label>
                             </div>
                             <div>
-                                <input id="jpeg" type="radio" value="1" name="projectType" v-model="imgData.exportType" />
+                                <input id="jpeg" type="radio" value="1" name="projectType"
+                                    v-model="imgData.exportType" />
                                 <label for="jpeg">jpeg</label>
                             </div>
+                        </div>
+                    </NikkeRadio>
+                </div>
+
+                <div class="pcontent">
+                    <span>导出方式</span>
+                    <NikkeRadio :checked="true" label="方式" style="flex: 1">
+                        <div style="margin: 0; display: flex; justify-content: space-between">
+                            <div>
+                                <input id="dom-to-image-more" type="radio" value="0" name="exportModelType"
+                                    v-model="imgData.exportHtmlType" checked />
+                                <label for="dom-to-image-more">dom</label>
+                            </div>
+                            <!-- <div>
+                                <input id="html-to-image" type="radio" value="1" name="exportModelType"
+                                    v-model="imgData.exportHtmlType" />
+                                <label for="html-to-image">html</label>
+                            </div> -->
                         </div>
                     </NikkeRadio>
                 </div>
@@ -678,8 +795,8 @@ const selectType = (index: number) => {
                 </NikkeInfo>
                 <div class="pcontent">
                     <span>缩放</span>
-                    <input style="flex: 0; width: 120px" class="nikkeInput" type="number" maxlength="20" min="1" max="10"
-                        v-model="imgData.scale" />
+                    <input style="flex: 0; width: 120px" class="nikkeInput" type="number" maxlength="20" min="1"
+                        max="10" v-model="imgData.scale" />
                 </div>
                 <NikkeInfo>
                     图片的缩放比例，值越高画面越清晰，但大小则会变得更大 推荐范围{1-10}
