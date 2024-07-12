@@ -11,7 +11,6 @@ import {
 } from "../script/project";
 import NikkeMessage from "./NikkeMessage.vue";
 import domtoimage from "dom-to-image-more";
-import { toPng, toJpeg } from 'html-to-image';
 import { ref, onMounted, nextTick, reactive } from "vue";
 // import { saveAs } from "file-saver";
 import NikkeWindow from "./NikkeWindow.vue";
@@ -21,6 +20,9 @@ import NikkeSelect from "./NikkeSelect.vue";
 import { ImgType, NikkeDatabase, addDataToDB } from '../script/project';
 import { openDB } from '../data/useIndexedDB';
 import download from 'downloadjs';
+
+import { getFontEmbedCSS, toPng, toJpeg } from 'html-to-image'
+import saveAs from "file-saver";
 
 let props = defineProps<{
     dialogData: Project;
@@ -33,6 +35,60 @@ let imgConfig: ImgConfig = reactive({
     maxWidth: 550,
     bottomHeigth: 15, // 最下面对话与图片最底部的距离 用于方便查看
 });
+
+interface exportImageConfig {
+    name?: string;
+    width?: number;
+    height?: number;
+    download?: boolean;
+}
+
+const exportHtmltoImage = async (
+    dom: HTMLElement,
+    config?: exportImageConfig
+): Promise<void> => {
+    try {
+        const fontEmbedCSS = await getFontEmbedCSS(dom);
+        let title = ""
+        if (imgData.imgName) {
+            title = imgData.imgName;
+        } else {
+            title = "默认";
+        }
+
+        const url = await toPng(dom, {
+                width: config?.width,
+                height: config?.height,
+                fontEmbedCSS
+        });
+
+        if (config?.download) {
+            const link = document.createElement('a');
+            link.download = imgData.exportType == '0' ? `${title}.png` : `${title}.jpeg`;
+            link.href = url;
+            link.click();
+        } else {
+            const img = new Image();
+            img.src = url;
+            img.alt = title;
+            img.style.width = '100%';
+
+            const win = window.open('', '_blank');
+            if (win) {
+                win.document.body.style.display = 'flex';
+                win.document.body.style.justifyContent = 'center';
+                win.document.body.style.alignItems = 'center';
+                win.document.title = title;
+                win.document.body.appendChild(img);
+            } else {
+                throw new Error('Unable to open new window for displaying the screenshot');
+            }
+        }
+    } catch (error) {
+        console.error('Error saving screenshot', error);
+    }
+}
+
 
 enum exportImgState {
     pause,
@@ -185,7 +241,7 @@ function exprotRealToImg() {
             nextTick(() => {
                 if (dialogImg.value != undefined) {
                     domtoimage
-                        .toPng(dialogImg.value, {
+                        .toBlob(dialogImg.value, {
                             width: dialogImg.value.clientWidth * imgData.scale,
                             height: dialogImg.value.clientHeight * imgData.scale,
                             style: {
@@ -193,20 +249,18 @@ function exprotRealToImg() {
                                 transformOrigin: "top left",
                             },
                         })
-                        .then(function (dataUrl: string) {
-                            // saveAs(dataUrl, imgData.imgName + ".png");
-
-                            download(dataUrl, imgData.imgName + ".png");
+                        .then(function (dataUrl: Blob) {
+                            saveAs(dataUrl, imgData.imgName + ".png");
+                            // download(dataUrl, imgData.imgName + ".png");
 
                             var img = new Image();
-                            img.src = dataUrl;
+                            img.src = URL.createObjectURL(dataUrl);
                             preview.value?.appendChild(img);
 
                             if (dialogImg.value != undefined) {
                                 dialogImg.value.style.transform = `scale(${1})`;
                             }
                             currentExportImgState.value = exportImgState.pause;
-
                             // isImg.value = false;
                         })
                         .catch(function (error: any) {
@@ -233,9 +287,7 @@ function exprotRealToImg() {
                         })
                         .then(function (dataUrl: string) {
                             // saveAs(dataUrl, imgData.imgName + ".jpeg");
-
                             download(dataUrl, imgData.imgName + ".jpeg");
-
                             var img = new Image();
                             img.src = dataUrl;
                             preview.value?.appendChild(img);
@@ -265,44 +317,14 @@ function exportRealHtmlToImg() {
         case exportImgType.png.toString():
             currentExportImgState.value = exportImgState.run;
             nextTick(() => {
-                if (dialog.value != undefined) {
-
-                    // 保存原始样式
-                    // const originalWidth = dialog.value?.style.width;
-                    // const originalHeight = dialog.value?.style.height;
-                    // const originalOverflow = dialog.value?.style.overflow;
-
-                    // // 设置新样式
-                    // dialog.value.style.width = `${dialog.value?.scrollWidth}px`;
-                    // dialog.value.style.height = `${dialog.value?.scrollHeight}px`;
-                    // dialog.value.style.overflow = 'visible';
-
-                    toPng(dialog.value, {
-                        width: dialog.value.scrollWidth * imgData.scale,
-                        height: dialog.value.scrollHeight * imgData.scale,
-                        style: {
-                            transform: "scale(" + imgData.scale + ")",
-                            transformOrigin: "top left",
-                        },
+                if (dialog.value != undefined && scrollContainer.value != undefined) {
+                    exportHtmltoImage(dialog.value, {
+                        height: scrollContainer?.value.scrollHeight + 185,
+                        width: 500,
+                        download: true
+                    }).then(() => {
+                        currentExportImgState.value = exportImgState.pause;
                     })
-                        .then(function (dataUrl) {
-                            download(dataUrl, imgData.imgName + ".png");
-
-                            if (dialog.value) {
-                                // dialog.value.style.width = originalWidth;
-                                // dialog.value.style.height = originalHeight;
-                                // dialog.value.style.overflow = originalOverflow;
-
-                                dialog.value.style.transform = `scale(${1})`;
-                            }
-
-
-                            currentExportImgState.value = exportImgState.pause;
-                        })
-                        .catch(function (error: any) {
-                            currentExportImgState.value = exportImgState.pause;
-                            console.error("oops, something went wrong!", error);
-                        });
                 }
             });
             break;
@@ -595,12 +617,12 @@ const selectType = (index: number) => {
             </div> -->
         </div>
         <div class="dcontent" ref="scrollContainer">
-            <NikkeMessage :is-edit="true" :dialog-data="dialogData" :current-data="totalImages"
+            <NikkeMessage :is-edit="currentExportImgState != exportImgState.run" :dialog-data="dialogData" :current-data="totalImages"
                 v-for="(value, index) in dialogData?.messageData.list" :type="value.msgType" :msgs="value.msg"
                 :nikke="value.nikke" :index="index" :key="index"></NikkeMessage>
         </div>
 
-        <div style="position: relative; bottom: 0; width: 100%">
+        <div style="position: relative; bottom: 0; width: 100%" v-if="currentExportImgState != exportImgState.run">
             <div class="dmodel">
                 <span class="dmodelView" :class="{ slectModel: currentModel == value }" v-for="value in typeList"
                     @click="selectModel(value)">{{ value }}</span>
@@ -777,11 +799,11 @@ const selectType = (index: number) => {
                                     v-model="imgData.exportHtmlType" checked />
                                 <label for="dom-to-image-more">dom</label>
                             </div>
-                            <!-- <div>
+                            <div>
                                 <input id="html-to-image" type="radio" value="1" name="exportModelType"
                                     v-model="imgData.exportHtmlType" />
                                 <label for="html-to-image">html</label>
-                            </div> -->
+                            </div>
                         </div>
                     </NikkeRadio>
                 </div>
@@ -793,12 +815,13 @@ const selectType = (index: number) => {
                 <NikkeInfo v-if="parseInt(imgData.exportType) == exportImgType.jpeg">
                     jepg导出时的质量取值范围{0-1}
                 </NikkeInfo>
-                <div class="pcontent">
+                <div class="pcontent" v-if="parseInt(imgData.exportHtmlType) == 0">
                     <span>缩放</span>
                     <input style="flex: 0; width: 120px" class="nikkeInput" type="number" maxlength="20" min="1"
                         max="10" v-model="imgData.scale" />
+
                 </div>
-                <NikkeInfo>
+                <NikkeInfo v-if="parseInt(imgData.exportHtmlType) == 0">
                     图片的缩放比例，值越高画面越清晰，但大小则会变得更大 推荐范围{1-10}
                 </NikkeInfo>
                 <div style="height: 1px; background-color: #e6e7e6"></div>
@@ -812,7 +835,7 @@ const selectType = (index: number) => {
                 <NikkeInfo> 图片预览，如果无法在你的浏览器导出则保存预览图 </NikkeInfo>
                 <div ref="preview" class="preview"></div>
                 <div class="loading" v-if="currentExportImgState == exportImgState.run">
-                    Loading&#8230;
+                    &#8230;
                 </div>
             </div>
         </div>
