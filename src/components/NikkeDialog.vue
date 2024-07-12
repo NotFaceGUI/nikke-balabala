@@ -57,16 +57,13 @@ const exportHtmltoImage = async (
         }
 
         const url = await toPng(dom, {
-                width: config?.width,
-                height: config?.height,
-                fontEmbedCSS
+            width: config?.width,
+            height: config?.height,
+            fontEmbedCSS
         });
 
         if (config?.download) {
-            const link = document.createElement('a');
-            link.download = imgData.exportType == '0' ? `${title}.png` : `${title}.jpeg`;
-            link.href = url;
-            link.click();
+
         } else {
             const img = new Image();
             img.src = url;
@@ -111,6 +108,14 @@ var typeList = ref([
 const dialogData = ref(props.dialogData);
 const scrollContainer = ref<HTMLElement | null>(null);
 const currentSelectImgae = ref<number>(-1);
+
+
+const selfDownload = (url:string ,title: string) => {
+    const link = document.createElement('a');
+    link.download = imgData.exportType == '0' ? `${title}.png` : `${title}.jpeg`;
+    link.href = url;
+    link.click();
+}
 
 const scrollToBottom = () => {
     nextTick(() => {
@@ -250,9 +255,9 @@ function exprotRealToImg() {
                             },
                         })
                         .then(function (dataUrl: Blob) {
-                            saveAs(dataUrl, imgData.imgName + ".png");
+                            // saveAs(dataUrl, imgData.imgName + ".png");
                             // download(dataUrl, imgData.imgName + ".png");
-
+                            selfDownload(URL.createObjectURL(dataUrl), imgData.imgName != undefined ? imgData.imgName : "默认");
                             var img = new Image();
                             img.src = URL.createObjectURL(dataUrl);
                             preview.value?.appendChild(img);
@@ -287,7 +292,8 @@ function exprotRealToImg() {
                         })
                         .then(function (dataUrl: string) {
                             // saveAs(dataUrl, imgData.imgName + ".jpeg");
-                            download(dataUrl, imgData.imgName + ".jpeg");
+                            // download(dataUrl, imgData.imgName + ".jpeg");
+                            selfDownload(dataUrl, imgData.imgName != undefined ? imgData.imgName : "默认");
                             var img = new Image();
                             img.src = dataUrl;
                             preview.value?.appendChild(img);
@@ -318,23 +324,16 @@ function exportRealHtmlToImg() {
             currentExportImgState.value = exportImgState.run;
             nextTick(() => {
                 if (dialog.value != undefined && scrollContainer.value != undefined) {
-                    exportHtmltoImage(dialog.value, {
-                        height: scrollContainer?.value.scrollHeight + 185,
-                        width: 500,
-                        download: true
-                    }).then(() => {
-                        currentExportImgState.value = exportImgState.pause;
-                    })
-                }
-            });
-            break;
-        case exportImgType.jpeg.toString():
-            currentExportImgState.value = exportImgState.run;
-            nextTick(() => {
-                if (dialog.value != undefined) {
-                    toJpeg(dialog.value, {
-                        width: dialog.value.clientWidth * imgData.scale,
-                        height: dialog.value.clientHeight * imgData.scale,
+                    // exportHtmltoImage(dialog.value, {
+                    //     height: scrollContainer?.value.scrollHeight + 185,
+                    //     width: 500,
+                    //     download: true
+                    // }).then(() => {
+                    //     currentExportImgState.value = exportImgState.pause;
+                    // })
+                    toPng(dialog.value, {
+                        width: 500 * imgData.scale,
+                        height: scrollContainer?.value.scrollHeight * imgData.scale + 185,
                         quality: imgData.quality,
                         style: {
                             transform: "scale(" + imgData.scale + ")",
@@ -342,13 +341,39 @@ function exportRealHtmlToImg() {
                         },
                     })
                         .then(function (dataUrl: string) {
-                            // saveAs(dataUrl, imgData.imgName + ".jpeg");
+                            // download(dataUrl, imgData.imgName + ".png");
+                            selfDownload(dataUrl, imgData.imgName != undefined ? imgData.imgName : "默认");
 
-                            // var img = new Image();
-                            // img.src = dataUrl;
-                            // preview.value?.appendChild(img);
+                            if (dialog.value != undefined) {
+                                dialog.value.style.transform = `scale(${1})`;
+                            }
+                            currentExportImgState.value = exportImgState.pause;
+                            // isImg.value = false;
+                        })
+                        .catch(function (error: any) {
+                            currentExportImgState.value = exportImgState.pause;
+                            console.error("oops, something went wrong!", error);
+                        });
+                }
+            });
+            break;
+        case exportImgType.jpeg.toString():
+            currentExportImgState.value = exportImgState.run;
+            nextTick(() => {
+                if (dialog.value != undefined && scrollContainer.value != undefined) {
+                    toJpeg(dialog.value, {
+                        width: 500 * imgData.scale,
+                        height: scrollContainer?.value.scrollHeight * imgData.scale + 185,
+                        quality: imgData.quality,
+                        style: {
+                            transform: "scale(" + imgData.scale + ")",
+                            transformOrigin: "top left",
+                        },
+                    })
+                        .then(function (dataUrl: string) {
+                            // download(dataUrl, imgData.imgName + ".jpeg");
+                            selfDownload(dataUrl, imgData.imgName != undefined ? imgData.imgName : "默认");
 
-                            download(dataUrl, imgData.imgName + ".png");
 
                             if (dialog.value != undefined) {
                                 dialog.value.style.transform = `scale(${1})`;
@@ -617,9 +642,9 @@ const selectType = (index: number) => {
             </div> -->
         </div>
         <div class="dcontent" ref="scrollContainer">
-            <NikkeMessage :is-edit="currentExportImgState != exportImgState.run" :dialog-data="dialogData" :current-data="totalImages"
-                v-for="(value, index) in dialogData?.messageData.list" :type="value.msgType" :msgs="value.msg"
-                :nikke="value.nikke" :index="index" :key="index"></NikkeMessage>
+            <NikkeMessage :is-edit="currentExportImgState != exportImgState.run" :dialog-data="dialogData"
+                :current-data="totalImages" v-for="(value, index) in dialogData?.messageData.list" :type="value.msgType"
+                :msgs="value.msg" :nikke="value.nikke" :index="index" :key="index"></NikkeMessage>
         </div>
 
         <div style="position: relative; bottom: 0; width: 100%" v-if="currentExportImgState != exportImgState.run">
@@ -815,7 +840,7 @@ const selectType = (index: number) => {
                 <NikkeInfo v-if="parseInt(imgData.exportType) == exportImgType.jpeg">
                     jepg导出时的质量取值范围{0-1}
                 </NikkeInfo>
-                <div class="pcontent" v-if="parseInt(imgData.exportHtmlType) == 0">
+                <div class="pcontent">
                     <span>缩放</span>
                     <input style="flex: 0; width: 120px" class="nikkeInput" type="number" maxlength="20" min="1"
                         max="10" v-model="imgData.scale" />
