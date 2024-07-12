@@ -19,10 +19,10 @@ import NikkeIcon from "./NikkeIcon.vue";
 import NikkeSelect from "./NikkeSelect.vue";
 import { ImgType, NikkeDatabase, addDataToDB } from '../script/project';
 import { openDB } from '../data/useIndexedDB';
-import download from 'downloadjs';
+// import download from 'downloadjs';
 
-import { getFontEmbedCSS, toPng, toJpeg } from 'html-to-image'
-import saveAs from "file-saver";
+import { /* getFontEmbedCSS */ toPng, toJpeg } from 'html-to-image'
+// import saveAs from "file-saver";
 
 let props = defineProps<{
     dialogData: Project;
@@ -36,55 +36,55 @@ let imgConfig: ImgConfig = reactive({
     bottomHeigth: 15, // 最下面对话与图片最底部的距离 用于方便查看
 });
 
-interface exportImageConfig {
-    name?: string;
-    width?: number;
-    height?: number;
-    download?: boolean;
-}
+// interface exportImageConfig {
+//     name?: string;
+//     width?: number;
+//     height?: number;
+//     download?: boolean;
+// }
 
-const exportHtmltoImage = async (
-    dom: HTMLElement,
-    config?: exportImageConfig
-): Promise<void> => {
-    try {
-        const fontEmbedCSS = await getFontEmbedCSS(dom);
-        let title = ""
-        if (imgData.imgName) {
-            title = imgData.imgName;
-        } else {
-            title = "默认";
-        }
+// const exportHtmltoImage = async (
+//     dom: HTMLElement,
+//     config?: exportImageConfig
+// ): Promise<void> => {
+//     try {
+//         const fontEmbedCSS = await getFontEmbedCSS(dom);
+//         let title = ""
+//         if (imgData.imgName) {
+//             title = imgData.imgName;
+//         } else {
+//             title = "默认";
+//         }
 
-        const url = await toPng(dom, {
-            width: config?.width,
-            height: config?.height,
-            fontEmbedCSS
-        });
+//         const url = await toPng(dom, {
+//             width: config?.width,
+//             height: config?.height,
+//             fontEmbedCSS
+//         });
 
-        if (config?.download) {
+//         if (config?.download) {
 
-        } else {
-            const img = new Image();
-            img.src = url;
-            img.alt = title;
-            img.style.width = '100%';
+//         } else {
+//             const img = new Image();
+//             img.src = url;
+//             img.alt = title;
+//             img.style.width = '100%';
 
-            const win = window.open('', '_blank');
-            if (win) {
-                win.document.body.style.display = 'flex';
-                win.document.body.style.justifyContent = 'center';
-                win.document.body.style.alignItems = 'center';
-                win.document.title = title;
-                win.document.body.appendChild(img);
-            } else {
-                throw new Error('Unable to open new window for displaying the screenshot');
-            }
-        }
-    } catch (error) {
-        console.error('Error saving screenshot', error);
-    }
-}
+//             const win = window.open('', '_blank');
+//             if (win) {
+//                 win.document.body.style.display = 'flex';
+//                 win.document.body.style.justifyContent = 'center';
+//                 win.document.body.style.alignItems = 'center';
+//                 win.document.title = title;
+//                 win.document.body.appendChild(img);
+//             } else {
+//                 throw new Error('Unable to open new window for displaying the screenshot');
+//             }
+//         }
+//     } catch (error) {
+//         console.error('Error saving screenshot', error);
+//     }
+// }
 
 
 enum exportImgState {
