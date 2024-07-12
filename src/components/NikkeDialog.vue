@@ -332,7 +332,7 @@ function exportRealHtmlToImg() {
                     //     currentExportImgState.value = exportImgState.pause;
                     // })
                     toPng(dialog.value, {
-                        width: 500 * imgData.scale,
+                        width: window.innerWidth < 500 ? window.innerWidth * imgData.scale : 500 * imgData.scale,
                         height: scrollContainer?.value.scrollHeight * imgData.scale + 185,
                         quality: imgData.quality,
                         style: {
@@ -362,7 +362,7 @@ function exportRealHtmlToImg() {
             nextTick(() => {
                 if (dialog.value != undefined && scrollContainer.value != undefined) {
                     toJpeg(dialog.value, {
-                        width: 500 * imgData.scale,
+                        width: window.innerWidth < 500 ? window.innerWidth * imgData.scale : 500 * imgData.scale,
                         height: scrollContainer?.value.scrollHeight * imgData.scale + 185,
                         quality: imgData.quality,
                         style: {
