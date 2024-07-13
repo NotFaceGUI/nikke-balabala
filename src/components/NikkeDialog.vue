@@ -21,7 +21,7 @@ import { ImgType, NikkeDatabase, addDataToDB } from '../script/project';
 import { openDB } from '../data/useIndexedDB';
 // import download from 'downloadjs';
 
-import { /* getFontEmbedCSS */ toPng, toJpeg } from 'html-to-image'
+import { getFontEmbedCSS, toPng, toJpeg } from 'html-to-image'
 // import saveAs from "file-saver";
 
 let props = defineProps<{
@@ -322,7 +322,7 @@ function exportRealHtmlToImg() {
     switch (imgData.exportType) {
         case exportImgType.png.toString():
             currentExportImgState.value = exportImgState.run;
-            nextTick(() => {
+            nextTick(async () => {
                 if (dialog.value != undefined && scrollContainer.value != undefined) {
                     // exportHtmltoImage(dialog.value, {
                     //     height: scrollContainer?.value.scrollHeight + 185,
@@ -339,10 +339,15 @@ function exportRealHtmlToImg() {
                             transform: "scale(" + imgData.scale + ")",
                             transformOrigin: "top left",
                         },
+                        fontEmbedCSS: await getFontEmbedCSS(dialog.value)
                     })
                         .then(function (dataUrl: string) {
                             // download(dataUrl, imgData.imgName + ".png");
                             selfDownload(dataUrl, imgData.imgName != undefined ? imgData.imgName : "默认");
+
+                            var img = new Image();
+                            img.src = dataUrl;
+                            preview.value?.appendChild(img);
 
                             if (dialog.value != undefined) {
                                 dialog.value.style.transform = `scale(${1})`;
@@ -359,7 +364,7 @@ function exportRealHtmlToImg() {
             break;
         case exportImgType.jpeg.toString():
             currentExportImgState.value = exportImgState.run;
-            nextTick(() => {
+            nextTick(async () => {
                 if (dialog.value != undefined && scrollContainer.value != undefined) {
                     toJpeg(dialog.value, {
                         width: window.innerWidth < 500 ? window.innerWidth * imgData.scale : 500 * imgData.scale,
@@ -369,11 +374,15 @@ function exportRealHtmlToImg() {
                             transform: "scale(" + imgData.scale + ")",
                             transformOrigin: "top left",
                         },
+                        fontEmbedCSS: await getFontEmbedCSS(dialog.value)
                     })
                         .then(function (dataUrl: string) {
                             // download(dataUrl, imgData.imgName + ".jpeg");
                             selfDownload(dataUrl, imgData.imgName != undefined ? imgData.imgName : "默认");
 
+                            var img = new Image();
+                            img.src = dataUrl;
+                            preview.value?.appendChild(img);
 
                             if (dialog.value != undefined) {
                                 dialog.value.style.transform = `scale(${1})`;
