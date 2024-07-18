@@ -185,86 +185,88 @@ var imgData = reactive({
 
 function exprotRealToImg() {
     console.log("dom-to-image-more");
-    switch (imgData.exportType) {
-        case exportImgType.png.toString():
-            currentExportImgState.value = exportImgState.run;
-            nextTick(() => {
-                if (dialogImg.value != undefined) {
-                    domtoimage
-                        .toBlob(dialogImg.value, {
-                            width: dialogImg.value.clientWidth * imgData.scale,
-                            height: dialogImg.value.clientHeight * imgData.scale,
-                            style: {
-                                transform: "scale(" + imgData.scale + ")",
-                                transformOrigin: "top left",
-                            },
-                        })
-                        .then(function (dataUrl: Blob) {
-                            // saveAs(dataUrl, imgData.imgName + ".png");
-                            // download(dataUrl, imgData.imgName + ".png");
-                            selfDownload(
-                                URL.createObjectURL(dataUrl),
-                                imgData.imgName != undefined ? imgData.imgName : "默认"
-                            );
-                            var img = new Image();
-                            img.src = URL.createObjectURL(dataUrl);
-                            preview.value?.appendChild(img);
+    document.fonts.ready.then(function () {
+        switch (imgData.exportType) {
+            case exportImgType.png.toString():
+                currentExportImgState.value = exportImgState.run;
+                nextTick(() => {
+                    if (dialogImg.value != undefined) {
+                        domtoimage
+                            .toBlob(dialogImg.value, {
+                                width: dialogImg.value.clientWidth * imgData.scale,
+                                height: dialogImg.value.clientHeight * imgData.scale,
+                                style: {
+                                    transform: "scale(" + imgData.scale + ")",
+                                    transformOrigin: "top left",
+                                },
+                            })
+                            .then(function (dataUrl: Blob) {
+                                // saveAs(dataUrl, imgData.imgName + ".png");
+                                // download(dataUrl, imgData.imgName + ".png");
+                                selfDownload(
+                                    URL.createObjectURL(dataUrl),
+                                    imgData.imgName != undefined ? imgData.imgName : "默认"
+                                );
+                                var img = new Image();
+                                img.src = URL.createObjectURL(dataUrl);
+                                preview.value?.appendChild(img);
 
-                            if (dialogImg.value != undefined) {
-                                dialogImg.value.style.transform = `scale(${1})`;
-                            }
-                            currentExportImgState.value = exportImgState.pause;
-                            // isImg.value = false;
-                        })
-                        .catch(function (error: any) {
-                            currentExportImgState.value = exportImgState.pause;
+                                if (dialogImg.value != undefined) {
+                                    dialogImg.value.style.transform = `scale(${1})`;
+                                }
+                                currentExportImgState.value = exportImgState.pause;
+                                // isImg.value = false;
+                            })
+                            .catch(function (error: any) {
+                                currentExportImgState.value = exportImgState.pause;
 
-                            console.error("oops, something went wrong!", error);
-                        });
-                }
-            });
-            break;
-        case exportImgType.jpeg.toString():
-            currentExportImgState.value = exportImgState.run;
-            nextTick(() => {
-                if (dialogImg.value != undefined) {
-                    domtoimage
-                        .toJpeg(dialogImg.value, {
-                            width: dialogImg.value.clientWidth * imgData.scale,
-                            height: dialogImg.value.clientHeight * imgData.scale,
-                            quality: imgData.quality,
-                            style: {
-                                transform: "scale(" + imgData.scale + ")",
-                                transformOrigin: "top left",
-                            },
-                        })
-                        .then(function (dataUrl: string) {
-                            // saveAs(dataUrl, imgData.imgName + ".jpeg");
-                            // download(dataUrl, imgData.imgName + ".jpeg");
-                            selfDownload(
-                                dataUrl,
-                                imgData.imgName != undefined ? imgData.imgName : "默认"
-                            );
-                            var img = new Image();
-                            img.src = dataUrl;
-                            preview.value?.appendChild(img);
+                                console.error("oops, something went wrong!", error);
+                            });
+                    }
+                });
+                break;
+            case exportImgType.jpeg.toString():
+                currentExportImgState.value = exportImgState.run;
+                nextTick(() => {
+                    if (dialogImg.value != undefined) {
+                        domtoimage
+                            .toJpeg(dialogImg.value, {
+                                width: dialogImg.value.clientWidth * imgData.scale,
+                                height: dialogImg.value.clientHeight * imgData.scale,
+                                quality: imgData.quality,
+                                style: {
+                                    transform: "scale(" + imgData.scale + ")",
+                                    transformOrigin: "top left",
+                                },
+                            })
+                            .then(function (dataUrl: string) {
+                                // saveAs(dataUrl, imgData.imgName + ".jpeg");
+                                // download(dataUrl, imgData.imgName + ".jpeg");
+                                selfDownload(
+                                    dataUrl,
+                                    imgData.imgName != undefined ? imgData.imgName : "默认"
+                                );
+                                var img = new Image();
+                                img.src = dataUrl;
+                                preview.value?.appendChild(img);
 
-                            if (dialogImg.value != undefined) {
-                                dialogImg.value.style.transform = `scale(${1})`;
-                            }
-                            currentExportImgState.value = exportImgState.pause;
-                            // isImg.value = false;
-                        })
-                        .catch(function (error: any) {
-                            currentExportImgState.value = exportImgState.pause;
-                            console.error("oops, something went wrong!", error);
-                        });
-                }
-            });
-            break;
-        default:
-            break;
-    }
+                                if (dialogImg.value != undefined) {
+                                    dialogImg.value.style.transform = `scale(${1})`;
+                                }
+                                currentExportImgState.value = exportImgState.pause;
+                                // isImg.value = false;
+                            })
+                            .catch(function (error: any) {
+                                currentExportImgState.value = exportImgState.pause;
+                                console.error("oops, something went wrong!", error);
+                            });
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+    });
 }
 
 function exportRealHtmlToImg() {
@@ -288,7 +290,7 @@ function exportRealHtmlToImg() {
                         fontEmbedCSS: await getFontEmbedCSS(dialog.value),
                     })
                         .then(function (dataUrl: string) {
-                            selfDownload(dataUrl,imgData.imgName != undefined ? imgData.imgName : "默认");
+                            selfDownload(dataUrl, imgData.imgName != undefined ? imgData.imgName : "默认");
                             var img = new Image();
                             img.src = dataUrl;
                             preview.value?.appendChild(img);
@@ -826,10 +828,11 @@ const selectType = (index: number) => {
                     <input style="flex: 0; width: 120px" class="nikkeInput" type="number" maxlength="20" min="1"
                         max="10" v-model="imgData.scale" />
                 </div>
-                <NikkeInfo >
+                <NikkeInfo>
                     <div class="success">
                         <span
-                            style="color: rgb(93, 182, 93); font-size: 10px; background-color: ">图片的缩放比例，值越高画面越清晰，但大小则会变得更大 推荐范围{1-10}</span>
+                            style="color: rgb(93, 182, 93); font-size: 10px; background-color: ">图片的缩放比例，值越高画面越清晰，但大小则会变得更大
+                            推荐范围{1-10}</span>
                     </div>
                 </NikkeInfo>
                 <div style="height: 1px; background-color: #e6e7e6"></div>
