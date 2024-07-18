@@ -408,7 +408,7 @@ function lostfocus(index: number) {
 
 
 .text {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     user-select: text;
     /* word-wrap: break-word; */
@@ -419,7 +419,7 @@ function lostfocus(index: number) {
     box-shadow: 0 4px 7px #00000010;
     color: #272727;
     background-color: white;
-    display: inline-block;
+    /* display: inline-block; */
     border-radius: 20px;
     min-height: 51px;
     min-width: 45px;
