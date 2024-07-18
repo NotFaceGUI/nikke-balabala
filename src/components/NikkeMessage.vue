@@ -408,6 +408,8 @@ function lostfocus(index: number) {
 
 
 .text {
+    display: flex;
+    align-items: center;
     user-select: text;
     /* word-wrap: break-word; */
     word-break: break-all;
