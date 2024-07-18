@@ -413,7 +413,6 @@ function lostfocus(index: number) {
     word-break: break-all;
     margin: 5px 0;
     font-weight: bold;
-    
     padding: 12px 18px;
     box-shadow: 0 4px 7px #00000010;
     color: #272727;
