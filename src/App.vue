@@ -673,21 +673,18 @@ let isUpdate = ref(true);
               <NikkeRadio :checked="true" label="任务" style="flex: 1;">
                 <div style="margin: 0; display: flex; justify-content: space-between;">
                   <div>
-                    <input id="task" type="radio" value="0" name="projectType" v-model="selectType">
-                    <label for="task">{{ $t('menu.task') }}</label>
+                    <input id="task" type="radio" value="0" name="projectType" v-model="selectType" disabled >
+                    <label for="task" style="color: #858383;">{{ $t('menu.task') }}</label>
                   </div>
                   <div>
                     <input id="nikke" type="radio" value="1" name="projectType" v-model="selectType" checked>
                     <label for="nikke">{{ $t('menu.nikke') }}</label>
                   </div>
                   <div>
-                    <input id="group" type="radio" value="2" name="projectType" v-model="selectType">
-                    <label for="group">{{ $t('menu.group') }}</label>
+                    <input id="group" type="radio" value="2" name="projectType" v-model="selectType" disabled>
+                    <label for="group" style="color: #858383;">{{ $t('menu.group') }}</label>
                   </div>
                 </div>
-                <NikkeInfo>
-                  (只实现了妮姬项目类型)
-                </NikkeInfo>
               </NikkeRadio>
             </div>
             <div class="pcontent">
@@ -704,15 +701,7 @@ let isUpdate = ref(true);
               <span>选择对话妮姬（可多选|至少选一个）</span>
 
             </div>
-            <div class="nikkeSelect" v-if="selectType == '1'">
-              <div class="enterprise">
-                <div class="enterpriseBox" style="background-color: #32b1f4;">ALL</div>
-                <div class="enterpriseBox">极乐净土</div>
-                <div class="enterpriseBox">米西利斯</div>
-                <div class="enterpriseBox">泰特拉</div>
-                <div class="enterpriseBox">朝圣者</div>
-                <div class="enterpriseBox">NPC</div>
-              </div>
+            <div class="nikkeSelect">
               <div class="nikkeGrid">
                 <div class="nikke" :class="{ nikkeCheck: isSelect[index] }" @click="select(value, index)"
                   v-for="(value, index) in nikkeData.nikkes" :key="index"
@@ -1042,8 +1031,6 @@ let isUpdate = ref(true);
   box-shadow: 20px 20px 60px #000000,
     -20px -20px 60px #1a1515;
   transition: all 0.3s ease-in-out;
-
-
 }
 
 .noList {

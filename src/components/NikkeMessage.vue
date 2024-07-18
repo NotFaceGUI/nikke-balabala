@@ -135,7 +135,7 @@ function lostfocus(index: number) {
         </div>
     </div>
     <div class="msg" v-else-if="type == msgType.img">
-        <div class="head" :style="{ backgroundImage: 'url(avatars/' + nikke.img + '.png)' }"></div>
+        <div class="head" :style="{backgroundImage: nikke.enterprise != enterprise.自定义 ? 'url(avatars/' + nikke.img + '.png)' : 'url('  + nikke.img + ')' }"></div>
         <div class="textgroup">
             <div class="name">{{ nikke.name }}</div>
             <div class="textbox" v-for="value, index in msgs" :key="index">

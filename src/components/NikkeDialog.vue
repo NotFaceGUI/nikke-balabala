@@ -12,17 +12,13 @@ import {
 import NikkeMessage from "./NikkeMessage.vue";
 import domtoimage from "dom-to-image-more";
 import { ref, onMounted, nextTick, reactive } from "vue";
-// import { saveAs } from "file-saver";
 import NikkeWindow from "./NikkeWindow.vue";
 import NikkeInfo from "./NikkeInfo.vue";
-import NikkeIcon from "./NikkeIcon.vue";
 import NikkeSelect from "./NikkeSelect.vue";
-import { ImgType, NikkeDatabase, addDataToDB } from '../script/project';
-import { openDB } from '../data/useIndexedDB';
-// import download from 'downloadjs';
+import { ImgType, NikkeDatabase, addDataToDB } from "../script/project";
+import { openDB } from "../data/useIndexedDB";
 
-import { getFontEmbedCSS, toPng, toJpeg } from 'html-to-image'
-// import saveAs from "file-saver";
+import { getFontEmbedCSS, toPng, toJpeg } from "html-to-image";
 
 let props = defineProps<{
     dialogData: Project;
@@ -33,59 +29,8 @@ let props = defineProps<{
 let imgConfig: ImgConfig = reactive({
     width: 500,
     maxWidth: 550,
-    bottomHeigth: 15, // 最下面对话与图片最底部的距离 用于方便查看
+    bottomHeigth: 15,
 });
-
-// interface exportImageConfig {
-//     name?: string;
-//     width?: number;
-//     height?: number;
-//     download?: boolean;
-// }
-
-// const exportHtmltoImage = async (
-//     dom: HTMLElement,
-//     config?: exportImageConfig
-// ): Promise<void> => {
-//     try {
-//         const fontEmbedCSS = await getFontEmbedCSS(dom);
-//         let title = ""
-//         if (imgData.imgName) {
-//             title = imgData.imgName;
-//         } else {
-//             title = "默认";
-//         }
-
-//         const url = await toPng(dom, {
-//             width: config?.width,
-//             height: config?.height,
-//             fontEmbedCSS
-//         });
-
-//         if (config?.download) {
-
-//         } else {
-//             const img = new Image();
-//             img.src = url;
-//             img.alt = title;
-//             img.style.width = '100%';
-
-//             const win = window.open('', '_blank');
-//             if (win) {
-//                 win.document.body.style.display = 'flex';
-//                 win.document.body.style.justifyContent = 'center';
-//                 win.document.body.style.alignItems = 'center';
-//                 win.document.title = title;
-//                 win.document.body.appendChild(img);
-//             } else {
-//                 throw new Error('Unable to open new window for displaying the screenshot');
-//             }
-//         }
-//     } catch (error) {
-//         console.error('Error saving screenshot', error);
-//     }
-// }
-
 
 enum exportImgState {
     pause,
@@ -104,18 +49,16 @@ var typeList = ref([
     msgType.branch,
 ]);
 
-// 使用ref包装dialogData，使其变成响应式
 const dialogData = ref(props.dialogData);
 const scrollContainer = ref<HTMLElement | null>(null);
 const currentSelectImgae = ref<number>(-1);
 
-
-const selfDownload = (url:string ,title: string) => {
-    const link = document.createElement('a');
-    link.download = imgData.exportType == '0' ? `${title}.png` : `${title}.jpeg`;
+const selfDownload = (url: string, title: string) => {
+    const link = document.createElement("a");
+    link.download = imgData.exportType == "0" ? `${title}.png` : `${title}.jpeg`;
     link.href = url;
     link.click();
-}
+};
 
 const scrollToBottom = () => {
     nextTick(() => {
@@ -126,8 +69,6 @@ const scrollToBottom = () => {
 };
 
 function check() {
-    // 如果当前模式是图片
-
     if (currentSelectImgae.value != -1 || currentModel.value == msgType.branch) {
         return;
     }
@@ -213,9 +154,13 @@ function add() {
     if (currentModel.value == msgType.img && currentSelectImgae.value != -1) {
         info.msgType = msgType.img;
         if (currentImageType.value == ImgType.localImage) {
-            info.msg.push("[url][base64:] [" + totalImages.value[currentSelectImgae.value] + "]");
+            info.msg.push(
+                "[url][base64:] [" + totalImages.value[currentSelectImgae.value] + "]"
+            );
         } else if (currentImageType.value == ImgType.builtinImage) {
-            info.msg.push("[url][base64:] [" + builtinImageDatas[currentSelectImgae.value] + "]");
+            info.msg.push(
+                "[url][base64:] [" + builtinImageDatas[currentSelectImgae.value] + "]"
+            );
         } else {
             info.msg.push("[表情]");
         }
@@ -257,7 +202,10 @@ function exprotRealToImg() {
                         .then(function (dataUrl: Blob) {
                             // saveAs(dataUrl, imgData.imgName + ".png");
                             // download(dataUrl, imgData.imgName + ".png");
-                            selfDownload(URL.createObjectURL(dataUrl), imgData.imgName != undefined ? imgData.imgName : "默认");
+                            selfDownload(
+                                URL.createObjectURL(dataUrl),
+                                imgData.imgName != undefined ? imgData.imgName : "默认"
+                            );
                             var img = new Image();
                             img.src = URL.createObjectURL(dataUrl);
                             preview.value?.appendChild(img);
@@ -293,7 +241,10 @@ function exprotRealToImg() {
                         .then(function (dataUrl: string) {
                             // saveAs(dataUrl, imgData.imgName + ".jpeg");
                             // download(dataUrl, imgData.imgName + ".jpeg");
-                            selfDownload(dataUrl, imgData.imgName != undefined ? imgData.imgName : "默认");
+                            selfDownload(
+                                dataUrl,
+                                imgData.imgName != undefined ? imgData.imgName : "默认"
+                            );
                             var img = new Image();
                             img.src = dataUrl;
                             preview.value?.appendChild(img);
@@ -316,7 +267,6 @@ function exprotRealToImg() {
     }
 }
 
-
 function exportRealHtmlToImg() {
     console.log("html-to-image");
     switch (imgData.exportType) {
@@ -324,27 +274,21 @@ function exportRealHtmlToImg() {
             currentExportImgState.value = exportImgState.run;
             nextTick(async () => {
                 if (dialog.value != undefined && scrollContainer.value != undefined) {
-                    // exportHtmltoImage(dialog.value, {
-                    //     height: scrollContainer?.value.scrollHeight + 185,
-                    //     width: 500,
-                    //     download: true
-                    // }).then(() => {
-                    //     currentExportImgState.value = exportImgState.pause;
-                    // })
                     toPng(dialog.value, {
-                        width: window.innerWidth < 500 ? window.innerWidth * imgData.scale : 500 * imgData.scale,
+                        width:
+                            window.innerWidth < 500
+                                ? window.innerWidth * imgData.scale
+                                : 500 * imgData.scale,
                         height: scrollContainer?.value.scrollHeight * imgData.scale + 185,
                         quality: imgData.quality,
                         style: {
                             transform: "scale(" + imgData.scale + ")",
                             transformOrigin: "top left",
                         },
-                        fontEmbedCSS: await getFontEmbedCSS(dialog.value)
+                        fontEmbedCSS: await getFontEmbedCSS(dialog.value),
                     })
                         .then(function (dataUrl: string) {
-                            // download(dataUrl, imgData.imgName + ".png");
-                            selfDownload(dataUrl, imgData.imgName != undefined ? imgData.imgName : "默认");
-
+                            selfDownload(dataUrl,imgData.imgName != undefined ? imgData.imgName : "默认");
                             var img = new Image();
                             img.src = dataUrl;
                             preview.value?.appendChild(img);
@@ -353,7 +297,6 @@ function exportRealHtmlToImg() {
                                 dialog.value.style.transform = `scale(${1})`;
                             }
                             currentExportImgState.value = exportImgState.pause;
-                            // isImg.value = false;
                         })
                         .catch(function (error: any) {
                             currentExportImgState.value = exportImgState.pause;
@@ -367,18 +310,24 @@ function exportRealHtmlToImg() {
             nextTick(async () => {
                 if (dialog.value != undefined && scrollContainer.value != undefined) {
                     toJpeg(dialog.value, {
-                        width: window.innerWidth < 500 ? window.innerWidth * imgData.scale : 500 * imgData.scale,
+                        width:
+                            window.innerWidth < 500
+                                ? window.innerWidth * imgData.scale
+                                : 500 * imgData.scale,
                         height: scrollContainer?.value.scrollHeight * imgData.scale + 185,
                         quality: imgData.quality,
                         style: {
                             transform: "scale(" + imgData.scale + ")",
                             transformOrigin: "top left",
                         },
-                        fontEmbedCSS: await getFontEmbedCSS(dialog.value)
+                        fontEmbedCSS: await getFontEmbedCSS(dialog.value),
                     })
                         .then(function (dataUrl: string) {
                             // download(dataUrl, imgData.imgName + ".jpeg");
-                            selfDownload(dataUrl, imgData.imgName != undefined ? imgData.imgName : "默认");
+                            selfDownload(
+                                dataUrl,
+                                imgData.imgName != undefined ? imgData.imgName : "默认"
+                            );
 
                             var img = new Image();
                             img.src = dataUrl;
@@ -454,12 +403,19 @@ onMounted(() => {
     //     totalImages.value = JSON.parse(isV);
     // }
 
-    retrieveDataFromDB(dbPromise, NikkeDatabase.nikkeProject, NikkeDatabase.nikkeTotalImages).then((value) => {
+    retrieveDataFromDB(
+        dbPromise,
+        NikkeDatabase.nikkeProject,
+        NikkeDatabase.nikkeTotalImages
+    ).then((value) => {
         if (value) {
             totalImages.value = JSON.parse(value.totalImages);
         } else {
             console.log("没有图片数据，数据写入中……");
-            addDataToDB(dbPromise, NikkeDatabase.nikkeProject, { sequenceId: NikkeDatabase.nikkeTotalImages, totalImages: JSON.stringify(totalImages.value) })
+            addDataToDB(dbPromise, NikkeDatabase.nikkeProject, {
+                sequenceId: NikkeDatabase.nikkeTotalImages,
+                totalImages: JSON.stringify(totalImages.value),
+            });
         }
     });
 });
@@ -534,7 +490,10 @@ const addImages = () => {
     });
     if (sum > 0) {
         // localStorage.setItem("totalImages", JSON.stringify(totalImages.value));
-        let data = { sequenceId: NikkeDatabase.nikkeTotalImages, totalImages: JSON.stringify(totalImages.value) };
+        let data = {
+            sequenceId: NikkeDatabase.nikkeTotalImages,
+            totalImages: JSON.stringify(totalImages.value),
+        };
         addDataToDB(dbPromise, NikkeDatabase.nikkeProject, data);
     }
 };
@@ -543,7 +502,6 @@ function selectImage(index: number) {
     console.log(1);
     currentModel.value = msgType.img;
     if (currentSelectImgae.value == index) {
-
         currentSelectImgae.value = -1;
     } else {
         currentSelectImgae.value = index;
@@ -596,30 +554,22 @@ let isAddNikkeWindow = ref(false);
 
 const addNikke = () => {
     isAddNikkeWindow.value = true;
-}
+};
 
 const cancelAdition = () => {
     isAddNikkeWindow.value = false;
-}
+};
 
 let currentImageType = ref<ImgType>(ImgType.localImage);
 
 const selectType = (index: number) => {
     currentImageType.value = index;
     console.log(index);
-}
-
+};
 </script>
 
 <template>
-    <!-- <div>
-        <input type="file" @change="handleFileUpload" accept="image/*" multiple />
-        <div v-for="(image, index) in selectedImages" :key="index">
-            <img :src="image" alt="Uploaded Image" />
-        </div>
-        <button @click="saveImages">Save Images</button>
-    </div> -->
-    <div style="width: 100%;height: 75%;position: absolute;">
+    <div style="width: 100%; height: 75%; position: absolute">
         <NikkeWindow id="createProject" title="添加新的妮姬对象" :confirm="false" :show="isImg" v-if="isAddNikkeWindow"
             button-cancel="取消添加" :cancel="cancelAdition" button-success="确认添加">
             <div>
@@ -642,13 +592,6 @@ const selectType = (index: number) => {
                     <span style="vertical-align: middle">{{ dialogData?.name }}</span>
                 </div>
             </div>
-
-            <!-- <div class="floorInfo">
-                <span>@{{ dialogData?.author }}</span>
-                <span>
-                    balabala 生成器制作@流浪鬼
-                </span>
-            </div> -->
         </div>
         <div class="dcontent" ref="scrollContainer">
             <NikkeMessage :is-edit="currentExportImgState != exportImgState.run" :dialog-data="dialogData"
@@ -662,19 +605,20 @@ const selectType = (index: number) => {
                     @click="selectModel(value)">{{ value }}</span>
                 <span class="dmodelView export" style="margin-left: auto; width: 80px" @click="exportImg()">导出图片</span>
             </div>
-            <!-- <div class="editBar"></div> -->
             <div class="selectNikkeInfo last" v-if="isSelectView" @click="selectZ()">指</div>
             <div class="dselectnikke" v-if="isSelectView">
-                <div class="selectNikkeInfo" v-for="(value, index) in dialogData?.projectNikkes" :key="index"
-                    :style="{ backgroundImage: value.enterprise != enterprise.自定义 ? 'url(avatars/' + value.img + '.png)' : 'url(' + value.img + ')' }"
-                    @click="selectNikke(index)"></div>
+                <div class="selectNikkeInfo" v-for="(value, index) in dialogData?.projectNikkes" :key="index" :style="{
+                    backgroundImage:
+                        value.enterprise != enterprise.自定义
+                            ? 'url(avatars/' + value.img + '.png)'
+                            : 'url(' + value.img + ')',
+                }" @click="selectNikke(index)"></div>
                 <div class="selectNikkeInfo nadd" @click="addNikke()"></div>
-
             </div>
 
-            <div style="background-color:#fcfcfc;" v-if="isImgListView">
+            <div style="background-color: #fcfcfc" v-if="isImgListView">
                 <div class="imageType">
-                    <ul style="color: black;" class="itab">
+                    <ul style="color: black" class="itab">
                         <li @click="selectType(0)" :class="{ selectType: currentImageType == ImgType.localImage }">
                             <span>本地图片</span>
                         </li>
@@ -689,22 +633,42 @@ const selectType = (index: number) => {
                 <div class="imgList" v-if="currentImageType == ImgType.localImage">
                     <div v-for="(value, index) in totalImages" :key="index">
                         <div style="width: 96px; height: 96px">
-                            <img :src="value" :class="{ isSelectImageView: currentSelectImgae === index }"
-                                style="box-sizing: border-box;width: 96px;background-color: #c6c6c6;border-radius: 5px;border: 2px #c6c6c6 solid;transition: all 0.1s ease-in-out;"
-                                @click="selectImage(index)" />
+                            <img :src="value" :class="{ isSelectImageView: currentSelectImgae === index }" style="
+                  box-sizing: border-box;
+                  width: 96px;
+                  background-color: #c6c6c6;
+                  border-radius: 5px;
+                  border: 2px #c6c6c6 solid;
+                  transition: all 0.1s ease-in-out;
+                " @click="selectImage(index)" />
                         </div>
                     </div>
-                    <div style="font-size: 64px;color: black;width: 96px;height: 96px;text-align: center;border: 1px solid skyblue;border-radius: 10px;display: flex;justify-content: center;align-items: center;"
-                        @click="openFile()">
+                    <div style="
+              font-size: 64px;
+              color: black;
+              width: 96px;
+              height: 96px;
+              text-align: center;
+              border: 1px solid skyblue;
+              border-radius: 10px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            " @click="openFile()">
                         <span style="margin-top: -11px"> + </span>
                     </div>
                 </div>
                 <div class="imgList" v-if="currentImageType == ImgType.builtinImage">
                     <div v-for="(value, index) in builtinImageDatas" :key="index">
-                        <div style="width: 96px; ">
-                            <img :src="value" :class="{ isSelectImageView: currentSelectImgae === index }"
-                                style="box-sizing: border-box;width: 96px;background-color: #c6c6c6;border-radius: 5px;border: 2px #c6c6c6 solid;transition: all 0.1s ease-in-out;"
-                                @click="selectImage(index)">
+                        <div style="width: 96px">
+                            <img :src="value" :class="{ isSelectImageView: currentSelectImgae === index }" style="
+                  box-sizing: border-box;
+                  width: 96px;
+                  background-color: #c6c6c6;
+                  border-radius: 5px;
+                  border: 2px #c6c6c6 solid;
+                  transition: all 0.1s ease-in-out;
+                " @click="selectImage(index)" />
                         </div>
                     </div>
                 </div>
@@ -712,14 +676,15 @@ const selectType = (index: number) => {
                     <div v-for="(value, index) in builtinImageDatas" :key="index">
                         {{ value }}
                     </div>
-
                 </div>
             </div>
 
             <div class="nikkeedit">
                 <div class="selectNikkeInfo" @click="show()" :style="{
-                    backgroundImage: dialogData?.projectNikkes[currentNikke].enterprise != enterprise.自定义 ? 'url(avatars/' + dialogData?.projectNikkes[currentNikke].img + '.png)' : 'url(' + dialogData?.projectNikkes[currentNikke].img + ')'
-
+                    backgroundImage:
+                        dialogData?.projectNikkes[currentNikke].enterprise != enterprise.自定义
+                            ? 'url(avatars/' + dialogData?.projectNikkes[currentNikke].img + '.png)'
+                            : 'url(' + dialogData?.projectNikkes[currentNikke].img + ')',
                 }" :class="{ zhg: isZHG }">
                     <span v-if="isZHG" style="
               color: rgb(92, 58, 58);
@@ -786,10 +751,8 @@ const selectType = (index: number) => {
     <NikkeWindow id="createProject" title="导出图片" :confirm="true" :show="isImg" v-if="isImg" button-cancel="关闭"
         :cancel="cancel" :success="imgData.exportHtmlType == '0' ? exprotRealToImg : exportRealHtmlToImg"
         button-success="导出">
-        <NikkeIcon></NikkeIcon>
         <div class="project">
             <div class="label">
-                <NikkeInfo>如果出现问题可以通过点击上面的图标进行跳转反馈，包括bug、想要添加的功能等等都可以在上反馈。</NikkeInfo>
                 <NikkeInfo>
                     <div class="error">
                         <span style="color: rgb(182, 93, 93); font-size: 10px; background-color: ">如果主页的字体不是
@@ -805,7 +768,13 @@ const selectType = (index: number) => {
                     <span>是否添加水印 </span>
                     <input type="checkbox" v-model="imgData.mark" />
                 </div>
-                <NikkeInfo> 将会在头部添加作者名字、使用的工具等信息 (临时) </NikkeInfo>
+                <NikkeInfo>
+                    <div class="success">
+                        <span
+                            style="color: rgb(93, 182, 93); font-size: 10px; background-color: ">将会在头部添加作者名字、使用的工具等信息</span>
+                    </div>
+                </NikkeInfo>
+
                 <div class="pcontent">
                     <span>导出图片格式</span>
                     <NikkeRadio :checked="true" label="任务" style="flex: 1">
@@ -846,17 +815,22 @@ const selectType = (index: number) => {
                     <input class="nikkeInput" v-model="imgData.quality" type="number" min="0" max="1" />
                     <div></div>
                 </div>
-                <NikkeInfo v-if="parseInt(imgData.exportType) == exportImgType.jpeg">
-                    jepg导出时的质量取值范围{0-1}
-                </NikkeInfo>
+                <!-- <NikkeInfo v-if="parseInt(imgData.exportType) == exportImgType.jpeg">
+                    <div class="success">
+                        <span
+                            style="color: rgb(93, 182, 93); font-size: 10px; background-color: ">jepg导出时的质量取值范围{0-1}</span>
+                    </div>
+                </NikkeInfo> -->
                 <div class="pcontent">
                     <span>缩放</span>
                     <input style="flex: 0; width: 120px" class="nikkeInput" type="number" maxlength="20" min="1"
                         max="10" v-model="imgData.scale" />
-
                 </div>
-                <NikkeInfo v-if="parseInt(imgData.exportHtmlType) == 0">
-                    图片的缩放比例，值越高画面越清晰，但大小则会变得更大 推荐范围{1-10}
+                <NikkeInfo >
+                    <div class="success">
+                        <span
+                            style="color: rgb(93, 182, 93); font-size: 10px; background-color: ">图片的缩放比例，值越高画面越清晰，但大小则会变得更大 推荐范围{1-10}</span>
+                    </div>
                 </NikkeInfo>
                 <div style="height: 1px; background-color: #e6e7e6"></div>
                 <div style="text-align: center">预览</div>
@@ -882,6 +856,13 @@ const selectType = (index: number) => {
     border-radius: 10px;
     padding: 5px;
     border: #f3f1f1 1px solid;
+}
+
+.success {
+    background-color: #f8fffa;
+    border-radius: 10px;
+    padding: 5px;
+    border: #e2f3eb 1px solid;
 }
 
 .editBar {
@@ -1063,7 +1044,6 @@ const selectType = (index: number) => {
 .selectType {
     color: rgb(243, 124, 124) !important;
     background-color: rgb(222, 224, 222);
-
 }
 
 .imageType {
@@ -1139,8 +1119,8 @@ div.dialogImg {
     flex-direction: column;
     justify-content: space-between;
     /* overflow: hidden; */
-    min-width: 500px !important;
-    max-width: 550px;
+    min-width: 515px !important;
+    max-width: 550px !important;
     z-index: 99999;
 }
 
@@ -1391,21 +1371,16 @@ div>.slectModel {
 
 div::-webkit-scrollbar {
     width: 0;
-    /* 隐藏滚动条 */
 }
 
 .dcontent::-webkit-scrollbar-thumb {
     background: #ccc;
-    /* 滚动条thumb颜色 */
     border-radius: 5px;
-    /* 滚动条thumb圆角 */
 }
 
 .dcontent::-webkit-scrollbar-track {
     background: transparent;
-    /* 滚动条轨道颜色 */
     border-radius: 5px;
-    /* 滚动条轨道圆角 */
 }
 
 .dheader {
@@ -1420,19 +1395,4 @@ div::-webkit-scrollbar {
     background-position: center;
     background-color: #fda912;
 }
-
-/* .dheader::after {
-    content: "";
-    z-index: 1;
-    position: absolute;
-    background-image: url('data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHcAAABiAgMAAAAXTKQxAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACVBMVEX3t0X3t0X///+98LFLAAAAAXRSTlMAQObYZgAAAAFiS0dEAmYLfGQAAAAHdElNRQfnCxYRBSCeyqUCAAABAUlEQVRIx+2WyxHDIAxExYES1A8l6GD6byWO7RAw0q5nOCa6vtHu+oOEyLdyPaqIW1qvMkhdnmtXk36qQ93xSOsGpGf5Ox3bp+axfaZ9e3JwF149bEi7U88ubuHUx4a0m3oKcIXWH3ONsCHryzy0Ps1zjAvHGmNDyc5sGIPg7+gEZ4QLw4qwLWJE9wf/49/CivDqv5YRpsdg7QiuHX82W0D0B4OLTEUyU9lEDs3Lk21AdgnbRIF5W7JQm+5QsoHJ/mbbn9wd2M2D3FvYrYfcmQZsgrBDO1wkxi5rn2UTiKNmwc2CmxNuzu6rHLDFWJH0kQzQBFIf1kh6t0ZUoLSk6JleKJaqutiaJukAAAAASUVORK5CYII=');
-    background-repeat: no-repeat;
-    background-size: 256px;
-    width: 256px;
-    height: 256px;
-    top: -109px;
-    right: -50px;
-    opacity: 0.65;
-    transform: rotate(4deg);
-} */
 </style>
