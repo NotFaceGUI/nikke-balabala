@@ -420,6 +420,7 @@ function lostfocus(index: number) {
     color: #272727;
     background-color: white;
     /* display: inline-block; */
+    font-size: 18px;
     border-radius: 20px;
     min-height: 51px;
     min-width: 45px;
