@@ -408,7 +408,7 @@ function lostfocus(index: number) {
 
 
 .text {
-    display: inline-flex;
+    display: inline-flex !important;
     align-items: center;
     user-select: text;
     /* word-wrap: break-word; */
