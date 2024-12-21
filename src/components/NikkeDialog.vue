@@ -578,8 +578,7 @@ const selectType = (index: number) => {
                 <NikkeSelect :filter-data="dialogData?.projectNikkes"></NikkeSelect>
             </div>
         </NikkeWindow>
-    </div>
-
+    </div> 
     <div class="dialog" ref="dialog">
         <div class="dheader">
             <div class="tilte">
@@ -755,13 +754,13 @@ const selectType = (index: number) => {
         button-success="导出">
         <div class="project">
             <div class="label">
-                <NikkeInfo>
+                <!-- <NikkeInfo>
                     <div class="error">
                         <span style="color: rgb(182, 93, 93); font-size: 10px; background-color: ">如果主页的字体不是
                             “sourcehansans”
                             请尝试等待或者切换网络环境等待字体加载完毕，可避免部分导出图片的问题。</span>
                     </div>
-                </NikkeInfo>
+                </NikkeInfo> -->
                 <div class="pcontent">
                     <span>图片名称 *</span>
                     <input class="nikkeInput" v-model="imgData.imgName" type="text" />
@@ -781,11 +780,11 @@ const selectType = (index: number) => {
                     <span>导出图片格式</span>
                     <NikkeRadio :checked="true" label="任务" style="flex: 1">
                         <div style="margin: 0; display: flex; justify-content: space-between">
-                            <div>
+                            <!-- <div>
                                 <input id="png" type="radio" value="0" name="projectType" v-model="imgData.exportType"
                                     checked />
                                 <label for="png">png</label>
-                            </div>
+                            </div> -->
                             <div>
                                 <input id="jpeg" type="radio" value="1" name="projectType"
                                     v-model="imgData.exportType" />

@@ -89,7 +89,7 @@ function lostfocus(index: number) {
         <div class="textgroup">
             <div class="name">{{ nikke.name }}</div>
             <div class="textbox" v-for="value, index in msgs" :key="index">
-                <span class="text" v-if="!parseImg(value)">
+                <span class="text" style="display: inline-flex;" v-if="!parseImg(value)">
                     <input ref="spaceRefs" v-if="!editInputs.indexOf(index)" v-model="editContent" type="text"
                         @blur="lostfocus(index)" class="nikkeInput msgInput">
                     <div v-else>
@@ -109,8 +109,8 @@ function lostfocus(index: number) {
 
     <div class="zmsg" v-else-if="type == msgType.commander">
         <div class="ztextbox" v-for="value, index in msgs" :key="index">
-            <span v-if="!parseImg(value)" class="text mzhg">
-                <input ref="spaceRefs" v-if="!editInputs.indexOf(index)" v-model="editContent" type="text"
+            <span v-if="!parseImg(value)" style="display: inline-flex;" class="text mzhg">
+                <input ref="spaceRefs" v-if="!editInputs.indexOf(index)" v-model="editContent"  type="text"
                     @blur="lostfocus(index)" class="nikkeInput msgInput">
                 <div v-else>
                     {{ value }}
@@ -408,7 +408,7 @@ function lostfocus(index: number) {
 
 
 .text {
-    display: inline-flex !important;
+    
     align-items: center;
     user-select: text;
     /* word-wrap: break-word; */

@@ -127,7 +127,7 @@ input[type="radio"] {
   width: 14px;
   height: 14px;
   border-radius: 4px;
-  border: 2px white solid !important;
+  border: 2px white solid !important; 
   outline: #979797 solid thin;
   transition: all 0.3s ease-in-out;
   box-sizing: border-box;
@@ -153,6 +153,7 @@ input[type="radio"]:checked+label {
 .nikkeInput {
   flex: 1;
   padding: 1px 5px;
+  width: 100%;
   border: 1px #2b2b2b3d solid;
   border-radius: 5px;
   min-height: 25px;
@@ -175,7 +176,7 @@ input[type="radio"]:checked+label {
     url('./assets/fonts/webfont.svg#webfont') format('svg');
 } */
 
-/* @font-face {
+@font-face {
   font-family: "sourcehansans";
   src:
     url("./assets/fonts/SourceHanSansSC-Bold.ttf");
@@ -185,7 +186,7 @@ input[type="radio"]:checked+label {
 
 * {
   font-family: "sourcehansans";
-} */
+}
 
 .contentBox {
   overflow: hidden;
@@ -198,6 +199,7 @@ input[type="radio"]:checked+label {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 
 ul {
   padding: 0;

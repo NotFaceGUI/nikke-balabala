@@ -26,8 +26,6 @@ const data = reactive([
 
 const appVersion = "v1.3";
 
-
-
 var filteredData = ref<Project[]>([]);
 var selectNikke: Array<INikkeData> = reactive([]);
 var isSelect: Array<boolean> = reactive([]);
@@ -724,7 +722,6 @@ let isUpdate = ref(true);
           </div>
 
           <NikkeInfo>
-
             <div class="error">
               <span style="color: rgb(93, 182, 93); font-size: 12px;">
                 请在需要修改的妮姬对象下填入新的名字，并保存。
@@ -752,24 +749,18 @@ let isUpdate = ref(true);
           </div>
 
         </NikkeWindow>
-
       </div>
-
-
-      <div class="box back"><img src="/background.png" style="width: 100%;height: 100%;object-fit: cover;"></div>
-
-
+      <!-- <div class="box back"><img src="/background.png" style="width: 100%;height: 100%;object-fit: cover;"></div> -->
       <div class="header">
         <div class="tilte">
           <span style="vertical-align: middle;">
             <img src="/wifi.png" style="width: 18px;">
           </span>
           {{ currentTime }}
-          <!-- <span style="font-size: 12px;margin-left: auto;">当前字体：{{ currcurentFont }}</span> -->
+
           <span class="logoText">生成器 {{ appVersion }}</span>
         </div>
         <div class="logo">
-          <!-- <NikkeIcon></NikkeIcon> -->
           <span>balabala</span>
         </div>
         <div class="tab">
@@ -786,7 +777,6 @@ let isUpdate = ref(true);
         <span>图标 </span>
       </div>
       <div class="content">
-
         <div class="cardList container">
           <TransitionGroup tag="ul" name="fade">
             <div v-for="(value, index) in filteredData" :key="index">
@@ -964,7 +954,6 @@ let isUpdate = ref(true);
   background-color: #c6c6c6;
   border-radius: 5px;
   border: 2px #c6c6c6 solid;
-  /* background-image: url("/nikke/bx.png"); */
   background-repeat: no-repeat;
   background-size: 60px 60px;
   transition: border 0.1s ease-in-out;
@@ -1123,7 +1112,6 @@ let isUpdate = ref(true);
 
 .content {
   max-height: 82.2%;
-
   overflow-y: scroll;
   overflow-x: hidden;
 }
